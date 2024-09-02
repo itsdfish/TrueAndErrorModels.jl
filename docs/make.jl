@@ -16,7 +16,7 @@ makedocs(
     ),
     modules = [
         TrueAndErrorModels
-        #.get_extension(TrueAndErrorModels, :TuringExt),
+    #.get_extension(TrueAndErrorModels, :TuringExt),
     ],
     pages = [
         "Home" => "index.md",
