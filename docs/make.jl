@@ -1,7 +1,6 @@
 using Documenter
 using TrueAndErrorModels
 using Turing
-using Plots
 
 makedocs(
     warnonly = true,
