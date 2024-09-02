@@ -8,10 +8,20 @@ meaning 8 choices are made in total. Subscript r represents risky, subscript s r
 represent choice set. For example, `pᵣᵣ` represents the probability of truely prefering the risky option in both choice sets
 and `ϵᵣₛ₁` represents the error probability of choosing safe given a true preference for risky in first choice set. 
 
-    # Fields 
+# Fields 
 
 - `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
 - `p::AbstractVector{T}`: a vector of error probabilities with elements `[ϵᵣₛ₁, ϵᵣₛ₂, ϵₛᵣ₁, ϵₛᵣ₂]`.
+
+# Example 
+
+```julia 
+using TrueAndErrorModels
+
+dist = TrueErrorModel(; p = [0.60, .30, .05, .05], ϵ = fill(.10, 4))
+data = rand(dist, 200)
+logpdf(dist, data)
+```
 
 # References
 
