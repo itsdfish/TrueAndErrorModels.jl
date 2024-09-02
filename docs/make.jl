@@ -15,7 +15,7 @@ makedocs(
         collapselevel = 1
     ),
     modules = [
-        TrueAndErrorModels,
+        TrueAndErrorModels
         #.get_extension(TrueAndErrorModels, :TuringExt),
     ],
     pages = [
