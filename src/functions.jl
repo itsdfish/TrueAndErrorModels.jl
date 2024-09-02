@@ -137,13 +137,48 @@ function compute_probs(dist::TrueErrorModel{T}) where {T}
         pᵣₛ * ϵᵣₛ₁ * (1 - ϵₛᵣ₂) * ϵᵣₛ₁ * (1 - ϵₛᵣ₂) +
         pₛᵣ * (1 - ϵₛᵣ₁) * ϵᵣₛ₂ * (1 - ϵₛᵣ₁) * ϵᵣₛ₂ +
         pₛₛ * (1 - ϵₛᵣ₁) * (1 - ϵₛᵣ₂) * (1 - ϵₛᵣ₁) * (1 - ϵₛᵣ₂)
-    #probs = probs ./ sum(probs)
     return θ
 end
 
-function rand(dist::TrueErrorModel, n::Int)
+"""
+    rand(dist::TrueErrorModel, n_trials::Int)
+
+Generate 
+
+- `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
+a risky option R and a safe option S.
+- `n_trials`: the number of simulated trials 
+
+# Output 
+
+- `data::Vector{<:Int}`: vector of joint response frequencies with the following elements:
+
+1.  RR,RR
+2.  RR,RS
+3.  RR,SR
+4.  RR,SS
+5.  RS,RR
+6.  RS,RS
+7.  RS,SR
+8.  RS,SS
+9.  SR,RR
+10. SR,RS
+11. SR,SR
+12. SR,SS
+13. SS,RR
+14. SS,RS
+15. SS,SR
+16. SS,SS
+
+where S corresponds to choosing the safe option, R corresponds to choosing the risky option, each pair (XX)
+is the joint choice for choice sets 1 and two, respectively for a given session. The first pair corresponds to 
+the first session, and the second pair corresponds to the second session. For example, SR,RS indicates the selection 
+of the safe option for choice set 1 followed by the risky option for choice set 2 during the first session, and the 
+reversal of choices for the second secession. 
+"""
+function rand(dist::TrueErrorModel, n_trials::Int)
     probs = compute_probs(dist)
-    return rand(Multinomial(n, probs))
+    return rand(Multinomial(n_trials, probs))
 end
 
 function logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})

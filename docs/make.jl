@@ -1,15 +1,29 @@
 using Documenter
 using TrueAndErrorModels
+using Turing
+using Plots
 
 makedocs(
+    warnonly = true,
     sitename = "TrueAndErrorModels",
-    format = Documenter.HTML(),
-    modules = [TrueAndErrorModels]
+    format = Documenter.HTML(
+        assets = [
+            asset(
+            "https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap",
+            class = :css
+        )
+        ],
+        collapselevel = 1
+    ),
+    modules = [
+        TrueAndErrorModels,
+        #.get_extension(TrueAndErrorModels, :TuringExt),
+    ],
+    pages = [
+        "Home" => "index.md",
+        "Bayesian Parameter Estimation" => "parameter_estimation.md",
+        "Bayesian Model Comparison" => "bayes_factor.md"
+    ]
 )
 
-# Documenter can also automatically deploy documentation to gh-pages.
-# See "Hosting Documentation" and deploydocs() in the Documenter manual
-# for more information.
-#=deploydocs(
-    repo = "<repository url>"
-)=#
+deploydocs(repo = "github.com/itsdfish/TrueAndErrorModels.jl.git")
