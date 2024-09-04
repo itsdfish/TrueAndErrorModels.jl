@@ -1,8 +1,6 @@
-# A Simple Turing Model
+# Bayesian Parameter Estimation
 
-It is possible to use [Turing.jl](https://turinglang.org/stable/) to perform Bayesian parameter estimation on models defined in SequentialSamplingModels.jl. Below, we show you how to estimate the parameters for the [Linear Ballistic Accumulator (LBA)](https://itsdfish.github.io/SequentialSamplingModels.jl/dev/lba/) and to use it to estimate effects.
-
-Note that you can easily swap the LBA model from this example for other [SSM models](https://itsdfish.github.io/SequentialSamplingModels.jl/dev/api/) simply by changing the names of the parameters.
+The purpose of this tutorial is to demonstrate how to perform Bayesian parameter estimation of the True and Error model using the [Turing.jl](https://turinglang.org/) package. 
 
 ## Load Packages
 
@@ -14,7 +12,6 @@ using Turing
 using TrueAndErrorModels
 using Random
 using StatsPlots
-using Random
 
 Random.seed!(25044)
 ```
@@ -25,25 +22,28 @@ We will use the [LBA](https://itsdfish.github.io/SequentialSamplingModels.jl/dev
 
 ```julia
 # Generate some data with known parameters
-dist = TrueErrorModel(; p = [0.60, .30, .05, .05], ϵ = fill(.10, 4))
+dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
 data = rand(dist, 200)
 ```
 
 ```julia 
 16-element Vector{Int64}:
- 80
+ 87
+ 11
  13
-  8
   1
- 16
- 35
-  ⋮
-  8
-  2
+ 13
+ 18
+  0
   3
-  9
+ 10
+  2
+ 18
   1
-  9
+  4
+  5
+  2
+ 12
 ```
 
 The `rand()` function will sample random draws from the distribution, and store that into a named tuple of 2 vectors (one for `choice` and one for `rt`). The individual vectors can be accessed by their names using `data.choice` and `data.rt`.
@@ -77,6 +77,20 @@ chains = sample(model(data), NUTS(1000, .65), MCMCThreads(), 1000, 4)
 ```
 
 ```julia
+name_map = Dict(
+    "p[1]" => "pᵣᵣ",
+    "p[2]" => "pᵣₛ",
+    "p[3]" => "pₛᵣ",
+    "p[4]" => "pₛₛ",
+    "ϵ[1]" => "ϵᵣₛ₁",
+    "ϵ[2]" => "ϵᵣₛ₂",
+    "ϵ[3]" => "ϵₛᵣ₁",
+    "ϵ[4]" => "ϵₛᵣ₂",
+)
+chains = replacenames(chains, name_map)
+```
+
+```julia
 Chains MCMC chain (1000×20×4 Array{Float64, 3}):
 
 Iterations        = 1001:1:2000
@@ -91,41 +105,27 @@ Summary Statistics
   parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ess_per_sec 
       Symbol   Float64   Float64   Float64     Float64     Float64   Float64       Float64 
 
-        p[1]    0.5310    0.0844    0.0021   1611.5020   1931.9193    1.0008      259.5011
-        p[2]    0.2536    0.0725    0.0017   1882.4309   2316.0608    1.0006      303.1290
-        p[3]    0.1033    0.0512    0.0013   1520.5778   2258.6363    1.0006      244.8596
-        p[4]    0.1121    0.0443    0.0010   1999.5107   2448.4595    1.0012      321.9824
-        ϵ[1]    0.0654    0.0328    0.0008   1521.5648   1140.1998    1.0025      245.0185
-        ϵ[2]    0.0984    0.0479    0.0011   1750.7039   1641.4243    1.0008      281.9169
-        ϵ[3]    0.3015    0.1241    0.0030   1641.3979   1858.2680    1.0034      264.3153
-        ϵ[4]    0.1382    0.0810    0.0019   1744.5089   1863.3155    1.0014      280.9193
+         pᵣᵣ    0.5809    0.0809    0.0022   1457.7428   1950.9582    1.0015       44.6079
+         pᵣₛ    0.1352    0.0549    0.0015   1528.4144   1321.0865    1.0011       46.7705
+         pₛᵣ    0.1713    0.0598    0.0015   1593.3595   2335.4474    1.0037       48.7579
+         pₛₛ    0.1126    0.0374    0.0009   1875.5054   2164.3467    1.0006       57.3918
+        ϵᵣₛ₁    0.0713    0.0382    0.0009   1668.8838   1615.1341    1.0032       51.0690
+        ϵᵣₛ₂    0.0871    0.0344    0.0010   1274.9137    738.2457    1.0016       39.0132
+        ϵₛᵣ₁    0.2325    0.1063    0.0026   1597.8772   1635.9023    1.0031       48.8961
+        ϵₛᵣ₂    0.1287    0.0932    0.0025   1419.0534   1597.3096    1.0016       43.4240
 
 Quantiles
   parameters      2.5%     25.0%     50.0%     75.0%     97.5% 
       Symbol   Float64   Float64   Float64   Float64   Float64 
 
-        p[1]    0.3662    0.4706    0.5323    0.5931    0.6851
-        p[2]    0.1378    0.1994    0.2444    0.2985    0.4119
-        p[3]    0.0276    0.0635    0.0967    0.1349    0.2171
-        p[4]    0.0427    0.0793    0.1064    0.1404    0.2091
-        ϵ[1]    0.0060    0.0410    0.0655    0.0891    0.1292
-        ϵ[2]    0.0087    0.0622    0.1018    0.1343    0.1841
-        ϵ[3]    0.0438    0.2090    0.3166    0.4040    0.4880
-        ϵ[4]    0.0116    0.0714    0.1318    0.1998    0.2997
-```
-
-```julia
-name_map = Dict(
-    "p[1]" => "pᵣᵣ",
-    "p[2]" => "pᵣₛ",
-    "p[3]" => "pₛᵣ",
-    "p[4]" => "pₛₛ",
-    "ϵ[1]" => "ϵᵣₛ₁",
-    "ϵ[2]" => "ϵᵣₛ₂",
-    "ϵ[3]" => "ϵₛᵣ₁",
-    "ϵ[4]" => "ϵₛᵣ₂",
-)
-chains = replacenames(chains, name_map)
+         pᵣᵣ    0.4166    0.5243    0.5850    0.6418    0.7202
+         pᵣₛ    0.0555    0.0967    0.1246    0.1635    0.2718
+         pₛᵣ    0.0757    0.1255    0.1660    0.2118    0.2973
+         pₛₛ    0.0514    0.0858    0.1087    0.1346    0.1960
+        ϵᵣₛ₁    0.0052    0.0411    0.0707    0.0995    0.1413
+        ϵᵣₛ₂    0.0107    0.0666    0.0912    0.1115    0.1452
+        ϵₛᵣ₁    0.0275    0.1546    0.2385    0.3134    0.4227
+        ϵₛᵣ₂    0.0047    0.0523    0.1085    0.1893    0.3348
 ```
 ## Posterior Summary
 
@@ -141,14 +141,14 @@ Summary Statistics
   parameters      mean       std      mcse    ess_bulk    ess_tail      rhat   ess_per_sec 
       Symbol   Float64   Float64   Float64     Float64     Float64   Float64       Float64 
 
-         pᵣᵣ    0.5310    0.0844    0.0021   1611.5020   1931.9193    1.0008      259.5011
-         pᵣₛ    0.2536    0.0725    0.0017   1882.4309   2316.0608    1.0006      303.1290
-         pₛᵣ    0.1033    0.0512    0.0013   1520.5778   2258.6363    1.0006      244.8596
-         pₛₛ    0.1121    0.0443    0.0010   1999.5107   2448.4595    1.0012      321.9824
-        ϵᵣₛ₁    0.0654    0.0328    0.0008   1521.5648   1140.1998    1.0025      245.0185
-        ϵᵣₛ₂    0.0984    0.0479    0.0011   1750.7039   1641.4243    1.0008      281.9169
-        ϵₛᵣ₁    0.3015    0.1241    0.0030   1641.3979   1858.2680    1.0034      264.3153
-        ϵₛᵣ₂    0.1382    0.0810    0.0019   1744.5089   1863.3155    1.0014      280.9193
+         pᵣᵣ    0.5809    0.0809    0.0022   1457.7428   1950.9582    1.0015       44.6079
+         pᵣₛ    0.1352    0.0549    0.0015   1528.4144   1321.0865    1.0011       46.7705
+         pₛᵣ    0.1713    0.0598    0.0015   1593.3595   2335.4474    1.0037       48.7579
+         pₛₛ    0.1126    0.0374    0.0009   1875.5054   2164.3467    1.0006       57.3918
+        ϵᵣₛ₁    0.0713    0.0382    0.0009   1668.8838   1615.1341    1.0032       51.0690
+        ϵᵣₛ₂    0.0871    0.0344    0.0010   1274.9137    738.2457    1.0016       39.0132
+        ϵₛᵣ₁    0.2325    0.1063    0.0026   1597.8772   1635.9023    1.0031       48.8961
+        ϵₛᵣ₂    0.1287    0.0932    0.0025   1419.0534   1597.3096    1.0016       43.4240
 ```
 
 As you can see, based on the mean values of the posterior distributions, the original parameters (`ν=[3.0, 2.0], A = .8, k = .2, τ = .3`) are successfully recovered from the data (the accuracy would increase with more data).
