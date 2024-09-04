@@ -15,8 +15,8 @@ makedocs(
         collapselevel = 1
     ),
     modules = [
-        TrueAndErrorModels,
-        #.get_extension(TrueAndErrorModels, :TuringExt),
+        TrueAndErrorModels
+    #.get_extension(TrueAndErrorModels, :TuringExt),
     ],
     pages = [
         "Home" => "index.md",
