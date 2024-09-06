@@ -1,6 +1,6 @@
 # Bayesian Parameter Estimation
 
-The purpose of this tutorial is to demonstrate how to perform Bayesian parameter estimation of the True and Error model using the [Turing.jl](https://turinglang.org/) package. 
+The purpose of this tutorial is to demonstrate how to perform Bayesian parameter estimation of the True and Error model (Birnbaum & Quispe-Torreblanca, 2018) using the [Turing.jl](https://turinglang.org/) package. 
 
 ## Load Packages
 
@@ -18,7 +18,7 @@ Random.seed!(25044)
 
 ## Generate Data
 
-We will use the [LBA](https://itsdfish.github.io/SequentialSamplingModels.jl/dev/lba/) distribution to simulate data (100 trials) with fixed parameters (those we want to recover only from the data using Bayesian modeling).
+
 
 ```julia
 # Generate some data with known parameters
@@ -163,3 +163,7 @@ plot(chains)
 ```
 
 ![](assets/posterior_distribution.png)
+
+# References
+
+Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.

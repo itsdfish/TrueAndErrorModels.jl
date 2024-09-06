@@ -30,10 +30,10 @@ a risky option R and a safe option S.
 16. SS,SS
 
 where S corresponds to choosing the safe option, R corresponds to choosing the risky option, each pair (XX)
-is the joint choice for choice sets 1 and two, respectively for a given session. The first pair corresponds to 
-the first session, and the second pair corresponds to the second session. For example, SR,RS indicates the selection 
-of the safe option for choice set 1 followed by the risky option for choice set 2 during the first session, and the 
-reversal of choices for the second secession. 
+is the joint choice for choice sets 1 and two, respectively for a given replication. The first pair corresponds to 
+the first replication, and the second pair corresponds to the second replication. For example, SR,RS indicates the selection 
+of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
+reversal of choices for the second replication. 
 """
 function compute_probs(dist::TrueErrorModel{T}) where {T}
     (; p, ϵ) = dist
@@ -171,10 +171,10 @@ a risky option R and a safe option S.
 16. SS,SS
 
 where S corresponds to choosing the safe option, R corresponds to choosing the risky option, each pair (XX)
-is the joint choice for choice sets 1 and two, respectively for a given session. The first pair corresponds to 
-the first session, and the second pair corresponds to the second session. For example, SR,RS indicates the selection 
-of the safe option for choice set 1 followed by the risky option for choice set 2 during the first session, and the 
-reversal of choices for the second secession. 
+is the joint choice for choice sets 1 and two, respectively for a given replication. The first pair corresponds to 
+the first replication, and the second pair corresponds to the second replication. For example, SR,RS indicates the selection 
+of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
+reversal of choices for the second replication. 
 """
 function rand(dist::TrueErrorModel, n_trials::Int)
     probs = compute_probs(dist)
