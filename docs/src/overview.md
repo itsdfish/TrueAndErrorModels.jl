@@ -23,10 +23,10 @@ subject to the constraint that ``p_{\mathrm{RR}} + p_{\mathrm{RS}} + p_{\mathrm{
 
 The remaining four parameters correspond to error probabilities. 
 
-- ``\epsilon_{\mathrm{RS}_1}``: the probability of selecting $\mathcal{S}_1$ given $\mathcal{R}_1$ is prefered.
-- ``\epsilon_{\mathrm{RS}_2}``: the probability of selecting $\mathcal{R}_2$ given $\mathcal{S}_2$ is prefered.
-- ``\epsilon_{\mathrm{SR}_1}``: the probability of selecting $\mathcal{S}_1$ given $\mathcal{R}_1$ is prefered.
-- ``\epsilon_{\mathrm{SR}_2}``: the probability of selecting $\mathcal{S}_2$ given $\mathcal{R}_2$ is prefered.
+- ``\epsilon_{\mathrm{S}_1}``: the probability of selecting $\mathcal{S}_1$ given $\mathcal{R}_1$ is prefered.
+- ``\epsilon_{\mathrm{S}_2}``: the probability of selecting $\mathcal{S}_2$ given $\mathcal{R}_2$ is prefered.
+- ``\epsilon_{\mathrm{R}_1}``: the probability of selecting $\mathcal{R}_1$ given $\mathcal{S}_1$ is prefered.
+- ``\epsilon_{\mathrm{R}_2}``: the probability of selecting $\mathcal{R}_2$ given $\mathcal{S}_2$ is prefered.
 
 ## Structure
 
@@ -35,128 +35,128 @@ The TET model is structured as a multinomial processing tree in which nodes corr
 ### $\mathcal{R}_1\mathcal{R}_2$,$\mathcal{R}_1\mathcal{R}_2$
 ``
 \theta_1 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{R}_1\mathcal{R}_2$,$\mathcal{R}_1\mathcal{S}_2$
 ``
 \theta_2 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{R}_1\mathcal{R}_2$,$\mathcal{S}_1\mathcal{R}_2$
 ``
 \theta_3 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{R}_1\mathcal{R}_2$,$\mathcal{S}_1\mathcal{S}_2$
 ``
 \theta_4 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{R}_1\mathcal{S}_2$,$\mathcal{R}_1\mathcal{R}_2$
 ``
 \theta_5 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{R}_1\mathcal{S}_2$,$\mathcal{R}_1\mathcal{S}_2$
 ``
 \theta_6 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{R}_1\mathcal{S}_2$,$\mathcal{S}_1\mathcal{R}_2$
 ``
 \theta_7 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{R}_1\mathcal{S}_2$,$\mathcal{S}_1\mathcal{S}_2$
 ``
 \theta_8 =
-    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{S}_1\mathcal{R}_2$,$\mathcal{R}_1\mathcal{R}_2$
 ``
 \theta_9 =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{S}_1\mathcal{R}_2$,$\mathcal{R}_1\mathcal{S}_2$
 ``
 \theta_{10} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{S}_1\mathcal{R}_2$,$\mathcal{S}_1\mathcal{R}_2$
 ``
 \theta_{11} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{S}_1\mathcal{R}_2$,$\mathcal{S}_1\mathcal{S}_2$
 ``
 \theta_{12} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{S}_1\mathcal{S}_2$,$\mathcal{R}_1\mathcal{R}_2$
 ``
 \theta_{13} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{S}_1\mathcal{S}_2$,$\mathcal{R}_1\mathcal{S}_2$
 ``
 \theta_{14} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{RS}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{SR}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{SR}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{S}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{R}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{R}_1} \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
 ### $\mathcal{S}_1\mathcal{S}_2$,$\mathcal{S}_1\mathcal{R}_2$
 ``
 \theta_{15} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{SR}_2} + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{RS}_2}) + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{SR}_2}
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{R}_2} + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{S}_2}) + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{R}_2}
 ``
 ### $\mathcal{S}_1\mathcal{S}_2$,$\mathcal{S}_1\mathcal{S}_2$
 ``
 \theta_{16} =
-    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} \cdot \epsilon_{\mathrm{RS}_1} \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot \epsilon_{\mathrm{RS}_1} \cdot (1 - \epsilon_{\mathrm{SR}_2}) + \\ 
-    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot \epsilon_{\mathrm{RS}_2} + \\ 
-    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2}) \cdot (1 - \epsilon_{\mathrm{SR}_1}) \cdot (1 - \epsilon_{\mathrm{SR}_2})
+    p_{\mathrm{RR}} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} \cdot \epsilon_{\mathrm{S}_1} \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{RS}} \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot \epsilon_{\mathrm{S}_1} \cdot (1 - \epsilon_{\mathrm{R}_2}) + \\ 
+    p_{\mathrm{SR}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot \epsilon_{\mathrm{S}_2} + \\ 
+    p_{\mathrm{SS}} \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2}) \cdot (1 - \epsilon_{\mathrm{R}_1}) \cdot (1 - \epsilon_{\mathrm{R}_2})
 ``
