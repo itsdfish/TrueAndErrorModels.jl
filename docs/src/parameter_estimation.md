@@ -17,7 +17,7 @@ Random.seed!(25044)
 
 ## Generate Data
 
-In the code block below, we will create a model object and generate 2 simulated responses from 100 simulated subjects for a total of 200 responses. For this model, we assume that the probability of a true preference state RR is relatively high, and the probability of other preference states decreases as they become more difference from RR:
+For a description of the decision making task, please see the description in the [model overview](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/overview/). In the code block below, we will create a model object and generate 2 simulated responses from 100 simulated subjects for a total of 200 responses. For this model, we assume that the probability of a true preference state RR is relatively high, and the probability of other preference states decreases as they become more difference from RR:
 
 - ``p_{\mathrm{RR}} = .65``
 - ``p_{\mathrm{RS}} = .15``
@@ -145,7 +145,8 @@ vline!(post_plot, [missing .65 missing .15 missing .15 missing .05 missing .10],
 
 The data-generating parameters are represented as black vertical lines in the density plots. As expected, the posterior distributions are centered near the data-generating parameters. Given that the data-generating and estimated model are the same, we would expect the posterior distributions to be near the data-generating parameters. 
 
-
 # References
 
 Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.
+
+Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision making, 13(6), 622-635.

@@ -22,11 +22,11 @@ where outcome $x_i$ occurs with probability $p_i$. The key difference between ga
 
 # True and Error Theory
 
-As noted above, True and Error Theory provides a mathematical framework for distinguishing true preferences from errors in reporting errors due to various sources, such as trembling hand, failures of memory and/or reasoning, and lapses of attention. According to TET, there are four possible preference states, one for each possible option: RR, RS, SR, SS. For example, preference state SR indicates a person pefers the safe option in the first choice set, and the risky option in the second choice set.
+As noted above, TET provides a mathematical framework for distinguishing between true preferences and errors in reporting errors due to various sources, such as trembling hand, failures of memory and/or reasoning, and lapses of attention. According to TET, there are four possible preference states, one for each possible option: RR, RS, SR, SS. For example, preference state SR indicates a person pefers the safe option in the first choice set, and the risky option in the second choice set. If this person responded without error, his or her response pattern would be ``(\mathcal{S}_1\mathcal{R}_2,\mathcal{S}_1\mathcal{R}_2)``.
 
 ## Parameters
 
-The full TET model contains 8 parameters in total. Four of the parameters represent the joint probability of the four true preference states:
+The full TET model contains 8 parameters in total: four preference state parameters and four error parameters. Sometimes this model is called the TET4 model, with 4 signifying the number of error parameters. Four of the parameters represent the joint probability of the four true preference states:
 
 - ``p_{\mathrm{RR}}``: the probability of prefering the risky option in both choice sets
 - ``p_{\mathrm{RS}}``: the probability of prefering the risky option in the first choice set and prefering the safe option in the second choice set
@@ -35,7 +35,7 @@ The full TET model contains 8 parameters in total. Four of the parameters repres
 
 subject to the constraint that ``p_{\mathrm{RR}} + p_{\mathrm{RS}} + p_{\mathrm{SR}} + p_{\mathrm{SS}} = 1``.
 
-The remaining four parameters correspond to error probabilities. 
+The remaining four parameters correspond to error probabilities:
 
 - ``\epsilon_{\mathrm{S}_1}``: the error probability of selecting $\mathcal{S}_1$ given that $\mathcal{R}_1$ is prefered.
 - ``\epsilon_{\mathrm{S}_2}``: the error probability of selecting $\mathcal{S}_2$ given that $\mathcal{R}_2$ is prefered.

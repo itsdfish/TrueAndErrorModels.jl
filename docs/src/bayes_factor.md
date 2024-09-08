@@ -1,15 +1,36 @@
-# Computing the Bayes Factor
+# Bayesian Model Comparison
 
 ## Overview
 
-In this tutorial, we will use the Bayes factor to compare the evidence for one model relative to another reference model. Computing the Bayes factor is challenging because it requires integrating the log likelihood over the model parameters. One method for approximating this complex integral is non-reversible parallel tempering (Bouchard-Côté et al., 2022) using 
+In this tutorial, we will compare two True and Error model variants using the Bayes factor. One model variant imposes no restrictions on the error probability parameters, whereas the other model constrains the error probabilities to be equal. Computing the Bayes factor is challenging because it requires integrating over a potentially high dimensional parameter space. To compute Bayes factors, we will use a robust method called non-reversible parallel tempering (Bouchard-Côté et al., 2022) using the Julia package
 [Pigeons.jl](https://julia-tempering.github.io/Pigeons.jl/dev/). 
 
-In the tutorial below, we will compare two models which differ only in terms of assumptions about drift rate variability: the LBA and the RDM. The LBA assumes that the drift rate varies across trials and is otherwise deterministic, whereas the RDM assumes the drift rate varies within a trial as Gaussian noise, but not across trials. The difference between the models can be visualized with Plots.jl:
+### Bayes Factor 
+
+Before proceeding to the code, we provide a brief overview of the Bayes factor. In Bayesian model comparison, the Bayes factor allows one to compare the probability of the data under two different models while taking into account model flexibility stemming from number of parameters, functional form, and prior distribution. Thus, it provides a way to balance model fit and model flexibility into a single index. One important fact to keep in mind is that Bayes factors can be sensitive to the choice prior distributions over parameters. Sensitivity to prior distributions over parameters might be desireable depending on one's goals and knowledge of the models under consideration. 
+
+ The Bayes factor is the likelihood of the data $\mathbf{Y} = \left[y_1,y_2, \dots, y_n\right]$ under model $\mathcal{M}_i$ vs. model $\mathcal{M}_j$. The relationship between the Bayes Factor and the posterior of odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$ can be stated as:
+
+``\frac{p(\mathcal{M}_i \mid \mathbf{Y})}{p(\mathcal{M}_j \mid \mathbf{Y})} = \frac{p(\mathcal{M}_i)}{p(\mathcal{M}_j)} \mathrm{BF}_{i,j}.``
+
+The term on the left hand side is the posterior odds, the first term on the right hand side is the prior odds, and ``\mathrm{BF}_{i,j}`` is the Bayes factor for $\mathcal{M}_i$ vs. $\mathcal{M}_j$.  In the equation above, ``\mathrm{BF}_{i,j}`` functions as a conversion factor, which converts prior odds into posterior odds. Thus,  the Bayes factor is as the factor by which prior odds must be updated in light of the data. This interpretation becomes even more appearent by solving for ``\mathrm{BF}_{i,j}``:
+
+``\mathrm{BF}_{i,j} =  \left. \frac{p(\mathcal{M}_i \mid \mathbf{Y})}{p(\mathcal{M}_j \mid \mathbf{Y})} \middle/ \frac{p(\mathcal{M}_i)}{p(\mathcal{M}_j)} \right.``
+
+This interpretation is important because demonstrates that the prior odds should be updated by the same factor even if there is disagreement over the prior odds. The Bayes factor can also be written as the ratio of marginal likelihoods as follows: 
+
+``\mathrm{BF}_{i,j} = \frac{p(\mathbf{Y} \mid \mathcal{M}_i)}{p(\mathbf{Y} \mid \mathcal{M}_j)}``,
+
+where the marginal likelihood of $\mathcal{M}_i$ is given by:
+
+``p(\mathbf{Y} \mid \mathcal{M}_i) = \int_{\boldsymbol{\theta}\in \boldsymbol{\Theta}_i} p(\mathbf{Y} \mid \boldsymbol{\theta}, \mathcal{M}_i) p(\boldsymbol{\theta} \mid \mathcal{M}_i) d \boldsymbol{\theta}``.
+
+In the equation above, $\boldsymbol{\Theta}_i$ is the parameter space for $\mathcal{M}_i$ and $\boldsymbol{\theta} \in \boldsymbol{\Theta}$ is a vector of parameters. Under this interpretation, the marginal likelihood represents its average prior predictive ability of of $\mathcal{M}_i$. One benefit of the Bayes factor is that the marginal likelihood accounts for model flexibility because the density of the prior distribution must be "rationed" across the parameter space (i.e., must integrate to 1). Consequentially, the predictions of a model with a diffuse distribution in a high dimensional parameter space will be penalized due to its low prior density. 
 
 ## Load Packages
 
 Before proceeding, we will load the required packages.
+
 ```julia
 using MCMCChains
 using Pigeons
@@ -18,30 +39,40 @@ using TrueAndErrorModels
 using Turing
 ```
 
-## Data-Generating Model
-
-The next step is to generate simulated data for comparing the models. Here, we will assume that the LBA is the
-true data generating model:
-```julia
-Random.seed!(258)
-dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
-data = rand(dist, 200)
-```
-
 ## Define Models 
-The following code blocks define the models along with their prior distributions using [Turing.jl](https://turinglang.org/stable/). Notice that the models are identical except for the log likelihood function.
 
-### TE4 Model
+The following code blocks define the models along with their prior distributions using [Turing.jl](https://turinglang.org/stable/). Notice that the models are identical except constraints imposed on the error probabilities $\epsilon_i$.
+
+### TET4 Model
+
+The TET4 model is described in detail on the page called [model overview](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/overview/). The *4* in TET4 refers to the number of error probability parameters, which are described below. The TET4 model has four true preference state parameters which collectively form the joint probability distribution over preference states RR, RS, SR, SS, where R represents a true preference for the risky option, S represents a true preference for the safe option, and the position corresponds to choice set. In the TET4 model, the only constraint is that $p_i \geq 0, \forall i$ and
+
+``\sum_{i=1}^4 p_i = 1``
+
+As its namesake implies, the TET4 model also has four error probability parameters:
+
+- ``\epsilon_{\mathrm{S}_1}``: the error probability of selecting $\mathcal{S}_1$ given that $\mathcal{R}_1$ is prefered.
+- ``\epsilon_{\mathrm{S}_2}``: the error probability of selecting $\mathcal{S}_2$ given that $\mathcal{R}_2$ is prefered.
+- ``\epsilon_{\mathrm{R}_1}``: the error probability of selecting $\mathcal{R}_1$ given that $\mathcal{S}_1$ is prefered.
+- ``\epsilon_{\mathrm{R}_2}``: the error probability of selecting $\mathcal{R}_2$ given that $\mathcal{S}_2$ is prefered.
+
+The only constraint is that $\epsilon_i \in [0, .50],\forall i$. In the Turing model below, we use non-informative priors. The Dichelet prior on preference state vector $\mathbf{p}$ ensures that the joint distribution over preference states is a valid probability distribution. The each parameter in vector $\boldsymbol{\epsilon}$ is follows an independently uniform distribution ranging from 0 to .50.
 
 ```julia
-@model function te4_model(data)
+@model function tet4_model(data)
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ filldist(Uniform(0, .5), 4)
     data ~ TrueErrorModel(p, ϵ)
 end
 ```
 
-## TE1 Model 
+## TET1 Model 
+
+As the name implies, the TET1 model constrains all error probability parameters to be equal:
+
+``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``
+
+Otherwise, TET1 and TET4 are identical.
 
 ```julia
 @model function te1_model(data)
@@ -50,12 +81,36 @@ end
     data ~ TrueErrorModel(p, fill(ϵ, 4))
 end
 ```
+
+## Data-Generating Model
+
+ In our demonstration, we will use the TET1 as the data-generating model. In the code block below, we will create a model object and generate 2 simulated responses from all 100 simulated subjects for a total of 200 responses. In this model, we assume that the probability of a true preference state RR is relatively high, and the probability of other preference states decreases as they become more difference from RR:
+
+- ``p_{\mathrm{RR}} = .65``
+- ``p_{\mathrm{RS}} = .15``
+- ``p_{\mathrm{SR}} = .15``
+- ``p_{\mathrm{SS}} = .05``
+
+In addition, our model assumes the error probabilities are constrained to be equal:
+
+``\epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2} = .10``
+
+```julia
+Random.seed!(258)
+dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
+data = rand(dist, 200)
+```
+
 ## Estimate Marginal Log Likelihood
+
 The next step is to run the `pigeons` function to estimate the marginal log likelihood for each model. 
 
 ### TE4
+
+In the code block below, we estimate the marginal log likelihood by passing `tet4_model` to the function`pigeons`. 
+
 ```julia
-pt_te4 = pigeons(target=TuringLogPotential(te4_model(data)), record=[traces])
+tet4_model = pigeons(target=TuringLogPotential(tet4_model(data)), record=[traces])
 ```
 ```julia
 ────────────────────────────────────────────────────────────────────────────
@@ -74,6 +129,7 @@ pt_te4 = pigeons(target=TuringLogPotential(te4_model(data)), record=[traces])
 ────────────────────────────────────────────────────────────────────────────
 ```
 
+Below, we will change the numerical indices to more descriptive indices for ease of interpretation. The next line of code converts the output to an `Chain` object.
 
 ```julia
 name_map = Dict(
@@ -81,14 +137,15 @@ name_map = Dict(
     "p[2]" => "pᵣₛ",
     "p[3]" => "pₛᵣ",
     "p[4]" => "pₛₛ",
-    "ϵ[1]" => "ϵᵣₛ₁",
-    "ϵ[2]" => "ϵᵣₛ₂",
-    "ϵ[3]" => "ϵₛᵣ₁",
-    "ϵ[4]" => "ϵₛᵣ₂",
+    "ϵ[1]" => "ϵₛ₁",
+    "ϵ[2]" => "ϵₛ₂",
+    "ϵ[3]" => "ϵᵣ₁",
+    "ϵ[4]" => "ϵᵣ₂",
 )
-chain_te4 = Chains(pt_te4)
+chain_te4 = Chains(tet4_model)
 chain_te4 = replacenames(chain_te4, name_map)
 ```
+A summary of the MCMCChain is provided below.
 
 ```julia 
 Chains MCMC chain (1024×9×1 Array{Float64, 3}):
@@ -96,7 +153,7 @@ Chains MCMC chain (1024×9×1 Array{Float64, 3}):
 Iterations        = 1:1:1024
 Number of chains  = 1
 Samples per chain = 1024
-parameters        = pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ, ϵᵣₛ₁, ϵᵣₛ₂, ϵₛᵣ₁, ϵₛᵣ₂
+parameters        = pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ, ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
 internals         = log_density
 
 Summary Statistics
@@ -107,10 +164,10 @@ Summary Statistics
          pᵣₛ    0.1820    0.0662    0.0033   391.3331   750.0271    1.0000       missing
          pₛᵣ    0.1787    0.0579    0.0026   523.1174   740.9073    1.0002       missing
          pₛₛ    0.0625    0.0297    0.0012   618.7097   755.8075    0.9995       missing
-        ϵᵣₛ₁    0.0517    0.0314    0.0014   529.0317   866.9172    0.9995       missing
-        ϵᵣₛ₂    0.0571    0.0342    0.0017   418.1905   657.3602    1.0010       missing
-        ϵₛᵣ₁    0.1995    0.1077    0.0048   514.3591   868.8844    1.0006       missing
-        ϵₛᵣ₂    0.2706    0.1235    0.0065   372.7194   763.7186    1.0005       missing
+         ϵₛ₁    0.0517    0.0314    0.0014   529.0317   866.9172    0.9995       missing
+         ϵₛ₂    0.0571    0.0342    0.0017   418.1905   657.3602    1.0010       missing
+         ϵᵣ₁    0.1995    0.1077    0.0048   514.3591   868.8844    1.0006       missing
+         ϵᵣ₂    0.2706    0.1235    0.0065   372.7194   763.7186    1.0005       missing
 
 Quantiles
   parameters      2.5%     25.0%     50.0%     75.0%     97.5% 
@@ -120,15 +177,18 @@ Quantiles
          pᵣₛ    0.0712    0.1317    0.1765    0.2275    0.3180
          pₛᵣ    0.0820    0.1335    0.1760    0.2202    0.2987
          pₛₛ    0.0179    0.0411    0.0576    0.0808    0.1294
-        ϵᵣₛ₁    0.0033    0.0245    0.0511    0.0754    0.1104
-        ϵᵣₛ₂    0.0033    0.0282    0.0566    0.0840    0.1238
-        ϵₛᵣ₁    0.0162    0.1078    0.2056    0.2830    0.3887
-        ϵₛᵣ₂    0.0232    0.1705    0.2894    0.3699    0.4639
+         ϵₛ₁    0.0033    0.0245    0.0511    0.0754    0.1104
+         ϵₛ₂    0.0033    0.0282    0.0566    0.0840    0.1238
+         ϵᵣ₁    0.0162    0.1078    0.2056    0.2830    0.3887
+         ϵᵣ₂    0.0232    0.1705    0.2894    0.3699    0.4639
 ```
 
 ### TE1
+
+As we did above, we will estimate the marginal log likelihood by passing `tet1_model` to the function`pigeons`. 
+
 ```julia
-pt_te1 = pigeons(target=TuringLogPotential(te1_model(data)), record=[traces])
+pt_tet1 = pigeons(target=TuringLogPotential(te1_model(data)), record=[traces])
 ```
 
 ```julia
@@ -147,6 +207,7 @@ pt_te1 = pigeons(target=TuringLogPotential(te1_model(data)), record=[traces])
  1.02e+03       3.41        -38      0.578      0.621          1          1 
 ────────────────────────────────────────────────────────────────────────────
 ```
+In the code block below, we will rename the parameters, and convert the output to an `Chain` object
 ```julia
 name_map = Dict(
     "p[1]" => "pᵣᵣ",
@@ -154,10 +215,10 @@ name_map = Dict(
     "p[3]" => "pₛᵣ",
     "p[4]" => "pₛₛ",
 )
-chain_te1 = Chains(pt_te1)
+chain_te1 = Chains(pt_tet1)
 chain_te1 = replacenames(chain_te1, name_map)
 ```
-
+The output below provides a summary of the chain.
 ```julia 
 Chains MCMC chain (1024×6×1 Array{Float64, 3}):
 
@@ -189,20 +250,28 @@ Quantiles
 ```
 
 ## Extract marginal log likelihood
-In the following code block, the function `stepping_stone` extracts that marginal log likelihood:
+
+In the following code block, the function `stepping_stone` extracts that marginal log likelihood for each model:
+
 ```julia
-mll_te1 = stepping_stone(pt_te1)
-mll_te4 = stepping_stone(pt_te4)
+mll_tet1 = stepping_stone(pt_tet1)
+mll_tet4 = stepping_stone(tet4_model)
 ```
 
 ## Compute the Bayes Factor
-The bayes factor is obtained by exponentiating the difference between marginal log likelihoods. The value of `1.21` indicates that the LBA is `1.21` times more likely to have generated the data. 
+
+The bayes factor is obtained by exponentiating the difference between marginal log likelihoods. Recall that TET1 was the data-generating model.  As expected, the value of `3.39` indicates that the data are `3.39` times more likely under TET1, the data-generating model, than TET4
+
 ```julia
-bf = exp(mll_te1 - mll_te4)
+bf = exp(mll_tet1 - mll_tet4)
 ```
 ```julia 
 3.3948019100884617
 ```
 # References
+
+Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.
+
+Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision making, 13(6), 622-635.
 
 Syed, S., Bouchard-Côté, A., Deligiannidis, G., & Doucet, A. (2022). Non-reversible parallel tempering: a scalable highly parallel MCMC scheme. Journal of the Royal Statistical Society Series B: Statistical Methodology, 84(2), 321-350.
