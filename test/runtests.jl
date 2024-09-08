@@ -66,3 +66,18 @@ end
     ]
     @test probs ≈ true_probs atol = 0.005
 end
+
+@safetestset "zero methods" begin
+    using TrueAndErrorModels
+    using Test
+
+    @test length(methods(tet1_model)) == 0
+end
+
+@safetestset "two methods" begin
+    using TrueAndErrorModels
+    using Test
+    using Turing
+
+    @test length(methods(tet1_model)) == 2
+end

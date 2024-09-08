@@ -12,6 +12,14 @@ export logpdf
 export rand
 export TrueErrorModel
 
+export tet1_model
+export tet2_model
+export tet4_model
+export eut1_model
+export eut2_model
+export eut4_model
+
 include("structs.jl")
 include("functions.jl")
+include("ext_functions.jl")
 end

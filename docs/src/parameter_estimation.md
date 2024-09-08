@@ -29,7 +29,6 @@ In addition, our model assumes the error probabilities are constrained to be equ
 ``\epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2} = .10``
 
 ```julia
-# Generate some data with known parameters
 dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
 data = rand(dist, 200)
 ```
@@ -60,17 +59,15 @@ In the output above, we see the response vector has 16 elements, which correspon
 
 where $\mathcal{R}$ and $\mathcal{S}$ correspond to risky and safe options, respectively, and the subscript indexes the choice set.  
 
-## Specify Turing Model
+## The Turing Model
 
-The code snippet below defines a model in Turing. The model function accepts a vector of response frequencies. The preference state vector $\mathbf{p}$ is sampled from a uniform Dirichlet distribution, which ensures that the four elements ``p_{\mathrm{RR}} + p_{\mathrm{RS}} + p_{\mathrm{SR}} + p_{\mathrm{SS}} = 1``. All error probability parameters are constrained to be equal single error probability parameter $\epsilon$, which is sampled from a uniform distribution ranging from 0 to .50.
+The TET1 model is automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies. The prior distributions are as follows:
 
-```julia
-@model function model(data)
-    p ~ Dirichlet(fill(1, 4))
-    ϵ ~ Uniform(0, .5)
-    data ~ TrueErrorModel(; p, ϵ = fill(ϵ, 4))
-end
-```
+``
+\mathbf{p} ~ \mathrm{Dirichlet}([1,1,1,1])
+\epsilon ~ \mathrm{Uniform}(0, .5)
+``
+where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. In the TET1 model, we assume ``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``. 
 
 ## Estimate the Parameters
 
@@ -84,7 +81,7 @@ Now that the Turing model has been specified, we can perform Bayesian parameter 
 
 ```julia
 # Estimate parameters
-chains = sample(model(data), NUTS(1000, .65), MCMCThreads(), 1000, 4)
+chains = sample(tet1_model(data), NUTS(1000, .65), MCMCThreads(), 1000, 4)
 ```
 
 For ease of intepretation, we will convert the numerical indices of preference vector $\mathbf{p}$ to more informative labeled indices. 
@@ -130,7 +127,6 @@ Quantiles
          pₛₛ    0.0448    0.0699    0.0847    0.1012    0.1362
            ϵ    0.0797    0.0937    0.1015    0.1095    0.1266
 ```
-
 
 ## Evaluation
 

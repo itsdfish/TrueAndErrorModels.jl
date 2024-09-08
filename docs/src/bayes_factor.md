@@ -56,15 +56,13 @@ As its namesake implies, the TET4 model also has four error probability paramete
 - ``\epsilon_{\mathrm{R}_1}``: the error probability of selecting $\mathcal{R}_1$ given that $\mathcal{S}_1$ is prefered.
 - ``\epsilon_{\mathrm{R}_2}``: the error probability of selecting $\mathcal{R}_2$ given that $\mathcal{S}_2$ is prefered.
 
-The only constraint is that $\epsilon_i \in [0, .50],\forall i$. In the Turing model below, we use non-informative priors. The Dichelet prior on preference state vector $\mathbf{p}$ ensures that the joint distribution over preference states is a valid probability distribution. The each parameter in vector $\boldsymbol{\epsilon}$ is follows an independently uniform distribution ranging from 0 to .50.
+The only constraint is that $\epsilon_i \in [0, .50],\forall i$. The TET4 model is automatically loaded when Turing is loaded into your Julia session. The `tet4_model` function accepts a vector of response frequencies. The prior distributions are as follows:
 
-```julia
-@model function tet4_model(data)
-    p ~ Dirichlet(fill(1, 4))
-    ϵ ~ filldist(Uniform(0, .5), 4)
-    data ~ TrueErrorModel(p, ϵ)
-end
-```
+``
+\mathbf{p} ~ \mathrm{Dirichlet}([1,1,1,1])
+\boldsymbol{epsilon} ~ \mathrm{Uniform}(0, .5)
+``
+where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{epsilon}$ is a vector of error probabilities. 
 
 ## TET1 Model 
 
@@ -72,10 +70,16 @@ As the name implies, the TET1 model constrains all error probability parameters 
 
 ``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``
 
-Otherwise, TET1 and TET4 are identical.
+Otherwise, TET1 and TET4 are identical. The TET1 model is also automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies. The prior distributions are as follows:
+
+``
+\mathbf{p} ~ \mathrm{Dirichlet}([1,1,1,1])
+\epsilon ~ \mathrm{Uniform}(0, .5)
+``
+where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. 
 
 ```julia
-@model function te1_model(data)
+@model function tet1_model(data)
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ Uniform(0, .5)
     data ~ TrueErrorModel(p, fill(ϵ, 4))

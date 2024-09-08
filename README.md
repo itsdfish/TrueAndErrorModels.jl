@@ -3,7 +3,7 @@
 
 [![Build Status](https://github.com/itsdfish/TrueAndErrorModels.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/itsdfish/TrueAndErrorModels.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-This repo contains code and documentation for applying True and Error Theory to repeated decision making tasks. 
+This repo contains code and [documentation](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/) for performing Bayesian parameter estimation and model comparison with True and Error Models.
 
 # References
 

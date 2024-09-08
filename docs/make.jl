@@ -15,14 +15,16 @@ makedocs(
         collapselevel = 1
     ),
     modules = [
-        TrueAndErrorModels
-    #.get_extension(TrueAndErrorModels, :TuringExt),
+        TrueAndErrorModels,
+        Base.get_extension(TrueAndErrorModels, :TuringExt),
     ],
     pages = [
         "Home" => "index.md",
         "Model Overview" => "overview.md",
         "Bayesian Parameter Estimation" => "parameter_estimation.md",
-        "Bayesian Model Comparison" => "bayes_factor.md"
+        "Bayesian Model Comparison" => "bayes_factor.md",
+        "Off-the-shelf Turing Models" => "turing_models.md",
+        "API" => "api.md",
     ]
 )
 
