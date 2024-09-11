@@ -13,6 +13,13 @@ and `ϵₛ₁` represents the error probability of choosing safe given a true pr
 - `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
 - `p::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂]`.
 
+
+# Constructors
+
+TrueErrorModel(p, ϵ)
+
+TrueErrorModel(; p, ϵ)
+
 # Example 
 
 ```julia 
@@ -32,6 +39,10 @@ Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgmen
 struct TrueErrorModel{T <: Real} <: AbstractTrueErrorModel
     p::AbstractVector{T}
     ϵ::AbstractVector{T}
+end
+
+function TrueErrorModel(p, ϵ)
+    return TrueErrorModel(promote(p, ϵ)...)
 end
 
 function TrueErrorModel(; p, ϵ)

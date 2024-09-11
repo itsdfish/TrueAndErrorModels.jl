@@ -1,7 +1,7 @@
 name = "TrueAndErrorModels"
 uuid = "260ba6b7-9af7-473a-b238-1a1a0638f266"
 authors = ["itsdfish"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
