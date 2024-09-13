@@ -1,5 +1,7 @@
-# TrueAndErrorModels
 [![](docs/logo/logo.png)](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/)
+
+
+# TrueAndErrorModels
 
 [![Build Status](https://github.com/itsdfish/TrueAndErrorModels.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/itsdfish/TrueAndErrorModels.jl/actions/workflows/CI.yml?query=branch%3Amain)
 

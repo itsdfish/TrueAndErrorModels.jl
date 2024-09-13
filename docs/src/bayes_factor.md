@@ -7,9 +7,9 @@ In this tutorial, we will compare two True and Error model variants using the Ba
 
 ### Bayes Factor 
 
-Before proceeding to the code, we provide a brief overview of the Bayes factor. In Bayesian model comparison, the Bayes factor allows one to compare the probability of the data under two different models while taking into account model flexibility stemming from number of parameters, functional form, and prior distribution. Thus, it provides a way to balance model fit and model flexibility into a single index. One important fact to keep in mind is that Bayes factors can be sensitive to the choice prior distributions over parameters. Sensitivity to prior distributions over parameters might be desireable depending on one's goals and knowledge of the models under consideration. 
+Before proceeding to the code, we provide a brief overview of the Bayes factor. Readers who are familiar with Bayes factors can skip this section. In Bayesian model comparison, the Bayes factor allows one to compare the probability of the data under two different models while taking into account model flexibility stemming all sources, including the number of parameters, functional form, and prior distribution. Thus, it provides a way to balance model fit and model flexibility into a single index. One important fact to keep in mind is that Bayes factors can be sensitive to the choice prior distributions over parameters. Sensitivity to prior distributions over parameters might be desireable depending on one's goals and knowledge of the models under consideration. 
 
- The Bayes factor is the likelihood of the data $\mathbf{Y} = \left[y_1,y_2, \dots, y_n\right]$ under model $\mathcal{M}_i$ vs. model $\mathcal{M}_j$. The relationship between the Bayes Factor and the posterior of odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$ can be stated as:
+The Bayes factor is the likelihood of the data $\mathbf{Y} = \left[y_1,y_2, \dots, y_n\right]$ under model $\mathcal{M}_i$ vs. model $\mathcal{M}_j$. The relationship between the Bayes Factor and the posterior of odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$ can be stated as:
 
 ``\frac{p(\mathcal{M}_i \mid \mathbf{Y})}{p(\mathcal{M}_j \mid \mathbf{Y})} = \frac{p(\mathcal{M}_i)}{p(\mathcal{M}_j)} \mathrm{BF}_{i,j}.``
 
@@ -70,21 +70,18 @@ As the name implies, the TET1 model constrains all error probability parameters 
 
 ``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``
 
-Otherwise, TET1 and TET4 are identical. The TET1 model is also automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies. The prior distributions are as follows:
+Otherwise, TET1 and TET4 are identical. The TET1 model is also automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies, and using the following prior distributions over the parameters:
 
 ``
-\mathbf{p} ~ \mathrm{Dirichlet}([1,1,1,1])
-\epsilon ~ \mathrm{Uniform}(0, .5)
+\mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
 ``
-where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. 
 
-```julia
-@model function tet1_model(data)
-    p ~ Dirichlet(fill(1, 4))
-    ϵ ~ Uniform(0, .5)
-    data ~ TrueErrorModel(p, fill(ϵ, 4))
-end
-```
+``
+\epsilon \sim \mathrm{Uniform}(0, .5),
+``
+
+where $\mathbf{p}$ is a vector of four preference state parameters, and error probability $\epsilon$ is a scalar. 
+
 
 ## Data-Generating Model
 
@@ -109,12 +106,23 @@ data = rand(dist, 200)
 
 The next step is to run the `pigeons` function to estimate the marginal log likelihood for each model. 
 
-### TE4
+### TET4
 
-In the code block below, we estimate the marginal log likelihood by passing `tet4_model` to the function`pigeons`. 
+As the name implies, the TET4 model has four error parameters: ``\epsilon_{\mathrm{S}_1}, \epsilon_{\mathrm{S}_S},\epsilon_{\mathrm{R}_1},\epsilon_{\mathrm{R}_2}``.  The Turing model `tet4_model` is automatically exported when Turing is loaded into your Julia session. The prior distributions for `tet4_model` are defined as: 
+
+``
+\mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
+``
+
+``
+\boldsymbol{\epsilon} \sim \mathrm{Uniform}(0, .5),
+``
+
+where where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{\epsilon}$ is a vector of error parameters.
+
 
 ```julia
-tet4_model = pigeons(target=TuringLogPotential(tet4_model(data)), record=[traces])
+pt_tet4 = pigeons(target=TuringLogPotential(tet4_model(data)), record=[traces])
 ```
 ```julia
 ────────────────────────────────────────────────────────────────────────────
@@ -146,7 +154,7 @@ name_map = Dict(
     "ϵ[3]" => "ϵᵣ₁",
     "ϵ[4]" => "ϵᵣ₂",
 )
-chain_te4 = Chains(tet4_model)
+chain_te4 = Chains(pt_tet4)
 chain_te4 = replacenames(chain_te4, name_map)
 ```
 A summary of the MCMCChain is provided below.
@@ -259,12 +267,12 @@ In the following code block, the function `stepping_stone` extracts that margina
 
 ```julia
 mll_tet1 = stepping_stone(pt_tet1)
-mll_tet4 = stepping_stone(tet4_model)
+mll_tet4 = stepping_stone(pt_tet4)
 ```
 
 ## Compute the Bayes Factor
 
-The bayes factor is obtained by exponentiating the difference between marginal log likelihoods. Recall that TET1 was the data-generating model.  As expected, the value of `3.39` indicates that the data are `3.39` times more likely under TET1, the data-generating model, than TET4
+The bayes factor is obtained by exponentiating the difference between marginal log likelihoods. Recall that TET1 was the data-generating model.  As expected, the value of `3.39` indicates that the data are `3.39` times more likely under the data-generating model, TET1, than TET4.
 
 ```julia
 bf = exp(mll_tet1 - mll_tet4)
