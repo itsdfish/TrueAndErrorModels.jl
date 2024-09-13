@@ -203,7 +203,7 @@ reversal of choices for the second replication.
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ filldist(Uniform(0, 0.5), 2)
     # ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
-    data  ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
+    data ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
 end
 
 """
