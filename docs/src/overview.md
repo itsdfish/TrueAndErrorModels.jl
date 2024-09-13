@@ -1,3 +1,6 @@
+```@raw html
+<img src="https://raw.githubusercontent.com/itsdfish/TrueAndErrorModels.jl/gh-pages/dev/assets/logo_readme.png" alt="drawing" width="900"/>
+```
 # Model Overview
 
 One challenge in evaluating theories of decision making is that data likely reflect a mixture of true preferences and response error. Suppose a person selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$. This response could arise through two different pathways. First, a person may truely prefer $\mathcal{R}$ to $\mathcal{S}$ and report his or her preferences accurately. Alternatively, this person may truely $\mathcal{S}$, but select $\mathcal{R}$ by accident. True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) provides a mathematical framework for distinguishing true preferences from errors in reporting due to various sources, such as trembling hand, failures of memory and/or reasoning, and lapses of attention. 

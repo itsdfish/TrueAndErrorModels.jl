@@ -1,3 +1,7 @@
+```@raw html
+<img src="https://raw.githubusercontent.com/itsdfish/TrueAndErrorModels.jl/gh-pages/dev/assets/logo_readme.png" alt="drawing" width="900"/>
+```
+
 # Turing Models
 
 TrueAndErrorModels.jl ships with off-the-shelf Turing models as described in Birnbaum, & Quispe-Torreblanca, (2018). The models become available when Turing is loaded into your current Julia session along with TrueAndErrorModels. The models have the following naming convention: The prefixes `tet` and `eut` correspond to True and Error Theory and Expected Utility Theory, respectively. The number corresponds to the number of error parameters. More details can be found in API.md.

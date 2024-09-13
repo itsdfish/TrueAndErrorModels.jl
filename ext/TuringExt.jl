@@ -10,13 +10,13 @@ import TrueAndErrorModels: eut2_model
 import TrueAndErrorModels: eut4_model
 
 """
-    tet1_model(data)
+    tet1_model(data::Vector{<:Integer})
 
 A True and Error Theory model with one error parameter: ϵₛ₁ = ϵₛ₂ = ϵᵣ₁ = ϵᵣ₂
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -41,20 +41,20 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function tet1_model(data)
+@model function tet1_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ Uniform(0, 0.5)
     data ~ TrueErrorModel(p, fill(ϵ, 4))
 end
 
 """
-    tet2_model(data)
+    tet2_model(data::Vector{<:Integer})
 
 A True and Error Theory model with two error parameters: ϵₛ₁ = ϵᵣ₁, ϵₛ₂ = ϵᵣ₂
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -79,7 +79,7 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function tet2_model(data)
+@model function tet2_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ filldist(Uniform(0, 0.5), 2)
     # ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
@@ -87,13 +87,13 @@ reversal of choices for the second replication.
 end
 
 """
-    tet4_model(data)
+    tet4_model(data::Vector{<:Integer})
 
 A True and Error Theory model with four error parameters: ϵₛ₁, ϵᵣ₁, ϵₛ₂, ϵᵣ₂
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -118,14 +118,14 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function tet4_model(data)
+@model function tet4_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ filldist(Uniform(0, 0.5), 4)
     data ~ TrueErrorModel(p, ϵ)
 end
 
 """
-    eut1_model(data)
+    eut1_model(data::Vector{<:Integer})
 
 
 An expected utility theory model with one error parameter: ϵₛ₁ = ϵₛ₂ = ϵᵣ₁ = ϵᵣ₂. The preference states of all 
@@ -133,7 +133,7 @@ expected utility theory models are subject to the constraint that pᵣₛ = pₛ
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -158,7 +158,7 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function eut1_model(data)
+@model function eut1_model(data::Vector{<:Integer})
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ Uniform(0, 0.5)
@@ -166,14 +166,14 @@ reversal of choices for the second replication.
 end
 
 """
-    eut2_model(data)
+    eut2_model(data::Vector{<:Integer})
 
 An expected utility theory model with two error parameters: ϵₛ₁ = ϵᵣ₁, ϵₛ₂ = ϵᵣ₂. The preference states of all 
 expected utility theory models are subject to the constraint that pᵣₛ = pₛᵣ = 0.
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -198,23 +198,23 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function eut2_model(data)
+@model function eut2_model(data::Vector{<:Integer})
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ filldist(Uniform(0, 0.5), 2)
     # ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
-    data ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
+    data  ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
 end
 
 """
-    eut4_model(data)
+    eut4_model(data::Vector{<:Integer})
 
 An expected utility theory model with four error parameters: ϵₛ₁, ϵᵣ₁, ϵₛ₂, ϵᵣ₂. The preference states of all 
 expected utility theory models are subject to the constraint that pᵣₛ = pₛᵣ = 0.
 
 # Arguments
 
-- `data`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
@@ -239,7 +239,7 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-@model function eut4_model(data)
+@model function eut4_model(data::Vector{<:Integer})
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ filldist(Uniform(0, 0.5), 4)
