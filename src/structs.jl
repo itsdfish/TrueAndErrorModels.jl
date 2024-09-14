@@ -30,6 +30,10 @@ data = rand(dist, 200)
 logpdf(dist, data)
 ```
 
+# Documentation 
+
+Full documentation can be found at https://itsdfish.github.io/TrueAndErrorModels.jl/dev/
+
 # References
 
 Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.
