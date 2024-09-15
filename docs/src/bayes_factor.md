@@ -16,11 +16,11 @@ The Bayes factor is the likelihood of the data $\mathbf{Y} = \left[y_1,y_2, \dot
 
 ``\frac{\pi(\mathcal{M}_i \mid \mathbf{Y})}{\pi(\mathcal{M}_j \mid \mathbf{Y})} = \frac{\pi(\mathcal{M}_i)}{\pi(\mathcal{M}_j)} \mathrm{BF}_{i,j}.``
 
-The term on the left hand side is the posterior odds, the first term on the right hand side is the prior odds, and ``\mathrm{BF}_{i,j}`` is the Bayes factor for $\mathcal{M}_i$ vs. $\mathcal{M}_j$.  In the equation above, ``\mathrm{BF}_{i,j}`` functions as a conversion factor, which converts prior odds into posterior odds. Thus,  the Bayes factor is as the factor by which prior odds must be updated in light of the data. This interpretation is important because demonstrates that the prior odds should be updated by the same factor even if there is disagreement over the prior odds. The Bayes factor can also be written as the ratio of marginal likelihoods as follows: 
+The term on the left hand side is the posterior odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$, $\pi$ is the posterior probability, the first term on the right hand side is the prior odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$, and ``\mathrm{BF}_{i,j}`` is the Bayes factor for $\mathcal{M}_i$ vs. $\mathcal{M}_j$.  In the equation above, ``\mathrm{BF}_{i,j}`` functions as a conversion factor between prior odds and posterior odds. Thus,  the Bayes factor is as the factor by which prior odds must be updated in light of the data. This interpretation is important because demonstrates that the prior odds should be updated by the same factor even if there is disagreement over the prior odds. The Bayes factor can also be written as the ratio of marginal likelihoods as follows: 
 
 ``\mathrm{BF}_{i,j} = \frac{f(\mathbf{Y} \mid \mathcal{M}_i)}{f(\mathbf{Y} \mid \mathcal{M}_j)}``,
 
-where the marginal likelihood of $\mathcal{M}_i$ is given by:
+where $f$ is the likelihood function of $\mathcal{M}_i$, and the marginal likelihood of $\mathcal{M}_i$ is given by:
 
 ``f(\mathbf{Y} \mid \mathcal{M}_i) = \int_{\boldsymbol{\theta}\in \boldsymbol{\Theta}_i} f(\mathbf{Y} \mid \boldsymbol{\theta}, \mathcal{M}_i) \pi(\boldsymbol{\theta} \mid \mathcal{M}_i) d \boldsymbol{\theta}``.
 
@@ -44,11 +44,14 @@ The following code blocks define the models along with their prior distributions
 
 ### TET4 Model
 
-The TET4 model is described in detail on the page called [model overview](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/overview/). The *4* in TET4 refers to the number of error probability parameters, which are described below. The TET4 model has four true preference state parameters which collectively form the joint probability distribution over preference states RR, RS, SR, SS, where R represents a true preference for the risky option, S represents a true preference for the safe option, and the position corresponds to choice set. In the TET4 model, the only constraint is that $p_i \geq 0, \forall i$ and
+The TET4 model is described in detail on the page called [model overview](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/overview/). The *4* in TET4 refers to the number of error probability parameters, which are described below. The TET4 model has four true preference state parameters which collectively form the joint probability distribution over preference states $R_1,R_2$, $R_1,S_2, $S_1,R_2$, $S_1S_2$, where R represents a true preference for the risky option, S represents a true preference for the safe option, and the subscript corresponds to choice set. The joint preference states are:
 
-``\sum_{i=1}^4 p_i = 1``
+- ``p_{\mathrm{R_1R_2}}``: the probability of prefering the risky option in both choice sets
+- ``p_{\mathrm{R_1S_2}}``: the probability of prefering the risky option in the first choice set and prefering the safe option in the second choice set
+- ``p_{\mathrm{S_1R_2}}``: the probability of prefering the safe option in the first choice set and prefering the risky option in the second choice set
+- ``p_{\mathrm{S_1S_2}}``: the probability of prefering the safe option in both choice sets
 
-As its namesake implies, the TET4 model also has four error probability parameters:
+subject to the constraint that ``p_{\mathrm{R_1R_2}} + p_{\mathrm{R_1S_2}} + p_{\mathrm{S_1R_2}} + p_{\mathrm{S_1S_2}} = 1``, and $p_i \geq 0, \forall i$. As its namesake implies, the TET4 model also has four error probability parameters:
 
 - ``\epsilon_{\mathrm{S}_1}``: the error probability of selecting $\mathcal{S}_1$ given that $\mathcal{R}_1$ is prefered.
 - ``\epsilon_{\mathrm{S}_2}``: the error probability of selecting $\mathcal{S}_2$ given that $\mathcal{R}_2$ is prefered.
