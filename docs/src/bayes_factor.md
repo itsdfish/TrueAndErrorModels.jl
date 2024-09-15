@@ -90,10 +90,10 @@ where $\mathbf{p}$ is a vector of four preference state parameters, and error pr
 
  In our demonstration, we will use the TET1 as the data-generating model. In the code block below, we will create a model object and generate 2 simulated responses from all 100 simulated subjects for a total of 200 responses. In this model, we assume that the probability of a true preference state RR is relatively high, and the probability of other preference states decreases as they become more difference from RR:
 
-- ``p_{\mathrm{RR}} = .65``
-- ``p_{\mathrm{RS}} = .15``
-- ``p_{\mathrm{SR}} = .15``
-- ``p_{\mathrm{SS}} = .05``
+- ``p_{\mathrm{R_1R_2}} = .65``
+- ``p_{\mathrm{R_1S_2}} = .15``
+- ``p_{\mathrm{S_1R_2}} = .15``
+- ``p_{\mathrm{S_1S_2}} = .05``
 
 In addition, our model assumes the error probabilities are constrained to be equal:
 
