@@ -14,19 +14,15 @@ Before proceeding to the code, we provide a brief overview of the Bayes factor. 
 
 The Bayes factor is the likelihood of the data $\mathbf{Y} = \left[y_1,y_2, \dots, y_n\right]$ under model $\mathcal{M}_i$ vs. model $\mathcal{M}_j$. The relationship between the Bayes Factor and the posterior of odds of $\mathcal{M}_i$ vs. $\mathcal{M}_j$ can be stated as:
 
-``\frac{p(\mathcal{M}_i \mid \mathbf{Y})}{p(\mathcal{M}_j \mid \mathbf{Y})} = \frac{p(\mathcal{M}_i)}{p(\mathcal{M}_j)} \mathrm{BF}_{i,j}.``
+``\frac{\pi(\mathcal{M}_i \mid \mathbf{Y})}{\pi(\mathcal{M}_j \mid \mathbf{Y})} = \frac{\pi(\mathcal{M}_i)}{\pi(\mathcal{M}_j)} \mathrm{BF}_{i,j}.``
 
-The term on the left hand side is the posterior odds, the first term on the right hand side is the prior odds, and ``\mathrm{BF}_{i,j}`` is the Bayes factor for $\mathcal{M}_i$ vs. $\mathcal{M}_j$.  In the equation above, ``\mathrm{BF}_{i,j}`` functions as a conversion factor, which converts prior odds into posterior odds. Thus,  the Bayes factor is as the factor by which prior odds must be updated in light of the data. This interpretation becomes even more appearent by solving for ``\mathrm{BF}_{i,j}``:
+The term on the left hand side is the posterior odds, the first term on the right hand side is the prior odds, and ``\mathrm{BF}_{i,j}`` is the Bayes factor for $\mathcal{M}_i$ vs. $\mathcal{M}_j$.  In the equation above, ``\mathrm{BF}_{i,j}`` functions as a conversion factor, which converts prior odds into posterior odds. Thus,  the Bayes factor is as the factor by which prior odds must be updated in light of the data. This interpretation is important because demonstrates that the prior odds should be updated by the same factor even if there is disagreement over the prior odds. The Bayes factor can also be written as the ratio of marginal likelihoods as follows: 
 
-``\mathrm{BF}_{i,j} =  \left. \frac{p(\mathcal{M}_i \mid \mathbf{Y})}{p(\mathcal{M}_j \mid \mathbf{Y})} \middle/ \frac{p(\mathcal{M}_i)}{p(\mathcal{M}_j)} \right.``
-
-This interpretation is important because demonstrates that the prior odds should be updated by the same factor even if there is disagreement over the prior odds. The Bayes factor can also be written as the ratio of marginal likelihoods as follows: 
-
-``\mathrm{BF}_{i,j} = \frac{p(\mathbf{Y} \mid \mathcal{M}_i)}{p(\mathbf{Y} \mid \mathcal{M}_j)}``,
+``\mathrm{BF}_{i,j} = \frac{f(\mathbf{Y} \mid \mathcal{M}_i)}{f(\mathbf{Y} \mid \mathcal{M}_j)}``,
 
 where the marginal likelihood of $\mathcal{M}_i$ is given by:
 
-``p(\mathbf{Y} \mid \mathcal{M}_i) = \int_{\boldsymbol{\theta}\in \boldsymbol{\Theta}_i} p(\mathbf{Y} \mid \boldsymbol{\theta}, \mathcal{M}_i) p(\boldsymbol{\theta} \mid \mathcal{M}_i) d \boldsymbol{\theta}``.
+``f(\mathbf{Y} \mid \mathcal{M}_i) = \int_{\boldsymbol{\theta}\in \boldsymbol{\Theta}_i} f(\mathbf{Y} \mid \boldsymbol{\theta}, \mathcal{M}_i) \pi(\boldsymbol{\theta} \mid \mathcal{M}_i) d \boldsymbol{\theta}``.
 
 In the equation above, $\boldsymbol{\Theta}_i$ is the parameter space for $\mathcal{M}_i$ and $\boldsymbol{\theta} \in \boldsymbol{\Theta}$ is a vector of parameters. Under this interpretation, the marginal likelihood represents its average prior predictive ability of of $\mathcal{M}_i$. One benefit of the Bayes factor is that the marginal likelihood accounts for model flexibility because the density of the prior distribution must be "rationed" across the parameter space (i.e., must integrate to 1). Consequentially, the predictions of a model with a diffuse distribution in a high dimensional parameter space will be penalized due to its low prior density. 
 
@@ -62,9 +58,13 @@ As its namesake implies, the TET4 model also has four error probability paramete
 The only constraint is that $\epsilon_i \in [0, .50],\forall i$. The TET4 model is automatically loaded when Turing is loaded into your Julia session. The `tet4_model` function accepts a vector of response frequencies. The prior distributions are as follows:
 
 ``
-\mathbf{p} ~ \mathrm{Dirichlet}([1,1,1,1])
-\boldsymbol{epsilon} ~ \mathrm{Uniform}(0, .5)
+\mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
 ``
+
+``
+\boldsymbol{\epsilon} \sim \mathrm{Uniform}(0, .5)
+``
+
 where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{epsilon}$ is a vector of error probabilities. 
 
 ## TET1 Model 
@@ -111,18 +111,7 @@ The next step is to run the `pigeons` function to estimate the marginal log like
 
 ### TET4
 
-As the name implies, the TET4 model has four error parameters: ``\epsilon_{\mathrm{S}_1}, \epsilon_{\mathrm{S}_S},\epsilon_{\mathrm{R}_1},\epsilon_{\mathrm{R}_2}``.  The Turing model `tet4_model` is automatically exported when Turing is loaded into your Julia session. The prior distributions for `tet4_model` are defined as: 
-
-``
-\mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
-``
-
-``
-\boldsymbol{\epsilon} \sim \mathrm{Uniform}(0, .5),
-``
-
-where where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{\epsilon}$ is a vector of error parameters.
-
+The code block below estimates the marginal log likelihood of the the TET4 model. This involves passing the `tet4_model` to the function `pigeons` along with the vector of response frequencies `data`.
 
 ```julia
 pt_tet4 = pigeons(target=TuringLogPotential(tet4_model(data)), record=[traces])

@@ -69,9 +69,11 @@ The TET1 model is automatically loaded when Turing is loaded into your Julia ses
 ``
 \mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
 ``
+
 ``
 \epsilon \sim \mathrm{Uniform}(0, .5)
 ``
+
 where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. In the TET1 model, we assume ``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``. 
 
 ## Estimate the Parameters
