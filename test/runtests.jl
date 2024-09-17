@@ -81,3 +81,11 @@ end
 
     @test length(methods(tet1_model)) == 2
 end
+
+@safetestset "one methods to_table" begin
+    using TrueAndErrorModels
+    using Test
+    using NamedArrays
+
+    @test length(methods(to_table)) == 1
+end

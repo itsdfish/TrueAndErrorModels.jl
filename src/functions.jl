@@ -163,3 +163,26 @@ function logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})
 end
 
 loglikelihood(dist::TrueErrorModel, data::AbstractVector{<:Integer}) = logpdf(dist, data)
+
+# for verification of reshape
+function get_response_labels()
+    labels = [
+        "RR,RR",
+        "RR,RS",
+        "RR,SR",
+        "RR,SS",
+        "RS,RR",
+        "RS,RS",
+        "RS,SR",
+        "RS,SS",
+        "SR,RR",
+        "SR,RS",
+        "SR,SR",
+        "SR,SS",
+        "SS,RR",
+        "SS,RS",
+        "SS,SR",
+        "SS,SS"
+    ]
+    return reshape(labels, 4, 4)
+end

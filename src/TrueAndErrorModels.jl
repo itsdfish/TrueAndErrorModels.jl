@@ -19,6 +19,9 @@ export eut1_model
 export eut2_model
 export eut4_model
 
+export to_table
+export get_response_labels
+
 include("structs.jl")
 include("functions.jl")
 include("ext_functions.jl")
