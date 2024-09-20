@@ -168,7 +168,7 @@ Computes the log loglikelihood of the data for a True and Error Model.
     a risky option R and a safe option S.
 - `data::AbstractVector{<:Integer}`: a vector of response pattern frequencies. The elements of this vector are 
     ordered as follows:
-    
+
 1.  RR,RR
 2.  RR,RS
 3.  RR,SR
