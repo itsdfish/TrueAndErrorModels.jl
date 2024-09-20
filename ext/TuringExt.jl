@@ -9,6 +9,12 @@ import TrueAndErrorModels: eut1_model
 import TrueAndErrorModels: eut2_model
 import TrueAndErrorModels: eut4_model
 
+import DynamicPPL: reconstruct
+import DynamicPPL: vectorize
+import TrueAndErrorModels: predict_distribution
+using Turing: @model
+using Turing: @submodel
+
 """
     tet1_model(data::Vector{<:Integer})
 
@@ -44,7 +50,9 @@ reversal of choices for the second replication.
 @model function tet1_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ Uniform(0, 0.5)
-    data ~ TrueErrorModel(p, fill(ϵ, 4))
+    ϵ′ = fill(ϵ, 4)
+    data ~ TrueErrorModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
 end
 
 """
@@ -82,8 +90,10 @@ reversal of choices for the second replication.
 @model function tet2_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ filldist(Uniform(0, 0.5), 2)
+    ϵ′ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]]
     # ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
-    data ~ TrueErrorModel(; p, ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
+    data ~ TrueErrorModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
 end
 
 """
@@ -122,6 +132,7 @@ reversal of choices for the second replication.
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ filldist(Uniform(0, 0.5), 4)
     data ~ TrueErrorModel(p, ϵ)
+    return (; p, ϵ)
 end
 
 """
@@ -162,7 +173,10 @@ reversal of choices for the second replication.
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ Uniform(0, 0.5)
-    data ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = fill(ϵ, 4))
+    p′ = [p[1], 0, 0, p[2]]
+    ϵ′ = fill(ϵ, 4)
+    data ~ TrueErrorModel(; p = p′, ϵ = ϵ′)
+    return (; p = p′, ϵ = ϵ′)
 end
 
 """
@@ -202,8 +216,11 @@ reversal of choices for the second replication.
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ filldist(Uniform(0, 0.5), 2)
+    p′ = [p[1], 0, 0, p[2]]
+    ϵ′ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]]
     # ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂
-    data ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ = [ϵ[1], ϵ[2], ϵ[1], ϵ[2]])
+    data ~ TrueErrorModel(; p = p′, ϵ = ϵ′)
+    return (; p = p′, ϵ = ϵ′)
 end
 
 """
@@ -243,7 +260,42 @@ reversal of choices for the second replication.
     # [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]
     p ~ Dirichlet(fill(1, 2))
     ϵ ~ filldist(Uniform(0, 0.5), 4)
-    data ~ TrueErrorModel(; p = [p[1], 0, 0, p[2]], ϵ)
+    p′ = [p[1], 0, 0, p[2]]
+    data ~ TrueErrorModel(; p′, ϵ)
+    return (; p′, ϵ)
 end
+
+"""
+    predict_distribution(dist, args...; model, func, n_samples, kwargs...)
+
+Generates a predictive distribution for a statistic defined by `func`.
+
+# Arguments 
+
+- `dist::Distribution`: a distribution type which accepts parameters as keyword arguments 
+- `args...` optional positional arguments passed to function `func`
+
+# Keywords
+
+- `model`: a Turing model which returns a `NamedTuple` of parameters 
+- `func`: a function which computes a statistic of simulated data. The function signature is `func(data, args...; kwargs...)`
+- `n_samples`: the number of observations to sample from `dist`
+- `kwargs...`: optional keyword arguments passed to `func`
+"""
+@model function predict_distribution(
+    dist,
+    args...;
+    model,
+    func = (x, args...; kwargs...) -> x,
+    n_samples,
+    kwargs...
+)
+    @submodel parms = model
+    sim_data = rand(dist(; parms...), n_samples)
+    return func(sim_data, args...; kwargs...)
+end
+
+#vectorize(d::SSM2D, r::NamedTuple) = [r...]
+reconstruct(d::AbstractTrueErrorModel, data::Vector{<:Integer}) = deepcopy(data)
 
 end

@@ -19,6 +19,7 @@ export eut1_model
 export eut2_model
 export eut4_model
 
+export predict_distribution
 export to_table
 export get_response_labels
 

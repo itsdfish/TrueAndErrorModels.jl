@@ -119,7 +119,7 @@ end
 """
     rand(dist::TrueErrorModel, n_trials::Int)
 
-Generate 
+Generate a vector of simulated response frequencies based on the provided True and Error Model.
 
 - `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
 a risky option R and a safe option S.
@@ -127,7 +127,7 @@ a risky option R and a safe option S.
 
 # Output 
 
-- `data::Vector{<:Int}`: vector of joint response frequencies with the following elements:
+- `data::Vector{<:Inte}`: vector of joint response frequencies with the following elements:
 
 1.  RR,RR
 2.  RR,RS
@@ -157,6 +157,41 @@ function rand(dist::TrueErrorModel, n_trials::Int)
     return rand(Multinomial(n_trials, probs))
 end
 
+"""
+    logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})
+
+Computes the log loglikelihood of the data for a True and Error Model. 
+
+# Arguments
+
+- `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
+    a risky option R and a safe option S.
+- `data::AbstractVector{<:Integer}`: a vector of response pattern frequencies. The elements of this vector are 
+    ordered as follows:
+    
+1.  RR,RR
+2.  RR,RS
+3.  RR,SR
+4.  RR,SS
+5.  RS,RR
+6.  RS,RS
+7.  RS,SR
+8.  RS,SS
+9.  SR,RR
+10. SR,RS
+11. SR,SR
+12. SR,SS
+13. SS,RR
+14. SS,RS
+15. SS,SR
+16. SS,SS
+
+where S corresponds to choosing the safe option, R corresponds to choosing the risky option, each pair (XX)
+is the joint choice for choice sets 1 and two, respectively for a given replication. The first pair corresponds to 
+the first replication, and the second pair corresponds to the second replication. For example, SR,RS indicates the selection 
+of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
+reversal of choices for the second replication. 
+"""
 function logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})
     probs = compute_probs(dist)
     return logpdf(Multinomial(sum(data), probs), data)
@@ -164,7 +199,11 @@ end
 
 loglikelihood(dist::TrueErrorModel, data::AbstractVector{<:Integer}) = logpdf(dist, data)
 
-# for verification of reshape
+"""
+    get_response_labels()
+
+Returns a vector of response pattern labels.
+"""
 function get_response_labels()
     labels = [
         "RR,RR",
@@ -184,5 +223,5 @@ function get_response_labels()
         "SS,SR",
         "SS,SS"
     ]
-    return reshape(labels, 4, 4)
+    #return reshape(labels, 4, 4)
 end

@@ -3,7 +3,7 @@
 ```
 # Model Overview
 
-One challenge in evaluating theories of decision making is that data likely reflect a mixture of true preferences and response error. Suppose a person selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$. This response could arise through two different pathways. First, a person may truely prefer $\mathcal{R}$ to $\mathcal{S}$ and report his or her preferences accurately. Alternatively, this person may truely $\mathcal{S}$, but select $\mathcal{R}$ by accident. True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) provides a mathematical framework for distinguishing true preferences from errors in reporting due to various sources, such as trembling hand, failures of memory and/or reasoning, and lapses of attention. 
+One challenge in evaluating theories of decision making is that data likely reflect a mixture of true preferences and response error. Suppose a person selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$. This response could arise through two different pathways. First, a person may truely prefer $\mathcal{R}$ over $\mathcal{S}$ and report his or her preferences accurately. Alternatively, this person may truely prefer $\mathcal{S}$, but select $\mathcal{R}$ accidentially due to various factors,  such as trembling hand, failures of memory and/or reasoning, and lapses of attention. True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) provides a mathematical framework for distinguishing true preferences from errors.  
 
 # Task
 
@@ -19,13 +19,13 @@ where $\mathcal{R}$ represents a risky gamble and $\mathcal{S}$ represents a saf
  
 ``\mathcal{G} = (x_{1}, p_{1}; \dots; x_{n}, p_{n}),`` 
 
-where outcome $x_i$ occurs with probability $p_i$. The key difference between gambles $\mathcal{R}$ and $\mathcal{S}$ is that $\mathrm{Var}[\mathcal{R}] > \mathrm{Var}[\mathcal{S}]$. An important requirement for TET is that subjects select an option from both choice sets at least twice within the same session. Assuming two replications each, the resulting joint response set contains 16 patterns: 
+where outcome $x_i$ occurs with probability $p_i$. The key difference between gambles $\mathcal{R}$ and $\mathcal{S}$ is that $\mathrm{Var}[\mathcal{R}] > \mathrm{Var}[\mathcal{S}]$. An important requirement for TET is that subjects select an option from both choice sets at least twice within the same session. Assuming two replications each, the resulting joint response set contains 16 possible response patterns: 
 
 ``\{(\mathcal{R}_1\mathcal{R}_2,\mathcal{R}_1\mathcal{R}_2),(\mathcal{R}_1\mathcal{R}_2,\mathcal{R}_1\mathcal{S}_2), \dots, (\mathcal{S}_1\mathcal{S}_2,\mathcal{S}_1\mathcal{S}_2)\}``.
 
 # True and Error Theory
 
-As noted above, TET provides a mathematical framework for distinguishing between true preferences and errors in reporting errors due to various sources, such as trembling hand, failures of memory and/or reasoning, and lapses of attention. According to TET, there are four possible preference states, one for each possible option: RR, RS, SR, SS. For example, preference state SR indicates a person pefers the safe option in the first choice set, and the risky option in the second choice set. If this person responded without error, his or her response pattern would be ``(\mathcal{S}_1\mathcal{R}_2,\mathcal{S}_1\mathcal{R}_2)``.
+As noted above, TET provides a mathematical framework for distinguishing between true preferences and response errors. According to TET, there are four possible preference states, one for each possible option: RR, RS, SR, SS. For example, preference state SR indicates a person pefers the safe option in the first choice set, and the risky option in the second choice set. If this person responded without error, his or her response pattern would be ``(\mathcal{S}_1\mathcal{R}_2,\mathcal{S}_1\mathcal{R}_2)``.
 
 ## Parameters
 
