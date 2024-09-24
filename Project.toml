@@ -19,7 +19,7 @@ TuringExt = "Turing"
 
 [compat]
 Distributions = "0.25.0"
-DynamicPPL = "0.28"
+DynamicPPL = "0.28, 0.29"
 NamedArrays = "0.10.0"
 Random = "1"
 SafeTestsets = "0.1.0"
