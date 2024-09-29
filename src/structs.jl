@@ -11,7 +11,7 @@ and `ϵₛ₁` represents the error probability of choosing safe given a true pr
 # Fields 
 
 - `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
-- `p::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂]`.
+- `ϵ::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂]`.
 
 
 # Constructors

@@ -101,6 +101,7 @@ violin(
     xticks = (1:length(labels), labels),
     ylabel = "Response Probability",
     leg = false,
+    grid = false,
     xrotation = 90
 )
 scatter!(1:16, data ./ sum(data), color = :black)

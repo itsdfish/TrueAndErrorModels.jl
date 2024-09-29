@@ -127,7 +127,7 @@ a risky option R and a safe option S.
 
 # Output 
 
-- `data::Vector{<:Inte}`: vector of joint response frequencies with the following elements:
+- `data::Vector{<:Integer}`: vector of joint response frequencies with the following elements:
 
 1.  RR,RR
 2.  RR,RS

@@ -68,13 +68,13 @@ The only constraint is that $\epsilon_i \in [0, .50],\forall i$. The TET4 model 
 \boldsymbol{\epsilon} \sim \mathrm{Uniform}(0, .5)
 ``
 
-where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{epsilon}$ is a vector of error probabilities. 
+where $\mathbf{p}$ is a vector of four preference state parameters, and $\boldsymbol{\epsilon}$ is a vector of error probabilities. 
 
 ## TET1 Model 
 
 As the name implies, the TET1 model constrains all error probability parameters to be equal:
 
-``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``
+``\epsilon = \epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_2} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2}``
 
 Otherwise, TET1 and TET4 are identical. The TET1 model is also automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies, and using the following prior distributions over the parameters:
 
