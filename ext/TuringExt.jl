@@ -262,7 +262,7 @@ reversal of choices for the second replication.
     ϵ ~ filldist(Uniform(0, 0.5), 4)
     p′ = [p[1], 0, 0, p[2]]
     data ~ TrueErrorModel(; p′, ϵ)
-    return (; p′, ϵ)
+    return (; p = p′, ϵ)
 end
 
 """
