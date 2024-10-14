@@ -11,10 +11,11 @@ The first step is to load the required packages. You will need to install each p
 environment in order to run the code locally. We will also set a random number generator so that the results are reproducible.
 
 ```julia
-using Turing
-using TrueAndErrorModels
 using Random
 using StatsPlots
+using TrueAndErrorModels
+using Turing
+using TuringUtilities
 Random.seed!(6521)
 ```
 
