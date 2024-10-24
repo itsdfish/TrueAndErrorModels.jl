@@ -89,3 +89,26 @@ end
 
     @test length(methods(to_table)) == 1
 end
+
+@safetestset "test Turing" begin
+    using TrueAndErrorModels
+    using Test
+    using Turing
+    using TuringUtilities
+
+    dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+    data = rand(dist, 200)
+
+    model = tet1_model(data)
+    chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+
+    pred_model = predict_distribution(
+        TrueErrorModel;
+        model,
+        func = x -> x ./ sum(x),
+        n_samples = 200
+    )
+
+    post_preds = generated_quantities(pred_model, chains)
+    post_preds = stack(post_preds, dims = 1)
+end
