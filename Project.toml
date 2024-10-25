@@ -8,6 +8,7 @@ Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
+TuringUtilities = "35dc62cd-6c01-44e1-a736-6cc36bfce0cc"
 
 [weakdeps]
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
@@ -24,6 +25,7 @@ NamedArrays = "0.10.0"
 Random = "1"
 SafeTestsets = "0.1.0"
 Turing = "0.34, 0.35"
+TuringUtilities = "0.1.1"
 julia = "1.6.7"
 
 [extras]
@@ -31,3 +33,6 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["NamedArrays", "Test", "Turing"]
+
+[sources]
+TuringUtilities = {url = "https://github.com/itsdfish/TuringUtilities.jl"}
