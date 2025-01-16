@@ -3,7 +3,7 @@
 ```
 # Model Overview
 
-One challenge in evaluating theories of decision making is that data likely reflect a mixture of true preferences and response error. Suppose a person selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$. This response could arise through two different pathways. First, a person may truely prefer $\mathcal{R}$ over $\mathcal{S}$ and report his or her preferences accurately. Alternatively, this person may truely prefer $\mathcal{S}$, but select $\mathcal{R}$ accidentially due to various factors,  such as trembling hand, failures of memory and/or reasoning, and lapses of attention. True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) provides a mathematical framework for distinguishing true preferences from errors.  
+One challenge in evaluating theories of decision making is that data likely reflect a mixture of true preferences and response error. Suppose a person selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$. This response could arise through two different pathways. First, a person may truly prefer $\mathcal{R}$ over $\mathcal{S}$ and report his or her preferences accurately. Alternatively, this person may truly prefer $\mathcal{S}$, but select $\mathcal{R}$ accidentially due to various factors,  such as trembling hand, failures of memory and/or reasoning, and lapses of attention. True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) provides a mathematical framework for distinguishing true preferences from errors.  
 
 # Task
 
