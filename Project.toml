@@ -19,7 +19,7 @@ TuringExt = "Turing"
 
 [compat]
 Distributions = "0.25.0"
-DynamicPPL = "0.28, 0.29, 0.30.0, 0.31.0, 0.32.0"
+DynamicPPL = "0.28, 0.29, 0.30.0, 0.31.0, 0.32.0, 0.33.0, 0.34.0"
 NamedArrays = "0.10.0"
 Random = "1"
 TestItemRunner = "1.0.5"
