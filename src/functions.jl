@@ -197,7 +197,8 @@ function logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
     return logpdf(Multinomial(sum(data), probs), data)
 end
 
-loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) = logpdf(dist, data)
+loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) =
+    logpdf(dist, data)
 
 """
     get_response_labels()
