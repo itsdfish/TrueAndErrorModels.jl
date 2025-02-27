@@ -1,11 +1,11 @@
 """
-    compute_probs(dist::TrueErrorModel{T})
+    compute_probs(dist::AbstractTrueErrorModel{T})
 
 Computes the joint probability for all 16 response categories
     
 # Arguments
 
-- `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
+- `dist::AbstractTrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
 a risky option R and a safe option S.
 
 # Output 
@@ -35,7 +35,7 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-function compute_probs(dist::TrueErrorModel{T}) where {T}
+function compute_probs(dist::AbstractTrueErrorModel{T}) where {T}
     (; p, ϵ) = dist
     pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ = p
     ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂ = ϵ
@@ -117,11 +117,11 @@ function compute_probs(dist::TrueErrorModel{T}) where {T}
 end
 
 """
-    rand(dist::TrueErrorModel, n_trials::Int)
+    rand(dist::AbstractTrueErrorModel, n_trials::Int)
 
 Generate a vector of simulated response frequencies based on the provided True and Error Model.
 
-- `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
+- `dist::AbstractTrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
 a risky option R and a safe option S.
 - `n_trials`: the number of simulated trials 
 
@@ -152,19 +152,19 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-function rand(dist::TrueErrorModel, n_trials::Int)
+function rand(dist::AbstractTrueErrorModel, n_trials::Int)
     probs = compute_probs(dist)
     return rand(Multinomial(n_trials, probs))
 end
 
 """
-    logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})
+    logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
 
 Computes the log loglikelihood of the data for a True and Error Model. 
 
 # Arguments
 
-- `dist::TrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
+- `dist::AbstractTrueErrorModel{T}`: a distribution object for a True and Error Model for two choices sets, each containing
     a risky option R and a safe option S.
 - `data::AbstractVector{<:Integer}`: a vector of response pattern frequencies. The elements of this vector are 
     ordered as follows:
@@ -192,12 +192,12 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-function logpdf(dist::TrueErrorModel, data::AbstractVector{<:Integer})
+function logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
     probs = compute_probs(dist)
     return logpdf(Multinomial(sum(data), probs), data)
 end
 
-loglikelihood(dist::TrueErrorModel, data::AbstractVector{<:Integer}) = logpdf(dist, data)
+loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) = logpdf(dist, data)
 
 """
     get_response_labels()
@@ -223,5 +223,4 @@ function get_response_labels()
         "SS,SR",
         "SS,SS"
     ]
-    #return reshape(labels, 4, 4)
 end
