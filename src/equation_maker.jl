@@ -1,14 +1,3 @@
-function subscriptnumber(i::Int)
-    if i < 0
-        c = [Char(0x208B)]
-    else
-        c = Char[]
-    end
-    for d in reverse(digits(abs(i)))
-        push!(c, Char(0x2080 + d))
-    end
-    return join(c)
-end
 
 function make_choice_patterns(n_choice_sets, n_reps)
     sub_patterns = collect(Base.product(fill((1, 2), n_choice_sets)...))
@@ -25,20 +14,20 @@ function make_preference_patterns(n_choice_sets)
 end
 
 function make_rep_index(i; constrained)
-    return constrained ? "" : subscriptnumber(i)
+    return constrained ? "" : sub("$i")
 end
 
 function make_preference_parms(preference_patterns)
-    return map(i -> "p" * (subscriptnumber.(i)...), preference_patterns)
+    return map(i -> "p" * (sub.("$i")...), preference_patterns)
 end
 
-function make_error_terms(choice_pattern, preference_pattern; constrained = false)
+function make_error_terms(choice_pattern, preference_pattern; constrained = true)
     error_terms = ""
     n_choice_sets = length(preference_pattern)
     n_reps = length(choice_pattern)
     for r ∈ 1:n_reps
         for i ∈ 1:n_choice_sets
-            ϵ = "ϵ" * subscriptnumber(i) * make_rep_index(r; constrained)
+            ϵ = "ϵ" * sub("$i") * make_rep_index(r; constrained)
             if preference_pattern[i] == choice_pattern[r][i]
                 error_terms *= "(1 - $ϵ)"
             else
@@ -67,20 +56,21 @@ function make_equation_rhs(
     return eq
 end
 
-function make_equations(n_choice_sets, n_reps; constrained = false)
+function make_equations(n_choice_sets, n_reps; constrained = true)
     choice_patterns = make_choice_patterns(n_choice_sets, n_reps)
     preference_patterns = make_preference_patterns(n_choice_sets)
     preference_parms = make_preference_parms(preference_patterns)
     eqs = ""
     i = 1
     for choice_pattern ∈ choice_patterns
+        comment = "# choice pattern: $choice_pattern \n"
         eq = make_equation_rhs(
             preference_parms,
             preference_patterns,
             choice_pattern;
             constrained
         )
-        eqs *= "θ[$i] = \n" * eq * " \n"
+        eqs *= comment * "θ[$i] = \n" * eq * " \n"
         i += 1
     end
     return eqs

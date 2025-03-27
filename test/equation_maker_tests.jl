@@ -1,4 +1,4 @@
-@testitem "sums to 1" begin 
+@testitem "sums to 1" begin
     using Distributions
     using TrueAndErrorModels
     using TrueAndErrorModels: make_equations
@@ -8,13 +8,11 @@
 
     n_choice_sets = 2
     n_reps = 2
+    constrained = false
     θ = zeros((n_reps * 2)^n_choice_sets)
     eqs = make_preference_sampler(n_choice_sets) * "\n"
-    eqs *= make_error_sampler(n_choice_sets, n_reps) * "\n"
-
-
-    eqs *= make_equations(n_choice_sets, n_reps; constrained = false)
-
+    eqs *= make_error_sampler(n_choice_sets, n_reps; constrained) * "\n"
+    eqs *= make_equations(n_choice_sets, n_reps; constrained)
 
     dir = pwd()
     cd(@__DIR__)
@@ -30,4 +28,13 @@
     end
     rm("temp.jl")
     cd(dir)
+
+    # ϵ₂₍₁₎
+    # ϵ₃₍₁₎
+    # ϵ₁₍₂₎ = .2
+    # ϵ₃₍₂₎
+    # ϵ₂₍₃₎
+    # ϵ₁₍₃₎
+
+    # 1,2,3 1,3,3: (1 - ϵ₂₍₁₎ - ϵ₃₍₁₎)
 end

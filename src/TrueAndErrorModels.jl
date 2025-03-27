@@ -1,5 +1,6 @@
 module TrueAndErrorModels
 
+using Subscripts: sub
 import Distributions: Multinomial
 import Distributions: DiscreteMultivariateDistribution
 import Distributions: logpdf
