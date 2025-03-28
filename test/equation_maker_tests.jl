@@ -6,13 +6,33 @@
 
     include("utilities.jl")
 
-    n_choice_sets = 2
+    n_choice_sets = 3
     n_reps = 2
-    constrained = false
-    θ = zeros((n_reps * 2)^n_choice_sets)
-    eqs = make_preference_sampler(n_choice_sets) * "\n"
-    eqs *= make_error_sampler(n_choice_sets, n_reps; constrained) * "\n"
-    eqs *= make_equations(n_choice_sets, n_reps; constrained)
+    n_options = 2
+    constrain_choice_set = false
+    constrain_conditional = true
+    constrain_option = true
+    θ = zeros((n_options)^(n_reps + n_choice_sets))
+    eqs = make_preference_sampler(n_choice_sets, n_options) * "\n"
+    #eqs *= make_error_sampler(n_choice_sets, n_options, n_reps; constrained = false) * "\n"
+    eqs *= make_equations(
+        n_choice_sets,
+        n_options,
+        n_reps;
+        constrain_choice_set,
+        constrain_conditional,
+        constrain_option
+    )
+
+    # p(1 | 1)
+    # p(2 | 1)
+    # p(3 | 1)
+    # p(1 | 2)
+    # p(2 | 2)
+    # p(3 | 2)
+    # p(1 | 3)
+    # p(2 | 3)
+    # p(3 | 3)
 
     dir = pwd()
     cd(@__DIR__)
