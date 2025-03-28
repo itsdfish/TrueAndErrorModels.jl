@@ -1,22 +1,51 @@
 using TrueAndErrorModels: make_preference_parms
 using TrueAndErrorModels: make_preference_patterns
-using TrueAndErrorModels: constrain_index
+using TrueAndErrorModels: add_choice_set_index
+using TrueAndErrorModels: add_conditional_index
+using TrueAndErrorModels: add_option_index
 using Subscripts: sub
 
-function make_error_parms(n_choice_sets, n_reps; constrained)
+function make_error_parms(
+    n_choice_sets,
+    n_options;
+    constrain_choice_set,
+    constrain_conditional,
+    constrain_option
+)
+    n_opt_constrained = constrain_option ? 1 : n_options
+    n_choice_constrained = constrain_choice_set ? 1 : n_choice_sets
     error_parms = ""
-    for r ∈ 1:n_reps
-        for i ∈ 1:n_choice_sets
-            error_parms *= "ϵ" * sub("$i") * constrain_index(r; constrained)
-            error_parms *= (r == n_reps) && (i == n_choice_sets) ? "" : ", "
+    for o1 ∈ 1:n_opt_constrained
+        for o2 ∈ 1:n_opt_constrained
+            for c ∈ 1:n_choice_constrained
+                (o1 == o2) && !constrain_option ? continue : nothing
+                error_parms *=
+                    "ϵ" * add_option_index(o2; constrain_option) *
+                    add_choice_set_index(c; constrain_choice_set) *
+                    add_conditional_index(o1; constrain_conditional)
+                error_parms *= ", "
+            end
         end
     end
     return error_parms
 end
 
-function make_error_sampler(n_choice_sets, n_options, n_reps; constrained)
-    parms = make_error_parms(n_choice_sets, n_reps; constrained)
-    return parms * " = rand(Uniform(0, .50), $(n_choice_sets * n_reps))"
+function make_error_sampler(
+    n_choice_sets,
+    n_options;
+    constrain_choice_set,
+    constrain_conditional,
+    constrain_option
+)
+    parms = make_error_parms(
+        n_choice_sets,
+        n_options;
+        constrain_choice_set,
+        constrain_conditional,
+        constrain_option
+    )
+    n = count(x -> occursin(x, ","), parms)
+    return parms * " = rand(Uniform(0, .50), $n)"
 end
 
 function make_preference_sampler(n_choice_sets, n_options)

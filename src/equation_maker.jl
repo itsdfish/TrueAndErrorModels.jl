@@ -65,24 +65,6 @@ function make_error_terms(
     return error_terms
 end
 
-# function make_error_terms(choice_pattern, preference_pattern; constrained = true)
-#     error_terms = ""
-#     n_choice_sets = length(preference_pattern)
-#     n_reps = length(choice_pattern)
-#     for r ∈ 1:n_reps
-#         for i ∈ 1:n_choice_sets
-#             ϵ = "ϵ" * sub("$i") * constrain_index(r; constrained)
-#             if preference_pattern[i] == choice_pattern[r][i]
-#                 error_terms *= "(1 - $ϵ)"
-#             else
-#                 error_terms *= "$ϵ"
-#             end
-#             error_terms *= (r == n_reps) && (i == n_choice_sets) ? "" : " * "
-#         end
-#     end
-#     return error_terms
-# end
-
 function make_equation_rhs(
     preference_parms,
     preference_patterns,
@@ -116,7 +98,7 @@ function make_equations(
     n_reps;
     constrain_choice_set,
     constrain_conditional,
-    constrain_option,
+    constrain_option
 )
     choice_patterns = make_choice_patterns(n_choice_sets, n_options, n_reps)
     preference_patterns = make_preference_patterns(n_choice_sets, n_options)
