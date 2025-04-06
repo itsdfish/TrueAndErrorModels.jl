@@ -116,24 +116,24 @@
 # end
 
 # @testitem "eut4_model" begin
-    # using TrueAndErrorModels
-    # using Test
-    # using Turing
-    # using TuringUtilities
+# using TrueAndErrorModels
+# using Test
+# using Turing
+# using TuringUtilities
 
-    # dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
-    # data = rand(dist, 200)
+# dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+# data = rand(dist, 200)
 
-    # model = eut4_model(data)
-    # chains = sample(model, NUTS(500, 0.65), MCMCThreads(), 500, 4)
+# model = eut4_model(data)
+# chains = sample(model, NUTS(500, 0.65), MCMCThreads(), 500, 4)
 
-    # pred_model = predict_distribution(
-    #     TrueErrorModel;
-    #     model,
-    #     func = x -> x ./ sum(x),
-    #     n_samples = 200
-    # )
+# pred_model = predict_distribution(
+#     TrueErrorModel;
+#     model,
+#     func = x -> x ./ sum(x),
+#     n_samples = 200
+# )
 
-    # post_preds = generated_quantities(pred_model, chains)
-    # post_preds = stack(post_preds, dims = 1)
+# post_preds = generated_quantities(pred_model, chains)
+# post_preds = stack(post_preds, dims = 1)
 # end
