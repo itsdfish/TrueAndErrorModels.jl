@@ -12,17 +12,18 @@ function make_error_parms(
     constrain_conditional,
     constrain_option
 )
-    n_opt_constrained = constrain_option ? 1 : n_options
+    n_opt_constrained = constrain_option ? fill(1, n_choice_sets) : n_options
     n_choice_constrained = constrain_choice_set ? 1 : n_choice_sets
     error_parms = ""
-    for o1 ∈ 1:n_opt_constrained
-        for o2 ∈ 1:n_opt_constrained
-            for c ∈ 1:n_choice_constrained
+    for c ∈ 1:n_choice_constrained
+        for o1 ∈ 1:n_opt_constrained[c]
+            for o2 ∈ 1:n_opt_constrained[c]
                 (o1 == o2) && !constrain_option ? continue : nothing
-                error_parms *=
+                ϵ =
                     "ϵ" * add_option_index(o2; constrain_option) *
                     add_choice_set_index(c; constrain_choice_set) *
                     add_conditional_index(o1; constrain_conditional)
+                error_parms *= contains(error_parms, ϵ) ? continue : ϵ
                 error_parms *= ", "
             end
         end
@@ -31,8 +32,24 @@ function make_error_parms(
 end
 
 function make_error_sampler(
-    n_choice_sets,
-    n_options;
+    n_choice_sets::Int,
+    n_options::Int;
+    constrain_choice_set,
+    constrain_conditional,
+    constrain_option
+)
+    return make_error_sampler(
+        n_choice_sets,
+        fill(n_options, n_choice_sets);
+        constrain_choice_set,
+        constrain_conditional,
+        constrain_option
+    )
+end
+
+function make_error_sampler(
+    n_choice_sets::Int,
+    n_options::Vector{Int};
     constrain_choice_set,
     constrain_conditional,
     constrain_option

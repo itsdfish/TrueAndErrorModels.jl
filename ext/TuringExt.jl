@@ -9,8 +9,8 @@ import TrueAndErrorModels: eut1_model
 import TrueAndErrorModels: eut2_model
 import TrueAndErrorModels: eut4_model
 
-import DynamicPPL: reconstruct
-import DynamicPPL: vectorize
+# import DynamicPPL: reconstruct
+# import DynamicPPL: vectorize
 
 """
     tet1_model(data::Vector{<:Integer})

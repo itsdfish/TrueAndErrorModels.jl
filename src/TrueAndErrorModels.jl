@@ -12,6 +12,7 @@ export compute_probs
 export logpdf
 export rand
 export TrueErrorModel
+export TEMContextEffect
 
 export tet1_model
 export tet2_model

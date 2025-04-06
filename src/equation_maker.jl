@@ -1,6 +1,6 @@
 
 function make_choice_patterns(n_choice_sets, n_options, n_reps)
-    sub_patterns = collect(Base.product(fill((1:n_options...,), n_choice_sets)...))
+    sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     sub_patterns = permutedims(sub_patterns, (n_choice_sets:-1:1))[:]
 
     patterns = collect(Base.product(fill(sub_patterns, n_reps)...))
@@ -9,8 +9,12 @@ function make_choice_patterns(n_choice_sets, n_options, n_reps)
 end
 
 function make_preference_patterns(n_choice_sets, n_options)
-    patterns = collect(Base.product(fill((1:n_options...,), n_choice_sets)...))
+    patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     return permutedims(patterns, (n_choice_sets:-1:1))[:]
+end
+
+function make_preference_patterns(n_choice_sets::Int, n_options::Int)
+    return make_preference_patterns(n_choice_sets, fill(n_options, n_choice_sets))
 end
 
 function add_choice_set_index(i; constrain_choice_set)
@@ -44,7 +48,7 @@ function make_error_terms(
         for i ∈ 1:n_choice_sets
             if preference_pattern[i] == choice_pattern[r][i]
                 error_terms *= "(1"
-                for c ∈ 1:n_options
+                for c ∈ 1:n_options[i]
                     error_terms *=
                         preference_pattern[i] ≠ c ?
                         " - ϵ" * add_option_index(c; constrain_option) *
@@ -93,9 +97,27 @@ function make_equation_rhs(
 end
 
 function make_equations(
-    n_choice_sets,
-    n_options,
-    n_reps;
+    n_choice_sets::Int,
+    n_options::Int,
+    n_reps::Int;
+    constrain_choice_set,
+    constrain_conditional,
+    constrain_option
+)
+    return make_equations(
+        n_choice_sets,
+        fill(n_options, n_choice_sets),
+        n_reps;
+        constrain_choice_set,
+        constrain_conditional,
+        constrain_option
+    )
+end
+
+function make_equations(
+    n_choice_sets::Int,
+    n_options::Vector{Int},
+    n_reps::Int;
     constrain_choice_set,
     constrain_conditional,
     constrain_option

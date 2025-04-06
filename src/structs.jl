@@ -10,8 +10,8 @@ and `ϵₛ₁` represents the error probability of choosing safe given a true pr
 
 # Fields 
 
-- `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
-- `ϵ::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂]`.
+- `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [p₁₁, p₁₂, p₁₃, p₂₁, p₂₂, p₂₃]`, such that sum(p) = 1. 
+- `ϵ::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵ₂₁, ϵ₁₁, ϵ₂₂, ϵ₃₂, ϵ₁₂]`.
 
 
 # Constructors
@@ -51,4 +51,17 @@ end
 
 function TrueErrorModel(; p, ϵ)
     return TrueErrorModel(p, ϵ)
+end
+
+struct TEMContextEffect{T <: Real} <: AbstractTrueErrorModel{T}
+    p::AbstractVector{T}
+    ϵ::AbstractVector{T}
+end
+
+function TEMContextEffect(p, ϵ)
+    return TEMContextEffect(promote(p, ϵ)...)
+end
+
+function TEMContextEffect(; p, ϵ)
+    return TEMContextEffect(p, ϵ)
 end
