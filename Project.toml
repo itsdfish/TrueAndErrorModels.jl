@@ -13,8 +13,8 @@ TuringUtilities = "35dc62cd-6c01-44e1-a736-6cc36bfce0cc"
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
 Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 
-[sources]
-TuringUtilities = {url = "https://github.com/itsdfish/TuringUtilities.jl"}
+[sources.TuringUtilities]
+url = "https://github.com/itsdfish/TuringUtilities.jl"
 
 [extensions]
 NamedArraysExt = "NamedArrays"
@@ -22,7 +22,7 @@ TuringExt = "Turing"
 
 [compat]
 Distributions = "0.25.0"
-DynamicPPL = "0.28, 0.29, 0.30.0, 0.31.0, 0.32.0, 0.33.0, 0.34.0, 0.35.0"
+DynamicPPL = "0.28, 0.29, 0.30.0, 0.31.0, 0.32.0, 0.33.0, 0.34.0, 0.35.0, 0.36"
 NamedArrays = "0.10.0"
 Random = "1"
 TestItemRunner = "1.0.5"
