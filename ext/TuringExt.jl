@@ -9,9 +9,6 @@ import TrueAndErrorModels: eut1_model
 import TrueAndErrorModels: eut2_model
 import TrueAndErrorModels: eut4_model
 
-import DynamicPPL: reconstruct
-import DynamicPPL: vectorize
-
 """
     tet1_model(data::Vector{<:Integer})
 
@@ -261,8 +258,5 @@ reversal of choices for the second replication.
     data ~ TrueErrorModel(; p = p′, ϵ)
     return (; p = p′, ϵ)
 end
-
-#vectorize(d::SSM2D, r::NamedTuple) = [r...]
-reconstruct(d::AbstractTrueErrorModel, data::Vector{<:Integer}) = deepcopy(data)
 
 end
