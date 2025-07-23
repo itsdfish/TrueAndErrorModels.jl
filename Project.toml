@@ -1,12 +1,13 @@
 name = "TrueAndErrorModels"
 uuid = "260ba6b7-9af7-473a-b238-1a1a0638f266"
 authors = ["itsdfish"]
-version = "0.2.14"
+version = "0.2.15"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [weakdeps]
 NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
@@ -20,14 +21,13 @@ TuringExt = "Turing"
 Distributions = "0.25.0"
 DynamicPPL = "0.28, 0.29, 0.30.0, 0.31.0, 0.32.0, 0.33.0, 0.34.0, 0.35.0, 0.36"
 NamedArrays = "0.10.0"
-Random = "1"
-TestItemRunner = "1.0.5"
+Random = "1.11.0"
+Test = "1.11.0"
 Turing = "0.34, 0.35, 0.36.0, 0.37.0, 0.38.0, 0.39.0"
 julia = "1.6.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
 
 [targets]
-test = ["NamedArrays", "Test", "Turing", "TestItemRunner"]
+test = ["Test"]

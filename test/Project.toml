@@ -1,0 +1,7 @@
+[deps]
+NamedArrays = "86f7a689-2022-50b4-a561-43c23ac3c673"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
+Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
+TuringUtilities = "35dc62cd-6c01-44e1-a736-6cc36bfce0cc"
