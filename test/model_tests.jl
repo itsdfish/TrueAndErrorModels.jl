@@ -14,7 +14,7 @@
     pred_model = predict_distribution(
         simulator = p -> rand(TrueErrorModel(; p...), n_sim);
         model,
-        func = x -> x ./ sum(x),
+        func = x -> x ./ sum(x)
     )
 
     post_preds = returned(pred_model, chains)
