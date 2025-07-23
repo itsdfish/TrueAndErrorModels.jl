@@ -10,7 +10,7 @@ TuringUtilities = "35dc62cd-6c01-44e1-a736-6cc36bfce0cc"
 
 [compat]
 Documenter = "1"
-MCMCChains = "6"
+MCMCChains = "6,7"
 NamedArrays = "0.10.0"
 StatsPlots = "0.15.0"
-Turing = "0.34.0, 0.35.0, 0.36.0"
+Turing = "0.34, 0.35, 0.36.0, 0.37.0, 0.38.0, 0.39.0"
