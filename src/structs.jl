@@ -45,7 +45,7 @@ struct TrueErrorModel{T <: Real} <: AbstractTrueErrorModel{T}
     ϵ::AbstractVector{T}
 
     function TrueErrorModel(p::AbstractArray{T}, ϵ::AbstractArray{T}) where {T <: Real}
-        @argcheck  all((ϵ .≥ 0) .&& (ϵ .≤ .5))
+        @argcheck all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
         return new{T}(p, ϵ)
     end
 end
