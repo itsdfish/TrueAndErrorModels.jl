@@ -152,10 +152,12 @@ the first replication, and the second pair corresponds to the second replication
 of the safe option for choice set 1 followed by the risky option for choice set 2 during the first replication, and the 
 reversal of choices for the second replication. 
 """
-function rand(dist::AbstractTrueErrorModel, n_trials::Int)
+function rand(rng::AbstractRNG, dist::AbstractTrueErrorModel, n_trials::Int)
     probs = compute_probs(dist)
-    return rand(Multinomial(n_trials, probs))
+    return rand(rng, Multinomial(n_trials, probs))
 end
+
+rand(dist::AbstractTrueErrorModel, n_trials::Int) = rand(Random.default_rng(), dist, n_trials)
 
 """
     logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
@@ -225,3 +227,5 @@ function get_response_labels()
         "SS,SS"
     ]
 end
+
+length(d::AbstractTrueErrorModel) = 16

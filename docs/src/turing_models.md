@@ -8,16 +8,16 @@ TrueAndErrorModels.jl ships with off-the-shelf Turing models as described in Bir
 
 ## True and Error Theory Models
 
-1. tet1_model
-2. tet2_model
-3. tet4_model
+1. [tet1_model](/api/#TrueAndErrorModels.tet1_model)
+2. [tet2_model](/api/#TrueAndErrorModels.tet2_model)
+3. [tet4_model](/api/#TrueAndErrorModels.tet4_model)
 
 
 ## Expected Utility Theory Models
 
-1. eut1_model
-2. eut2_model
-3. eut4_model
+1. [eut1_model](/api/#TrueAndErrorModels.eut1_model)
+2. [eut2_model](/api/#TrueAndErrorModels.eut2_model)
+3. [eut4_model](/api/#TrueAndErrorModels.eut4_model)
 
 
 # References

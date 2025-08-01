@@ -24,12 +24,6 @@ eut2_model
 eut4_model
 ```
 
-## Predictive Distributions 
-
-```@docs
-predict_distribution
-```
-
 ## Utilities 
 
 ```@docs

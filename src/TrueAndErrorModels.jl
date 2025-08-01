@@ -1,8 +1,11 @@
 module TrueAndErrorModels
 
 using ArgCheck
+using Random
+
 import Distributions: Multinomial
 import Distributions: DiscreteMultivariateDistribution
+import Distributions: length
 import Distributions: logpdf
 import Distributions: loglikelihood
 import Distributions: rand

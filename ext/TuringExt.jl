@@ -97,7 +97,7 @@ A True and Error Theory model with four error parameters: ϵₛ₁, ϵᵣ₁, ϵ
 
 # Arguments
 
-- `data::Vector{<:Integer}::Vector{<:Integer}`: a vector of response frequencies in which elements corrspond to the following response patterns:
+- `data::Vector{<:Integer}::Union{Vector{<:Integer}, Missing}`: a vector of response frequencies in which elements corrspond to the following response patterns:
 
 1.  RR,RR
 2.  RR,RS
