@@ -157,7 +157,8 @@ function rand(rng::AbstractRNG, dist::AbstractTrueErrorModel, n_trials::Int)
     return rand(rng, Multinomial(n_trials, probs))
 end
 
-rand(dist::AbstractTrueErrorModel, n_trials::Int) = rand(Random.default_rng(), dist, n_trials)
+rand(dist::AbstractTrueErrorModel, n_trials::Int) =
+    rand(Random.default_rng(), dist, n_trials)
 
 """
     logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
