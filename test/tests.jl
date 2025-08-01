@@ -82,6 +82,26 @@ end
     @test isa(model1.p, Vector{Float64})
 end
 
+@testitem "constructors 4" begin
+    using TrueAndErrorModels
+    using Test
+
+    Θ = (
+        p = [0.1, 0.2, 0.3, 0.4], ϵ = [-0.05, 0.10, 0.15, 0.20]
+    )
+    @test_throws ArgumentError TrueErrorModel(; Θ...)
+end
+
+@testitem "constructors 4" begin
+    using TrueAndErrorModels
+    using Test
+
+    Θ = (
+        p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.51, 0.10, 0.15, 0.20]
+    )
+    @test_throws ArgumentError TrueErrorModel(; Θ...)
+end
+
 @testitem "two methods" begin
     using TrueAndErrorModels
     using Test
@@ -96,4 +116,19 @@ end
     using NamedArrays
 
     @test length(methods(to_table)) == 1
+end
+
+@test "to_table" begin
+    using NamedArrays
+    using TrueAndErrorModels
+    using Test
+
+    labels = get_response_labels()
+    table = to_table(labels)
+
+    # choice 1 in columns 
+    choices = ["RR", "RS", "SR", "SS"]
+    for c1 ∈ choices, c2 ∈ choices
+        @test table[c2, c1] == c1 * "," * c2
+    end
 end

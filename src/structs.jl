@@ -43,6 +43,11 @@ Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgmen
 struct TrueErrorModel{T <: Real} <: AbstractTrueErrorModel{T}
     p::AbstractVector{T}
     ϵ::AbstractVector{T}
+
+    function TrueErrorModel(p::AbstractArray{T}, ϵ::AbstractArray{T}) where {T <: Real}
+        @argcheck  all((ϵ .≥ 0) .&& (ϵ .≤ .5))
+        return new{T}(p, ϵ)
+    end
 end
 
 function TrueErrorModel(p, ϵ)

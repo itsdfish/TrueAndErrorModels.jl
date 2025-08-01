@@ -37,8 +37,8 @@ end
         @test length(Θ) == 2
         @test all(Θ.p .≥ 0)
         @test sum(Θ.p) ≈ 1
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
-        @test var(Θ.ϵ) ≈ 0 
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
+        @test var(Θ.ϵ) ≈ 0
     end
 end
 
@@ -57,7 +57,7 @@ end
         @test length(Θ) == 2
         @test all(Θ.p .≥ 0)
         @test sum(Θ.p) ≈ 1
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
         @test Θ.ϵ[1] ≈ Θ.ϵ[3]
         @test Θ.ϵ[2] ≈ Θ.ϵ[4]
     end
@@ -78,8 +78,8 @@ end
         @test length(Θ) == 2
         @test all(Θ.p .≥ 0)
         @test sum(Θ.p) ≈ 1
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
-        @test Θ.ϵ[1] ≠ Θ.ϵ[2] ≠ Θ.ϵ[3] ≠ Θ.ϵ[4] 
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
+        @test Θ.ϵ[1] ≠ Θ.ϵ[2] ≠ Θ.ϵ[3] ≠ Θ.ϵ[4]
     end
 end
 
@@ -100,8 +100,8 @@ end
         @test sum(Θ.p) ≈ 1
         @test Θ.p[2] ≈ 0
         @test Θ.p[3] ≈ 0
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
-        @test var(Θ.ϵ) ≈ 0 
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
+        @test var(Θ.ϵ) ≈ 0
     end
 end
 
@@ -122,7 +122,7 @@ end
         @test sum(Θ.p) ≈ 1
         @test Θ.p[2] ≈ 0
         @test Θ.p[3] ≈ 0
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
         @test Θ.ϵ[1] ≈ Θ.ϵ[3]
         @test Θ.ϵ[2] ≈ Θ.ϵ[4]
     end
@@ -145,22 +145,7 @@ end
         @test sum(Θ.p) ≈ 1
         @test Θ.p[2] ≈ 0
         @test Θ.p[3] ≈ 0
-        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ .5))
-        @test Θ.ϵ[1] ≠ Θ.ϵ[2] ≠ Θ.ϵ[3] ≠ Θ.ϵ[4] 
-    end
-end
-
-@test "to_table" begin 
-    using NamedArrays
-    using TrueAndErrorModels
-    using Test
-
-    labels = get_response_labels()
-    table = to_table(labels)
-
-    # choice 1 in columns 
-    choices = ["RR", "RS", "SR", "SS"]
-    for c1 ∈ choices, c2 ∈ choices 
-        @test table[c2, c1] == c1 * "," * c2
+        @test all((Θ.ϵ .≥ 0) .&& (Θ.ϵ .≤ 0.5))
+        @test Θ.ϵ[1] ≠ Θ.ϵ[2] ≠ Θ.ϵ[3] ≠ Θ.ϵ[4]
     end
 end

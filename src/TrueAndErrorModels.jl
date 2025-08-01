@@ -1,5 +1,6 @@
 module TrueAndErrorModels
 
+using ArgCheck
 import Distributions: Multinomial
 import Distributions: DiscreteMultivariateDistribution
 import Distributions: logpdf

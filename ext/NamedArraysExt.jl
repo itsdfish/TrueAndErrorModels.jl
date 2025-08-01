@@ -32,6 +32,20 @@ Labels `S` correspond to safe option and `R` corresponds to risky option. The po
 14. SS,RS
 15. SS,SR
 16. SS,SS
+
+# Returns 
+
+- `table::NamedArray`: a 2×2 table in the following form:
+
+```julia
+4×4 Named Matrix{String}
+2 ╲ 1 │      RR       RS       SR       SS
+──────┼───────────────────────────────────
+RR    │ "RR,RR"  "RS,RR"  "SR,RR"  "SS,RR"
+RS    │ "RR,RS"  "RS,RS"  "SR,RS"  "SS,RS"
+SR    │ "RR,SR"  "RS,SR"  "SR,SR"  "SS,SR"
+SS    │ "RR,SS"  "RS,SS"  "SR,SS"  "SS,SS"
+```
 """
 function to_table(x::Vector)
     return NamedArray(
