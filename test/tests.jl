@@ -65,7 +65,7 @@ end
     @test probs ≈ true_probs atol = 0.005
 end
 
-@testitem "constructors" begin
+@testitem "constructors 1" begin
     using TrueAndErrorModels
     using Test
 
@@ -73,13 +73,14 @@ end
     model2 = TrueErrorModel([0.1, 0.2, 0.3, 0.4], [0.05, 0.10, 0.15, 0.20])
     @test model1 == model2
 end
-# @testitem "zero methods" begin
 
-#     using TrueAndErrorModels
-#     using Test
+@testitem "constructors 2" begin
+    using TrueAndErrorModels
+    using Test
 
-#     @test length(methods(tet1_model)) == 0
-# end
+    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.10, 0.15, 0.20])
+    @test isa(model1.p, Vector{Float64})
+end
 
 @testitem "two methods" begin
     using TrueAndErrorModels

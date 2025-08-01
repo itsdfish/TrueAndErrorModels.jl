@@ -33,7 +33,7 @@ Labels `S` correspond to safe option and `R` corresponds to risky option. The po
 15. SS,SR
 16. SS,SS
 """
-function to_table(x::Vector{<:Real})
+function to_table(x::Vector)
     return NamedArray(
         reshape(x, 4, 4),
         (["RR", "RS", "SR", "SS"], ["RR", "RS", "SR", "SS"]),
