@@ -5,6 +5,53 @@
 
 The purpose of this tutorial is to demonstrate how to generate and plot prior and posterior predictive distributions of a True and Error Theory model (TET; Birnbaum & Quispe-Torreblanca, 2018) using the [Turing.jl](https://turinglang.org/) package. 
 
+## Full Code 
+
+You can reveal copy-and-pastable version of the full code by clicking the ▶ below.
+
+```@raw html
+<details>
+<summary><b>Show Full Code</b></summary>
+```
+```julia
+using Random
+using StatsPlots
+using TrueAndErrorModels
+using Turing
+using TuringUtilities
+Random.seed!(6521)
+
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+n_sim = 200
+data = rand(dist, n_sim)
+
+model = tet1_model(data)
+chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+
+pred_model = predict_distribution(;
+    simulator = Θ -> rand(TrueErrorModel(; Θ...), n_sim),
+    model,
+    func = x -> x ./ sum(x)
+)
+
+post_preds = generated_quantities(pred_model, chains)
+post_preds = stack(post_preds, dims = 1)
+
+labels = get_response_labels()
+violin(
+    post_preds,
+    xticks = (1:length(labels), labels),
+    ylabel = "Response Probability",
+    leg = false,
+    grid = false,
+    xrotation = 90
+)
+scatter!(1:16, data ./ sum(data), color = :black)
+```
+```@raw html
+</details>
+```
+
 ## Load Packages
 
 The first step is to load the required packages. You will need to install each package in your local
@@ -23,8 +70,9 @@ Random.seed!(6521)
 
 For a description of the decision making task, please see the description in the [model overview](https://itsdfish.github.io/TrueAndErrorModels.jl/dev/overview/). In the code block below, we will create a model object and generate 2 simulated responses from 100 simulated subjects for a total of 200 responses. 
 ```julia
-dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
-data = rand(dist, 200)
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+n_sim = 200
+data = rand(dist, n_sim)
 ```
 ```julia
 16-element Vector{Int64}:
@@ -51,14 +99,16 @@ chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
 
 The code block below creates a model for generating a predictive distribution. The inputs for `predict_distribution` are defined as follows:
 
-- `TrueAndErrorModel`: a model type used for generating simulated data 
+- `simulator`: a function that generates simulated data from the model
 - `model`: a Turing model with data attached 
 - `func`: an arbitrary function applied to the simulated data. In this case, the simulated data are     normalized as response probabilities. 
-- `n_samples`: the number of simulated response per draw from the prior or posterior distribution 
 
 ```julia 
-pred_model =
-    predict_distribution(TrueErrorModel; model, func = x -> x ./ sum(x), n_samples = 200)
+pred_model = predict_distribution(;
+    simulator = Θ -> rand(TrueErrorModel(; Θ...), n_sim),
+    model,
+    func = x -> x ./ sum(x)
+)
 ```
 
 ## Generate Predictive Distribution

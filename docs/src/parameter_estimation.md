@@ -5,6 +5,47 @@
 
 The purpose of this tutorial is to demonstrate how to perform Bayesian parameter estimation of the True and Error model (TET; Birnbaum & Quispe-Torreblanca, 2018) using the [Turing.jl](https://turinglang.org/) package. 
 
+## Full Code 
+
+You can reveal copy-and-pastable version of the full code by clicking the ▶ below.
+
+```@raw html
+<details>
+<summary><b>Show Full Code</b></summary>
+```
+```julia
+using Turing
+using TrueAndErrorModels
+using Random
+using StatsPlots
+Random.seed!(25044)
+
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+data = rand(dist, 200)
+
+# Estimate parameters
+chains = sample(tet1_model(data), NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+
+name_map = Dict(
+    "p[1]" => "pᵣᵣ",
+    "p[2]" => "pᵣₛ",
+    "p[3]" => "pₛᵣ",
+    "p[4]" => "pₛₛ"
+)
+chains = replacenames(chains, name_map)
+
+post_plot = plot(chains, grid = false)
+vline!(
+    post_plot,
+    [missing 0.65 missing 0.15 missing 0.15 missing 0.05 missing 0.10],
+    color = :black,
+    linestyle = :dash
+)
+```
+```@raw html
+</details>
+```
+
 ## Load Packages
 
 The first step is to load the required packages. You will need to install each package in your local
@@ -32,7 +73,7 @@ In addition, our model assumes the error probabilities are constrained to be equ
 ``\epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2} = .10``
 
 ```julia
-dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
 data = rand(dist, 200)
 ```
 
@@ -88,7 +129,7 @@ Now that the Turing model has been specified, we can perform Bayesian parameter 
 
 ```julia
 # Estimate parameters
-chains = sample(tet1_model(data), NUTS(1000, .65), MCMCThreads(), 1000, 4)
+chains = sample(tet1_model(data), NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
 ```
 
 For ease of intepretation, we will convert the numerical indices of preference vector $\mathbf{p}$ to more informative labeled indices. 
@@ -98,7 +139,7 @@ name_map = Dict(
     "p[1]" => "pᵣᵣ",
     "p[2]" => "pᵣₛ",
     "p[3]" => "pₛᵣ",
-    "p[4]" => "pₛₛ",
+    "p[4]" => "pₛₛ"
 )
 chains = replacenames(chains, name_map)
 ```
@@ -141,7 +182,12 @@ It is important to verify that the chains converged. We see that the chains conv
 
 ```julia
 post_plot = plot(chains, grid = false)
-vline!(post_plot, [missing .65 missing .15 missing .15 missing .05 missing .10], color = :black, linestyle = :dash)
+vline!(
+    post_plot,
+    [missing 0.65 missing 0.15 missing 0.15 missing 0.05 missing 0.10],
+    color = :black,
+    linestyle = :dash
+)
 ```
 
 ![](assets/posterior_distribution.png)

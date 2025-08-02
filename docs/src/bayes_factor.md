@@ -8,6 +8,38 @@
 In this tutorial, we will compare two True and Error model variants using the Bayes factor. One model variant imposes no restrictions on the error probability parameters, whereas the other model constrains the error probabilities to be equal. Computing the Bayes factor is challenging because it requires integrating over a potentially high dimensional parameter space. To compute Bayes factors, we will use a robust method called non-reversible parallel tempering (Bouchard-Côté et al., 2022) using the Julia package
 [Pigeons.jl](https://julia-tempering.github.io/Pigeons.jl/dev/). 
 
+## Full Code 
+
+You can reveal copy-and-pastable version of the full code by clicking the ▶ below.
+
+```@raw html
+<details>
+<summary><b>Show Full Code</b></summary>
+```
+```julia
+using MCMCChains
+using Pigeons
+using Random
+using TrueAndErrorModels
+using Turing
+
+Random.seed!(258)
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+data = rand(dist, 200)
+
+pt_tet4 = pigeons(target = TuringLogPotential(tet4_model(data)), record = [traces])
+
+pt_tet1 = pigeons(target = TuringLogPotential(te1_model(data)), record = [traces])
+
+mll_tet1 = stepping_stone(pt_tet1)
+mll_tet4 = stepping_stone(pt_tet4)
+
+bf = exp(mll_tet1 - mll_tet4)
+```
+```@raw html
+</details>
+```
+
 ### Bayes Factor 
 
 Before proceeding to the code, we provide a brief overview of the Bayes factor. Readers who are familiar with Bayes factors can skip this section. In Bayesian model comparison, the Bayes factor allows one to compare the probability of the data under two different models while taking into account model flexibility stemming all sources, including the number of parameters, functional form, and prior distribution. Thus, it provides a way to balance model fit and model flexibility into a single index. One important fact to keep in mind is that Bayes factors can be sensitive to the choice prior distributions over parameters. Sensitivity to prior distributions over parameters might be desireable depending on one's goals and knowledge of the models under consideration. 
@@ -104,7 +136,7 @@ In addition, our model assumes the error probabilities are constrained to be equ
 
 ```julia
 Random.seed!(258)
-dist = TrueErrorModel(; p = [0.65, .15, .15, .05], ϵ = fill(.10, 4))
+dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
 data = rand(dist, 200)
 ```
 
@@ -117,7 +149,7 @@ The next step is to run the `pigeons` function to estimate the marginal log like
 The code block below estimates the marginal log likelihood of the the TET4 model. This involves passing the `tet4_model` to the function `pigeons` along with the vector of response frequencies `data`.
 
 ```julia
-pt_tet4 = pigeons(target=TuringLogPotential(tet4_model(data)), record=[traces])
+pt_tet4 = pigeons(target = TuringLogPotential(tet4_model(data)), record = [traces])
 ```
 ```julia
 ────────────────────────────────────────────────────────────────────────────
@@ -195,7 +227,7 @@ Quantiles
 As we did above, we will estimate the marginal log likelihood by passing `tet1_model` to the function`pigeons`. 
 
 ```julia
-pt_tet1 = pigeons(target=TuringLogPotential(te1_model(data)), record=[traces])
+pt_tet1 = pigeons(target = TuringLogPotential(te1_model(data)), record = [traces])
 ```
 
 ```julia
