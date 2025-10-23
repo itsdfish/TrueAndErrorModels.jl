@@ -1,6 +1,7 @@
 module TrueAndErrorModels
 
 using ArgCheck
+using PrettyTables
 using Random
 
 import Distributions: Multinomial
@@ -29,4 +30,5 @@ export get_response_labels
 include("structs.jl")
 include("functions.jl")
 include("ext_functions.jl")
+include("utilities.jl")
 end
