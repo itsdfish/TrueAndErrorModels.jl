@@ -13,6 +13,6 @@ function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel)
         column_labels = column_labels,
         compact_printing = false,
         formatters = [fmt__printf("%5.2f", [2,])],
-        alignment = :c,
+        alignment = :c
     )
 end
