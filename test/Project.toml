@@ -6,5 +6,5 @@ TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
 Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 TuringUtilities = "35dc62cd-6c01-44e1-a736-6cc36bfce0cc"
 
-[sources.TuringUtilities]
-url = "https://github.com/itsdfish/TuringUtilities.jl"
+[sources]
+TuringUtilities = {rev = "main", url = "https://github.com/itsdfish/TuringUtilities.jl"}
