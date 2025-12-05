@@ -1,6 +1,6 @@
 name = "TrueAndErrorModels"
 uuid = "260ba6b7-9af7-473a-b238-1a1a0638f266"
-version = "0.2.17"
+version = "0.2.18"
 authors = ["itsdfish"]
 
 [deps]
@@ -22,11 +22,11 @@ TuringExt = "Turing"
 [compat]
 ArgCheck = "2.5.0"
 Distributions = "0.25.0"
-DynamicPPL = "0.34.0, 0.35.0, 0.36, 0.37, 0.38"
+DynamicPPL = "0.34.0, 0.35.0, 0.36, 0.37, 0.38, 0.39.0"
 NamedArrays = "0.10.0"
 PrettyTables = "3.0.10"
 Random = "1.11.0"
-Turing = "0.34, 0.35, 0.36.0, 0.37.0, 0.38.0, 0.39.0, 0.40, 0.41"
+Turing = "0.38.0, 0.39.0, 0.40, 0.41, 0.42.0"
 julia = "1.6.7"
 
 [extras]
