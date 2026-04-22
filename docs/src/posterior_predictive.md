@@ -37,7 +37,7 @@ pred_model = predict_distribution(;
 post_preds = generated_quantities(pred_model, chains)
 post_preds = stack(post_preds, dims = 1)
 
-labels = get_response_labels()
+labels = get_response_labels(dist)
 violin(
     post_preds,
     xticks = (1:length(labels), labels),
@@ -146,7 +146,7 @@ post_preds = stack(post_preds, dims = 1)
 Lastly, we will plot the posterior predictive distributions as violin plots. The first line of code gets a pre-made vector of response category labels. The function `violin` generates a violin plot and rotates the response category labels by 90 degrees for readability. The final line of code plots the data as black dots. As expected, the data are typically located near the bulk of the posterior predictive density. 
 
 ```julia
-labels = get_response_labels()
+labels = get_response_labels(dist)
 violin(
     post_preds,
     xticks = (1:length(labels), labels),

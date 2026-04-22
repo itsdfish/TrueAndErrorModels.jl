@@ -16,3 +16,31 @@ function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel)
         alignment = :c
     )
 end
+
+get_response_labels(model::AbstractTrueErrorModel) = get_response_labels(typeof(model))
+
+"""
+    get_response_labels(::Type{<:AbstractTrueErrorModel})
+
+Returns a vector of response pattern labels.
+"""
+function get_response_labels(::Type{<:AbstractTrueErrorModel})
+    labels = [
+        "RR,RR",
+        "RR,RS",
+        "RR,SR",
+        "RR,SS",
+        "RS,RR",
+        "RS,RS",
+        "RS,SR",
+        "RS,SS",
+        "SR,RR",
+        "SR,RS",
+        "SR,SR",
+        "SR,SS",
+        "SS,RR",
+        "SS,RS",
+        "SS,SR",
+        "SS,SS"
+    ]
+end

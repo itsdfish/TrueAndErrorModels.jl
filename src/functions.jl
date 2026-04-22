@@ -203,30 +203,4 @@ end
 loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) =
     logpdf(dist, data)
 
-"""
-    get_response_labels()
-
-Returns a vector of response pattern labels.
-"""
-function get_response_labels()
-    labels = [
-        "RR,RR",
-        "RR,RS",
-        "RR,SR",
-        "RR,SS",
-        "RS,RR",
-        "RS,RS",
-        "RS,SR",
-        "RS,SS",
-        "SR,RR",
-        "SR,RS",
-        "SR,SR",
-        "SR,SS",
-        "SS,RR",
-        "SS,RS",
-        "SS,SR",
-        "SS,SS"
-    ]
-end
-
 length(d::AbstractTrueErrorModel) = 16
