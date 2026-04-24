@@ -1,4 +1,5 @@
-function make_choice_patterns(n_choice_sets, n_options, n_reps)
+function make_choice_patterns(n_options, n_reps)
+    n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     sub_patterns = permutedims(sub_patterns, (n_choice_sets:-1:1))[:]
 
@@ -7,13 +8,14 @@ function make_choice_patterns(n_choice_sets, n_options, n_reps)
     return patterns
 end
 
-function make_preference_patterns(n_choice_sets, n_options)
+function make_preference_patterns(n_options)
+    n_choice_sets = length(n_options)
     patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     return permutedims(patterns, (n_choice_sets:-1:1))[:]
 end
 
-function make_preference_patterns(n_choice_sets::Int, n_options::Int)
-    return make_preference_patterns(n_choice_sets, fill(n_options, n_choice_sets))
+function make_preference_patterns(n_options::Int)
+    return make_preference_patterns(fill(n_options, length(options)))
 end
 
 function add_choice_set_index(i; constrain_choice_set)
@@ -105,7 +107,6 @@ function make_equations(
     constrain_option
 )
     return make_equations(
-        n_choice_sets,
         fill(n_options, n_choice_sets),
         n_reps;
         constrain_choice_set,
@@ -114,14 +115,13 @@ function make_equations(
 end
 
 function make_equations(
-    n_choice_sets::Int,
     n_options::Vector{Int},
     n_reps::Int;
     constrain_choice_set,
     constrain_option
 )
-    choice_patterns = make_choice_patterns(n_choice_sets, n_options, n_reps)
-    preference_patterns = make_preference_patterns(n_choice_sets, n_options)
+    choice_patterns = make_choice_patterns(n_options, n_reps)
+    preference_patterns = make_preference_patterns(n_options)
     preference_parms = make_preference_parms(preference_patterns)
     eqs = ""
     i = 1
@@ -141,6 +141,23 @@ function make_equations(
     return eqs
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a standard True and Error model based on options per choice set and number of repetitions. 
+
+# Arguments 
+
+- `n_choice_sets::Int`: the number of choice sets
+- `n_options::Int`: the number of options per choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Keyword 
+
+- `model_type`: the type of model on which `compute_probs` is dispatched
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+"""
 function make_compute_probs(
     n_choice_sets::Int,
     n_options::Int,
@@ -150,7 +167,6 @@ function make_compute_probs(
     constrain_option
 )
     return make_compute_probs(
-        n_choice_sets,
         fill(n_options, n_choice_sets),
         n_reps;
         model_type,
@@ -159,8 +175,23 @@ function make_compute_probs(
     )
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a standard True and Error model based on options per choice set and number of repetitions. 
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Keyword 
+
+- `model_type`: the type of model on which `compute_probs` is dispatched
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+"""
 function make_compute_probs(
-    n_choice_sets::Int,
     n_options::Vector{Int},
     n_reps::Int;
     model_type,
@@ -169,7 +200,7 @@ function make_compute_probs(
 )
     function_header = "function compute_probs(dist::$model_type{T}) where {T}\n"
     parameter_extraction = "\t(; p, ϵ) = dist\n"
-    preference_patterns = make_preference_patterns(n_choice_sets, n_options)
+    preference_patterns = make_preference_patterns(n_options)
     preference_parms = make_preference_parms(preference_patterns)
     preference_extraction = "\t" * join(preference_parms, ", ") * " = p\n"
 
@@ -177,7 +208,6 @@ function make_compute_probs(
     error_extraction = "\t" * join(error_parms, ", ") * " = ϵ\n"
     theta = "\tθ = fill(0.0, $(prod(n_options)^n_reps))\n"
     eqs = make_equations(
-        n_choice_sets,
         n_options,
         n_reps;
         constrain_choice_set,

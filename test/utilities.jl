@@ -59,8 +59,12 @@ function make_error_sampler(
 end
 
 function make_preference_sampler(n_choice_sets, n_options)
+    return make_preference_sampler(fill(n_options, n_choice_sets))
+end
+
+function make_preference_sampler(n_options)
     parms = ""
-    preference_patterns = make_preference_patterns(n_choice_sets, n_options)
+    preference_patterns = make_preference_patterns(n_options)
     preference_parms = make_preference_parms(preference_patterns)
     n_parms = length(preference_parms)
     for i ∈ 1:n_parms
@@ -69,4 +73,21 @@ function make_preference_sampler(n_choice_sets, n_options)
     end
     parms *= " = rand(Dirichlet(fill(1, $n_parms)))"
     return parms
+end
+
+struct TestModel{T <: Real} <: AbstractTrueErrorModel{T}
+    p::AbstractVector{T}
+    ϵ::AbstractVector{T}
+
+    function TestModel(p::AbstractArray{T}, ϵ::AbstractArray{T}) where {T <: Real}
+        return new{T}(p, ϵ)
+    end
+end
+
+function TestModel(p, ϵ)
+    return TestModel(promote(p, ϵ)...)
+end
+
+function TestModel(; p, ϵ)
+    return TestModel(p, ϵ)
 end

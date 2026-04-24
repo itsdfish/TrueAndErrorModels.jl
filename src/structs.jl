@@ -1,7 +1,7 @@
 abstract type AbstractTrueErrorModel{T} <: DiscreteMultivariateDistribution end
 
 """
-    TrueErrorModel{T <: Real} <: AbstractTrueErrorModel{T}
+$(TYPEDEF)
 
 A model object for a True and Error Model of Allias Paradox. Two choice sets are presented twice during the same session, 
 meaning 4 choices are made in total. Subscript r represents risky, subscript s represents safe, and subscripts 1 and 2

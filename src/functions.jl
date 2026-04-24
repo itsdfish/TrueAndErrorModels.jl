@@ -1,5 +1,5 @@
 """
-    compute_probs(dist::AbstractTrueErrorModel{T})
+$(TYPEDSIGNATURES)
 
 Computes the joint probability for all 16 response categories
     
@@ -117,7 +117,7 @@ function compute_probs(dist::AbstractTrueErrorModel{T}) where {T}
 end
 
 """
-    rand(dist::AbstractTrueErrorModel, n_trials::Int)
+$(TYPEDSIGNATURES)
 
 Generate a vector of simulated response frequencies based on the provided True and Error Model.
 
@@ -161,7 +161,7 @@ rand(dist::AbstractTrueErrorModel, n_trials::Int) =
     rand(Random.default_rng(), dist, n_trials)
 
 """
-    logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})
+$(TYPEDSIGNATURES)
 
 Computes the log loglikelihood of the data for a True and Error Model. 
 

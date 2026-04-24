@@ -1,6 +1,7 @@
 module TrueAndErrorModels
 
 using ArgCheck
+using DocStringExtensions
 using PrettyTables
 using Random
 using Subscripts: sub

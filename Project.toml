@@ -6,6 +6,7 @@ authors = ["itsdfish"]
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
 PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -23,6 +24,7 @@ TuringExt = "Turing"
 [compat]
 ArgCheck = "2.5.0"
 Distributions = "0.25.0"
+DocStringExtensions = "0.9.5"
 DynamicPPL = "0.37, 0.38, 0.39.0, 0.40.0, 0.41.0"
 NamedArrays = "0.10.0"
 PrettyTables = "3.0.10"

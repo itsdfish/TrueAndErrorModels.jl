@@ -20,7 +20,7 @@ end
 get_response_labels(model::AbstractTrueErrorModel) = get_response_labels(typeof(model))
 
 """
-    get_response_labels(::Type{<:AbstractTrueErrorModel})
+$(TYPEDSIGNATURES)
 
 Returns a vector of response pattern labels.
 """

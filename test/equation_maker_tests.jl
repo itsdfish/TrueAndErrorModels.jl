@@ -200,7 +200,7 @@ end
     constrain_choice_set = false
     constrain_option = false
     eqs = "θ = fill(0.0, $(prod(n_options)^n_reps))\n"
-    eqs *= make_preference_sampler(n_choice_sets, n_options) * "\n"
+    eqs *= make_preference_sampler(n_options) * "\n"
     eqs *=
         make_error_sampler(
             n_choice_sets,
@@ -210,7 +210,6 @@ end
         ) * "\n"
 
     eqs *= make_equations(
-        n_choice_sets,
         n_options,
         n_reps;
         constrain_choice_set,
@@ -281,29 +280,12 @@ end
     cd(dir)
 end
 
-@safetestset "test make_compute_probs" begin
-    using ArgCheck
+@safetestset "test make_compute_probs 1" begin
     using Distributions
     using TrueAndErrorModels
+    import TrueAndErrorModels: compute_probs
     using Test
-
-    struct TestModel{T <: Real} <: AbstractTrueErrorModel{T}
-        p::AbstractVector{T}
-        ϵ::AbstractVector{T}
-
-        function TestModel(p::AbstractArray{T}, ϵ::AbstractArray{T}) where {T <: Real}
-            @argcheck all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
-            return new{T}(p, ϵ)
-        end
-    end
-
-    function TestModel(p, ϵ)
-        return TestModel(promote(p, ϵ)...)
-    end
-
-    function TestModel(; p, ϵ)
-        return TestModel(p, ϵ)
-    end
+    include("utilities.jl")
 
     n_choice_sets = 2
     n_reps = 2
@@ -312,7 +294,6 @@ end
     constrain_option = false
 
     function_str = make_compute_probs(
-        n_choice_sets,
         n_options,
         n_reps;
         model_type = "TestModel",
@@ -338,6 +319,51 @@ end
         @test sum(θ) ≈ 1
         @test all(x -> x ≥ 0, θ)
         @test length(θ) == 36
+    end
+
+    rm("temp.jl")
+    cd(dir)
+end
+
+@safetestset "test make_compute_probs 2" begin
+    using Distributions
+    using TrueAndErrorModels
+    import TrueAndErrorModels: compute_probs
+    using Test
+    include("utilities.jl")
+
+    n_choice_sets = 2
+    n_reps = 2
+    n_options = 2
+    constrain_choice_set = false
+    constrain_option = false
+
+    function_str = make_compute_probs(
+        n_choice_sets,
+        n_options,
+        n_reps;
+        model_type = "TestModel",
+        constrain_choice_set,
+        constrain_option
+    )
+
+    dir = pwd()
+    cd(@__DIR__)
+    open("temp.jl", "w") do io
+        write(io, function_str)
+    end
+
+    include("temp.jl")
+
+    for _ ∈ 1:10
+        p = rand(Dirichlet(fill(1, 4)))
+        ϵ = fill(0.0, 4)
+        model1 = TrueErrorModel(; p, ϵ)
+        θ1 = compute_probs(model1)
+        model2 = TestModel(; p, ϵ)
+        θ2 = compute_probs(model2)
+
+        @test θ1 ≈ θ2
     end
 
     rm("temp.jl")
