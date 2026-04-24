@@ -3,6 +3,7 @@ module TrueAndErrorModels
 using ArgCheck
 using PrettyTables
 using Random
+using Subscripts: sub
 
 import Distributions: Multinomial
 import Distributions: DiscreteMultivariateDistribution
@@ -14,6 +15,7 @@ import Distributions: rand
 export AbstractTrueErrorModel
 export compute_probs
 export logpdf
+export make_compute_probs
 export rand
 export TrueErrorModel
 
@@ -29,6 +31,7 @@ export get_response_labels
 
 include("structs.jl")
 include("functions.jl")
+include("equation_maker.jl")
 include("ext_functions.jl")
 include("utilities.jl")
 end

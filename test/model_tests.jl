@@ -1,4 +1,4 @@
-@testitem "predict_distribution" begin
+@safetestset "predict_distribution" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -22,7 +22,7 @@
     @test model() ≠ nothing
 end
 
-@testitem "tet1_model" begin
+@safetestset "tet1_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -42,7 +42,7 @@ end
     end
 end
 
-@testitem "tet2_model" begin
+@safetestset "tet2_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -63,7 +63,7 @@ end
     end
 end
 
-@testitem "tet4_model" begin
+@safetestset "tet4_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -83,7 +83,7 @@ end
     end
 end
 
-@testitem "eut1_model" begin
+@safetestset "eut1_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -105,7 +105,7 @@ end
     end
 end
 
-@testitem "eut2_model" begin
+@safetestset "eut2_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -128,7 +128,7 @@ end
     end
 end
 
-@testitem "eut4_model" begin
+@safetestset "eut4_model" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -150,12 +150,12 @@ end
     end
 end
 
-@test "to_table" begin
+@safetestset "to_table" begin
     using NamedArrays
     using TrueAndErrorModels
     using Test
 
-    labels = get_response_labels()
+    labels = get_response_labels(TrueErrorModel)
     table = to_table(labels)
 
     # choice 1 in columns 

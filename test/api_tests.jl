@@ -1,4 +1,4 @@
-@testitem "compute_probs" begin
+@safetestset "compute_probs" begin
     using TrueAndErrorModels
     using Test
 
@@ -29,7 +29,7 @@
     @test probs ≈ true_probs atol = 0.002
 end
 
-@testitem "rand" begin
+@safetestset "rand" begin
     using Random
     using TrueAndErrorModels
     using Test
@@ -65,7 +65,7 @@ end
     @test probs ≈ true_probs atol = 0.005
 end
 
-@testitem "constructors 1" begin
+@safetestset "constructors 1" begin
     using TrueAndErrorModels
     using Test
 
@@ -74,7 +74,7 @@ end
     @test model1 == model2
 end
 
-@testitem "constructors 2" begin
+@safetestset "constructors 2" begin
     using TrueAndErrorModels
     using Test
 
@@ -82,7 +82,7 @@ end
     @test isa(model1.p, Vector{Float64})
 end
 
-@testitem "constructors 4" begin
+@safetestset "constructors 4" begin
     using TrueAndErrorModels
     using Test
 
@@ -92,7 +92,7 @@ end
     @test_throws ArgumentError TrueErrorModel(; Θ...)
 end
 
-@testitem "constructors 4" begin
+@safetestset "constructors 4" begin
     using TrueAndErrorModels
     using Test
 
@@ -102,7 +102,7 @@ end
     @test_throws ArgumentError TrueErrorModel(; Θ...)
 end
 
-@testitem "two methods" begin
+@safetestset "two methods" begin
     using TrueAndErrorModels
     using Test
     using Turing
@@ -110,7 +110,7 @@ end
     @test length(methods(tet1_model)) == 2
 end
 
-@testitem "one methods to_table" begin
+@safetestset "one methods to_table" begin
     using TrueAndErrorModels
     using Test
     using NamedArrays
@@ -118,12 +118,12 @@ end
     @test length(methods(to_table)) == 1
 end
 
-@test "to_table" begin
+@safetestset "to_table" begin
     using NamedArrays
     using TrueAndErrorModels
     using Test
 
-    labels = get_response_labels()
+    labels = get_response_labels(TrueErrorModel)
     table = to_table(labels)
 
     # choice 1 in columns 
