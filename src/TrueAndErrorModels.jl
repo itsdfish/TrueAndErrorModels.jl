@@ -16,7 +16,7 @@ import Distributions: rand
 export AbstractTrueErrorModel
 export compute_probs
 export logpdf
-export make_compute_probs
+export @make_model
 export rand
 export TrueErrorModel
 

@@ -28,5 +28,6 @@ eut4_model
 
 ```@docs
 get_response_labels
+make_compute_probs
 to_table
 ```

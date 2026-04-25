@@ -40,13 +40,18 @@ Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error m
 
 Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision Making, 13(6), 622-635.
 """
-struct TrueErrorModel{T <: Real} <: AbstractTrueErrorModel{T}
-    p::AbstractVector{T}
-    ϵ::AbstractVector{T}
+struct TrueErrorModel{T <: Real, V <: AbstractVector{T}} <: AbstractTrueErrorModel{T}
+    p::V
+    ϵ::V
 
-    function TrueErrorModel(p::AbstractArray{T}, ϵ::AbstractArray{T}) where {T <: Real}
+    function TrueErrorModel(p::V, ϵ::V) where {T <: Real, V <: AbstractVector{T}}
+        # Your validation logic remains the same
+        @argcheck all(p .≥ 0)
+        @argcheck sum(p) ≈ 1
         @argcheck all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
-        return new{T}(p, ϵ)
+
+        # Explicitly pass all type parameters to 'new'
+        return new{T, V}(p, ϵ)
     end
 end
 
