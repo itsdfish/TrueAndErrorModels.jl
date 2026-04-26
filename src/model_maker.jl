@@ -42,6 +42,8 @@ function make_error_parms(n_options)
     return parms
 end
 
+count_equations(n_options, n_reps) = prod(n_options)^n_reps
+
 function make_error_terms(
     choice_pattern,
     preference_pattern,
@@ -85,6 +87,7 @@ function make_equation_rhs(
     n = length(preference_patterns)
     eq = ""
     for i ∈ 1:n
+        eq *= i > 1 ? "\t" : ""
         eq *=
             preference_parms[i] * " * " *
             make_error_terms(
@@ -117,8 +120,8 @@ end
 function make_equations(
     n_options::Vector{Int},
     n_reps::Int;
-    constrain_choice_set,
-    constrain_option
+    constrain_choice_set = false,
+    constrain_option = false
 )
     choice_patterns = make_choice_patterns(n_options, n_reps)
     preference_patterns = make_preference_patterns(n_options)
@@ -135,7 +138,7 @@ function make_equations(
             constrain_choice_set,
             constrain_option
         )
-        eqs *= comment * "θ[$i] = \n" * eq * " \n"
+        eqs *= comment * "θ[$i] = " * eq * " \n"
         i += 1
     end
     return eqs
@@ -212,7 +215,6 @@ function make_function_body(
     constrain_choice_set = false,
     constrain_option = false
 )
-    #function_header = "function compute_probs(dist::$model_type{T}) where {T}\n"
     parameter_extraction = "\t(; p, ϵ) = dist\n"
     preference_patterns = make_preference_patterns(n_options)
     preference_parms = make_preference_parms(preference_patterns)
@@ -220,7 +222,7 @@ function make_function_body(
 
     error_parms = make_error_parms(n_options)
     error_extraction = "\t" * join(error_parms, ", ") * " = ϵ\n"
-    theta = "\tθ = zeros(T, $(prod(n_options)^n_reps))\n"
+    theta = "\tθ = zeros(T, $(count_equations(n_options, n_reps)))\n"
     eqs = make_equations(
         n_options,
         n_reps;
@@ -352,20 +354,20 @@ macro make_model(model_type, n_options, n_reps)
         end
 
         local n_error_parms = sum($n_options)
-        function error_parm_count(dist::Type{<:$model_type})
+        function TEM.get_error_parm_count(dist::Type{<:$model_type})
             return n_error_parms
         end
 
-        error_parm_count(dist::$model_type) =
-            error_parm_count(typeof(dist))
+        TEM.get_error_parm_count(dist::$model_type) =
+            TEM.get_error_parm_count(typeof(dist))
 
         local n_true_parms = prod($n_options)
-        function true_parm_count(dist::Type{<:$model_type})
+        function TEM.get_true_parm_count(dist::Type{<:$model_type})
             return n_true_parms
         end
 
-        true_parm_count(dist::$model_type) =
-            true_parm_count(typeof(dist))
+        TEM.get_true_parm_count(dist::$model_type) =
+            TEM.get_true_parm_count(typeof(dist))
 
         local _n_options = deepcopy($n_options)
         function TEM.get_n_options(dist::Type{<:$model_type})
@@ -374,13 +376,28 @@ macro make_model(model_type, n_options, n_reps)
         TEM.get_n_options(dist::$model_type) = TEM.get_n_options(typeof(dist))
 
         local _n_reps = deepcopy($n_reps)
-        function get_n_reps(dist::Type{<:$model_type})
+        function TEM.get_n_reps(dist::Type{<:$model_type})
             return _n_reps
         end
-        get_n_reps(dist::$model_type) = get_n_reps(typeof(dist))
+        TEM.get_n_reps(dist::$model_type) = TEM.get_n_reps(typeof(dist))
+
+        local _n_equations = TEM.count_equations($n_options, $n_reps)
+        function TEM.get_equation_count(dist::Type{<:$model_type})
+            return _n_equations
+        end
+        TEM.get_equation_count(dist::$model_type) = TEM.get_equation_count(typeof(dist))
+
+        Base.length(dist::$model_type) = TEM.get_equation_count(dist)
+
+        local eqs = TEM.make_equations($n_options, $n_reps)
+        eqs = replace(eqs, "# " => "", "*" => "⋅")
+        function TEM.get_equations(dist::Type{<:$model_type})
+            return println(eqs)
+        end
+        TEM.get_equations(dist::$model_type) = TEM.get_equations(typeof(dist))
 
         @doc $func_doc
-        function compute_probs(dist::$model_type{T, V}) where {T, V}
+        function TEM.compute_probs(dist::$model_type{T, V}) where {T, V}
             $function_expr
         end
     end)

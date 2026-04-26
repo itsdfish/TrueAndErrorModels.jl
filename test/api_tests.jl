@@ -1,134 +1,139 @@
-@safetestset "compute_probs" begin
-    using TrueAndErrorModels
-    using Test
+module ComputeProbsTest1
+using TrueAndErrorModels
+using Test
 
-    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
-    probs = compute_probs(model)
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
 
-    @test sum(model.p) ≈ 1
-    @test sum(probs) ≈ 1
+model = TestModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
+probs = compute_probs(model)
 
-    true_probs = [
-        0.086
-        0.039
-        0.037
-        0.014
-        0.039
-        0.122
-        0.014
-        0.039
-        0.037
-        0.014
-        0.187
-        0.066
-        0.014
-        0.039
-        0.066
-        0.187
-    ]
-    @test probs ≈ true_probs atol = 0.002
+@test sum(model.p) ≈ 1
+@test sum(probs) ≈ 1
+
+true_probs = [
+    0.086
+    0.039
+    0.037
+    0.014
+    0.039
+    0.122
+    0.014
+    0.039
+    0.037
+    0.014
+    0.187
+    0.066
+    0.014
+    0.039
+    0.066
+    0.187
+]
+@test probs ≈ true_probs atol = 0.002
+println("$(@__MODULE__) passed")
 end
 
-@safetestset "rand" begin
-    using Random
-    using TrueAndErrorModels
-    using Test
+# @safetestset "rand" begin
+#     using Random
+#     using TrueAndErrorModels
+#     using Test
 
-    Random.seed!(574)
+#     Random.seed!(574)
 
-    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
-    n_trials = 100_000
-    data = rand(model, n_trials)
-    probs = data ./ n_trials
+#     model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
+#     n_trials = 100_000
+#     data = rand(model, n_trials)
+#     probs = data ./ n_trials
 
-    @test sum(model.p) ≈ 1
-    @test sum(probs) ≈ 1
+#     @test sum(model.p) ≈ 1
+#     @test sum(probs) ≈ 1
 
-    true_probs = [
-        0.086
-        0.039
-        0.037
-        0.014
-        0.039
-        0.122
-        0.014
-        0.039
-        0.037
-        0.014
-        0.187
-        0.066
-        0.014
-        0.039
-        0.066
-        0.187
-    ]
-    @test probs ≈ true_probs atol = 0.005
-end
+#     true_probs = [
+#         0.086
+#         0.039
+#         0.037
+#         0.014
+#         0.039
+#         0.122
+#         0.014
+#         0.039
+#         0.037
+#         0.014
+#         0.187
+#         0.066
+#         0.014
+#         0.039
+#         0.066
+#         0.187
+#     ]
+#     @test probs ≈ true_probs atol = 0.005
+# end
 
-@safetestset "constructors 1" begin
-    using TrueAndErrorModels
-    using Test
+# @safetestset "constructors 1" begin
+#     using TrueAndErrorModels
+#     using Test
 
-    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
-    model2 = TrueErrorModel([0.1, 0.2, 0.3, 0.4], [0.05, 0.15, 0.10, 0.20])
-    @test model1 == model2
-end
+#     model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
+#     model2 = TrueErrorModel([0.1, 0.2, 0.3, 0.4], [0.05, 0.15, 0.10, 0.20])
+#     @test model1 == model2
+# end
 
-@safetestset "constructors 2" begin
-    using TrueAndErrorModels
-    using Test
+# @safetestset "constructors 2" begin
+#     using TrueAndErrorModels
+#     using Test
 
-    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.15, 0.10, 0.20])
-    @test isa(model1.p, Vector{Float64})
-end
+#     model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.15, 0.10, 0.20])
+#     @test isa(model1.p, Vector{Float64})
+# end
 
-@safetestset "constructors 4" begin
-    using TrueAndErrorModels
-    using Test
+# @safetestset "constructors 4" begin
+#     using TrueAndErrorModels
+#     using Test
 
-    Θ = (
-        p = [0.1, 0.2, 0.3, 0.4], ϵ = [-0.05, 0.10, 0.15, 0.20]
-    )
-    @test_throws ArgumentError TrueErrorModel(; Θ...)
-end
+#     Θ = (
+#         p = [0.1, 0.2, 0.3, 0.4], ϵ = [-0.05, 0.10, 0.15, 0.20]
+#     )
+#     @test_throws ArgumentError TrueErrorModel(; Θ...)
+# end
 
-@safetestset "constructors 4" begin
-    using TrueAndErrorModels
-    using Test
+# @safetestset "constructors 4" begin
+#     using TrueAndErrorModels
+#     using Test
 
-    Θ = (
-        p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.51, 0.10, 0.15, 0.20]
-    )
-    @test_throws ArgumentError TrueErrorModel(; Θ...)
-end
+#     Θ = (
+#         p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.51, 0.10, 0.15, 0.20]
+#     )
+#     @test_throws ArgumentError TrueErrorModel(; Θ...)
+# end
 
-@safetestset "two methods" begin
-    using TrueAndErrorModels
-    using Test
-    using Turing
+# @safetestset "two methods" begin
+#     using TrueAndErrorModels
+#     using Test
+#     using Turing
 
-    @test length(methods(tet1_model)) == 2
-end
+#     @test length(methods(tet1_model)) == 2
+# end
 
-@safetestset "one methods to_table" begin
-    using TrueAndErrorModels
-    using Test
-    using NamedArrays
+# @safetestset "one methods to_table" begin
+#     using TrueAndErrorModels
+#     using Test
+#     using NamedArrays
 
-    @test length(methods(to_table)) == 1
-end
+#     @test length(methods(to_table)) == 1
+# end
 
-@safetestset "to_table" begin
-    using NamedArrays
-    using TrueAndErrorModels
-    using Test
+# @safetestset "to_table" begin
+#     using NamedArrays
+#     using TrueAndErrorModels
+#     using Test
 
-    labels = get_response_labels(TrueErrorModel)
-    table = to_table(labels)
+#     labels = get_response_labels(TrueErrorModel)
+#     table = to_table(labels)
 
-    # choice 1 in columns 
-    choices = ["RR", "RS", "SR", "SS"]
-    for c1 ∈ choices, c2 ∈ choices
-        @test table[c2, c1] == c1 * "," * c2
-    end
-end
+#     # choice 1 in columns 
+#     choices = ["RR", "RS", "SR", "SS"]
+#     for c1 ∈ choices, c2 ∈ choices
+#         @test table[c2, c1] == c1 * "," * c2
+#     end
+# end

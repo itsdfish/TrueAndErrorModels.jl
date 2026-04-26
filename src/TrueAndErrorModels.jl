@@ -15,12 +15,16 @@ import Distributions: rand
 
 export AbstractTrueErrorModel
 export compute_probs
-export error_parm_count
+export get_error_parm_count
+export get_equation_count
+export get_equations
 export get_n_options
+export get_n_reps
 export logpdf
 export @make_model
 export rand
 export TrueErrorModel
+export get_true_parm_count
 
 export tet1_model
 export tet2_model
