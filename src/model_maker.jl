@@ -290,7 +290,6 @@ macro make_model(model_type, n_options, n_reps)
     # Use __module__ to evaluate the arguments in the scope where the macro is called
     val_n_options = Core.eval(__module__, n_options)
     val_n_reps = Core.eval(__module__, n_reps)
-    m_name = esc(model_type)
     # 1. Generate the string or Expr body BEFORE the quote
     # Note: If n_options/n_reps are literals (like 5, 10), this works perfectly.
     function_body = make_function_body(
@@ -312,8 +311,9 @@ macro make_model(model_type, n_options, n_reps)
     dist = esc(:dist)
 
     return esc(quote
-        import TrueAndErrorModels: compute_probs
-        import TrueAndErrorModels: count_error_parms
+        # import TrueAndErrorModels: compute_probs
+        # import TrueAndErrorModels: error_parm_count
+        const TEM = TrueAndErrorModels
 
         @doc $struct_doc
         struct $model_type{T <: Real, V <: AbstractVector{T}} <: AbstractTrueErrorModel{T}
@@ -321,6 +321,9 @@ macro make_model(model_type, n_options, n_reps)
             ϵ::V
 
             function $model_type(p::V, ϵ::V) where {T <: Real, V <: AbstractVector{T}}
+                local n_error_parms = sum($n_options)
+                local n_true_parms = prod($n_options)
+
                 if !all(p .≥ 0)
                     throw(ArgumentError("All elements of p must be ≥ 0"))
                 end
@@ -329,6 +332,12 @@ macro make_model(model_type, n_options, n_reps)
                 end
                 if !all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
                     throw(ArgumentError("All elements of ϵ must be in [0, 0.5]"))
+                end
+                if length(p) ≠ n_true_parms
+                    throw(ArgumentError("The length of p must be in $(n_true_parms)"))
+                end
+                if length(ϵ) ≠ n_error_parms
+                    throw(ArgumentError("The length of ϵ must be in $(n_error_parms)"))
                 end
                 return new{T, V}(p, ϵ)
             end
@@ -342,33 +351,37 @@ macro make_model(model_type, n_options, n_reps)
             return $model_type(p, ϵ)
         end
 
-        # local n_error_parms = prod(val_n_options)
-        # function TrueAndErrorModels.count_error_parms(dist::$model_type)
-        #     return n_error_parms
-        # end
+        local n_error_parms = sum($n_options)
+        function error_parm_count(dist::Type{<:$model_type})
+            return n_error_parms
+        end
+
+        error_parm_count(dist::$model_type) =
+            error_parm_count(typeof(dist))
+
+        local n_true_parms = prod($n_options)
+        function true_parm_count(dist::Type{<:$model_type})
+            return n_true_parms
+        end
+
+        true_parm_count(dist::$model_type) =
+            true_parm_count(typeof(dist))
+
+        local _n_options = deepcopy($n_options)
+        function TEM.get_n_options(dist::Type{<:$model_type})
+            return _n_options
+        end
+        TEM.get_n_options(dist::$model_type) = TEM.get_n_options(typeof(dist))
+
+        local _n_reps = deepcopy($n_reps)
+        function get_n_reps(dist::Type{<:$model_type})
+            return _n_reps
+        end
+        get_n_reps(dist::$model_type) = get_n_reps(typeof(dist))
 
         @doc $func_doc
         function compute_probs(dist::$model_type{T, V}) where {T, V}
             $function_expr
         end
     end)
-end
-
-# macro my_macro(my_model, n_options)
-#     val_n_options = Core.eval(__module__, n_options)
-#     n_error_parms = prod(val_n_options)
-#     import TrueAndErrorModels: count_error_parms 
-
-#     # I want this function to bind a constant to this function in a performant way
-#     count_error_parms(dist::$model_type) = n_error_parms
-
-# end
-
-macro my_macro(model_type, n_options)
-    return quote
-        local const_val = prod($(esc(n_options)))
-        function TrueAndErrorModels.count_error_parms(dist::$(esc(model_type)))
-            return const_val
-        end
-    end
 end

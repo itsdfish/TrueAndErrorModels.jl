@@ -15,6 +15,8 @@ import Distributions: rand
 
 export AbstractTrueErrorModel
 export compute_probs
+export error_parm_count
+export get_n_options
 export logpdf
 export @make_model
 export rand

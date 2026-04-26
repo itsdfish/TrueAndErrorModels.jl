@@ -1,6 +1,6 @@
-function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel)
-    T = typeof(model)
+function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel{T}) where {T}
     model_name = string(T.name.name)
+    n_options = get_n_options(model)
     preference_patterns = make_preference_patterns(n_options)
     p = make_preference_parms(preference_patterns)
     ϵ = make_error_parms(n_options)
