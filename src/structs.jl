@@ -1,4 +1,3 @@
-abstract type AbstractTrueErrorModel{T} <: DiscreteMultivariateDistribution end
 
 """
 $(TYPEDEF)
@@ -10,8 +9,8 @@ and `ϵₛ₁` represents the error probability of choosing safe given a true pr
 
 # Fields 
 
-- `p::AbstractVector{T}`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
-- `ϵ::AbstractVector{T}`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵₛ₂, ϵᵣ₁, ϵᵣ₂]`.
+- `p::V`: a vector of true preference state probabilities with elements `p = [pᵣᵣ, pᵣₛ, pₛᵣ, pₛₛ]`, such that sum(p) = 1. 
+- `ϵ::V`: a vector of error probabilities with elements `ϵ = [ϵₛ₁, ϵᵣ₁, ϵₛ₂, ϵᵣ₂]`.
 
 
 # Constructors

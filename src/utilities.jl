@@ -1,9 +1,13 @@
 function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel)
     T = typeof(model)
     model_name = string(T.name.name)
+    preference_patterns = make_preference_patterns(n_options)
+    p = make_preference_parms(preference_patterns)
+    ϵ = make_error_parms(n_options)
+    θ = vcat(p, ϵ)
     column_labels = [
-        [MultiColumn(4, "p"), MultiColumn(4, "ϵ")],
-        ["pᵣᵣ", "pᵣₛ", "pₛᵣ", "pₛₛ", "ϵₛ₁", "ϵₛ₂", "ϵᵣ₁", "ϵᵣ₂"]
+        [MultiColumn(length(model.p), "p"), MultiColumn(length(model.ϵ), "ϵ")],
+        θ
     ]
     return pretty_table(
         io,

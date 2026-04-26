@@ -1,5 +1,4 @@
 using SafeTestsets
 
-include("api_tests.jl")
-include("model_tests.jl")
-include("equation_maker_tests.jl")
+files = filter(f -> occursin("tests.jl", f) && f ≠ "runtests.jl", readdir())
+include.(files)

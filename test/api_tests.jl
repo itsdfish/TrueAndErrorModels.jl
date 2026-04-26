@@ -2,7 +2,7 @@
     using TrueAndErrorModels
     using Test
 
-    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.10, 0.15, 0.20])
+    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
     probs = compute_probs(model)
 
     @test sum(model.p) ≈ 1
@@ -36,7 +36,7 @@ end
 
     Random.seed!(574)
 
-    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.10, 0.15, 0.20])
+    model = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
     n_trials = 100_000
     data = rand(model, n_trials)
     probs = data ./ n_trials
@@ -69,8 +69,8 @@ end
     using TrueAndErrorModels
     using Test
 
-    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.10, 0.15, 0.20])
-    model2 = TrueErrorModel([0.1, 0.2, 0.3, 0.4], [0.05, 0.10, 0.15, 0.20])
+    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.05, 0.15, 0.10, 0.20])
+    model2 = TrueErrorModel([0.1, 0.2, 0.3, 0.4], [0.05, 0.15, 0.10, 0.20])
     @test model1 == model2
 end
 
@@ -78,7 +78,7 @@ end
     using TrueAndErrorModels
     using Test
 
-    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.10, 0.15, 0.20])
+    model1 = TrueErrorModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.15, 0.10, 0.20])
     @test isa(model1.p, Vector{Float64})
 end
 

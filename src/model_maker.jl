@@ -234,10 +234,63 @@ function make_function_body(
     return str
 end
 
+function make_struct_doc_strings(model_type, n_options, n_reps)
+    preference_patterns = make_preference_patterns(n_options)
+    preference_parms = make_preference_parms(preference_patterns)
+    error_parms = make_error_parms(n_options)
+    p = "p = [" * join(preference_parms, ", ") * "]"
+
+    error_parms = make_error_parms(n_options)
+    ϵ = "ϵ = [" * join(error_parms, ", ") * "]"
+    return str = """
+        $model_type{T <: Real} <: AbstractTrueErrorModel{T}
+
+    A True and Error Model (TEM) based on `n_options` = $n_options and `n_reps` = $n_reps. The ith element in `n_options`
+    indicates the number of options in the ith choice set. `n_reps` denotes the number of times each choice set is presented 
+    in an experiment. Typically, each choice set is presented once per block in a randomized fashion with filler choices interspersed.
+
+    # Fields
+
+    - `p::V`: a vector of true preference state probabilities with elements `$p`, such that pᵢ ≥ 0 ∀i and Σᵢ pᵢ = 1. 
+        The parameter `pᵢⱼ` indicates the probability of true prefering option `i` in the first choice set and option `j` in the
+        second choice set.    
+    - `ϵ::V`: a vector of error probabilities with elements `$ϵ` such that 0 ≤ ϵₖ ≤ .50. 
+        The parameter ϵᵢₐ indicates the probability of erroneously selecting option `i` in block `a`. 
+
+    # Example
+
+
+    """
+end
+
+"""
+    make_model model_type n_options n_reps
+
+Generates a struct named `model_type`, constructors and a method for `compute_probs` based on `n_options` and 
+`n_reps`. The struct for `model_type` and method for `compute_probs` includes auto-generated documentation.
+
+# Arguments
+
+- `model_type`: the name of the struct representing the model. 
+- `n_options::Vector{Int}`: the number of options in each choice set, e.g., `[2,3]` indicates 2 options in 
+the first choice set and 3 in the second choice set. 
+- `n_reps`: the number of times each choice set is presented. Each repetition occurs in seperate blocks with filler choices.
+
+# Example
+
+```julia
+using TrueAndErrorModels
+
+@make_model MyCoolModel [2,2] 3
+
+model = MyCoolModel(; p = [.3, .1, .2, .4], ϵ = [])
+```
+"""
 macro make_model(model_type, n_options, n_reps)
     # Use __module__ to evaluate the arguments in the scope where the macro is called
     val_n_options = Core.eval(__module__, n_options)
     val_n_reps = Core.eval(__module__, n_reps)
+    m_name = esc(model_type)
     # 1. Generate the string or Expr body BEFORE the quote
     # Note: If n_options/n_reps are literals (like 5, 10), this works perfectly.
     function_body = make_function_body(
@@ -246,53 +299,76 @@ macro make_model(model_type, n_options, n_reps)
         constrain_choice_set = false,
         constrain_option = false
     )
-    m_name = esc(model_type)
+
     # 2. Convert the string to a Julia Expression (Expr) once
     function_expr = Meta.parse(function_body)
 
-    struct_doc = """
-    $model_type{T <: Real} <: AbstractTrueErrorModel{T}
-
-    This is a custom model of type `$model_type` with $val_n_options options and $val_n_reps reps.
-    """
+    struct_doc = make_struct_doc_strings(model_type, val_n_options, val_n_reps)
     func_doc = "Computes probabilities for the `$model_type` model."
 
     # We escape these symbols once here for readability
     T = esc(:T)
     V = esc(:V)
     dist = esc(:dist)
-    m_name = esc(model_type)
-    comp_probs = esc(:compute_probs)
 
-    quote
-        using ArgCheck
+    return esc(quote
         import TrueAndErrorModels: compute_probs
+        import TrueAndErrorModels: count_error_parms
 
-        #@doc $struct_doc
-        struct $m_name{$T <: Real, $V <: AbstractVector{$T}} <: AbstractTrueErrorModel{$T}
-            p::$V
-            ϵ::$V
+        @doc $struct_doc
+        struct $model_type{T <: Real, V <: AbstractVector{T}} <: AbstractTrueErrorModel{T}
+            p::V
+            ϵ::V
 
-            function $m_name(p::$V, ϵ::$V) where {$T <: Real, $V <: AbstractVector{$T}}
-                @argcheck all(p .≥ 0)
-                @argcheck sum(p) ≈ 1
-                @argcheck all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
-                return new{$T, $V}(p, ϵ)
+            function $model_type(p::V, ϵ::V) where {T <: Real, V <: AbstractVector{T}}
+                if !all(p .≥ 0)
+                    throw(ArgumentError("All elements of p must be ≥ 0"))
+                end
+                if !(sum(p) ≈ 1)
+                    throw(ArgumentError("Sum of p must be approximately 1"))
+                end
+                if !all((ϵ .≥ 0) .&& (ϵ .≤ 0.5))
+                    throw(ArgumentError("All elements of ϵ must be in [0, 0.5]"))
+                end
+                return new{T, V}(p, ϵ)
             end
         end
 
-        function $m_name(p, ϵ)
-            return $m_name(promote(p, ϵ)...)
+        function $model_type(p, ϵ)
+            return $model_type(promote(p, ϵ)...)
         end
 
-        function $m_name(; p, ϵ)
-            return $m_name(p, ϵ)
+        function $model_type(; p, ϵ)
+            return $model_type(p, ϵ)
         end
 
-        #@doc $func_doc
-        function $comp_probs($dist::$m_name{$T, $V}) where {$T, $V}
-            println("dfkk")
-            $(esc(function_expr))
+        # local n_error_parms = prod(val_n_options)
+        # function TrueAndErrorModels.count_error_parms(dist::$model_type)
+        #     return n_error_parms
+        # end
+
+        @doc $func_doc
+        function compute_probs(dist::$model_type{T, V}) where {T, V}
+            $function_expr
+        end
+    end)
+end
+
+# macro my_macro(my_model, n_options)
+#     val_n_options = Core.eval(__module__, n_options)
+#     n_error_parms = prod(val_n_options)
+#     import TrueAndErrorModels: count_error_parms 
+
+#     # I want this function to bind a constant to this function in a performant way
+#     count_error_parms(dist::$model_type) = n_error_parms
+
+# end
+
+macro my_macro(model_type, n_options)
+    return quote
+        local const_val = prod($(esc(n_options)))
+        function TrueAndErrorModels.count_error_parms(dist::$(esc(model_type)))
+            return const_val
         end
     end
 end

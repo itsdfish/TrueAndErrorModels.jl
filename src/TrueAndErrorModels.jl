@@ -30,9 +30,8 @@ export eut4_model
 export to_table
 export get_response_labels
 
-include("structs.jl")
-include("functions.jl")
-include("equation_maker.jl")
+include("api.jl")
+include("model_maker.jl")
 include("ext_functions.jl")
 include("utilities.jl")
 end
