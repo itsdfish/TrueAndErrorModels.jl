@@ -23,6 +23,14 @@ Generate a vector of simulated response frequencies based on the provided True a
 # Example
 
 ```julia
+using TrueAndErrorModels
+
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
+
+model = TestModel(; p = [0.3, 0.40, 0.3, 0.0], ϵ = [0.4, 0.2, 0.2, 0.1])
+data = rand(model, 100)
 ```
 """
 function rand(rng::AbstractRNG, dist::AbstractTrueErrorModel, n_trials::Int)
@@ -46,6 +54,16 @@ Computes the log loglikelihood of the data for a True and Error Model.
 # Example
 
 ```julia
+using TrueAndErrorModels
+
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
+
+model = TestModel(; p = [0.3, 0.40, 0.3, 0.0], ϵ = [0.4, 0.2, 0.2, 0.1])
+data = rand(model, 100)
+LL = logpdf(model, data)
+
 ```
 """
 function logpdf(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer})

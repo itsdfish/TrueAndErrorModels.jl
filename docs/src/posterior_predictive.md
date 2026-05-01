@@ -21,15 +21,27 @@ using Turing
 using TuringUtilities
 Random.seed!(6521)
 
-dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+n_options = [2, 2]
+n_reps = 2
+@make_model MyCoolModel n_options n_reps
+
+dist = MyCoolModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
 n_sim = 200
 data = rand(dist, n_sim)
+
+@model function tet1_model(data::Vector{<:Integer})
+    p ~ Dirichlet(fill(1, 4))
+    ϵ ~ Uniform(0, 0.5)
+    ϵ′ = fill(ϵ, 4)
+    data ~ MyCoolModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
+end
 
 model = tet1_model(data)
 chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
 
 pred_model = predict_distribution(;
-    simulator = Θ -> rand(TrueErrorModel(; Θ...), n_sim),
+    simulator = Θ -> rand(MyCoolModel(; Θ...), n_sim),
     model,
     func = x -> x ./ sum(x)
 )

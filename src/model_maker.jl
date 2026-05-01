@@ -1,21 +1,31 @@
 function make_choice_patterns(n_options, n_reps)
     n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
-    sub_patterns = permutedims(sub_patterns, (n_choice_sets:-1:1))[:]
+    sub_patterns = permutedims(sub_patterns, (1:n_choice_sets))[:]
 
     patterns = collect(Base.product(fill(sub_patterns, n_reps)...))
-    patterns = permutedims(patterns, (n_reps:-1:1))[:]
+    patterns = permutedims(patterns, (1:n_reps))[:]
     return patterns
 end
 
 function make_preference_patterns(n_options)
     n_choice_sets = length(n_options)
     patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
-    return permutedims(patterns, (n_choice_sets:-1:1))[:]
+    return permutedims(patterns, (1:n_choice_sets))[:]
 end
 
 function make_preference_patterns(n_options::Int)
     return make_preference_patterns(fill(n_options, length(options)))
+end
+
+function make_numbered_patterns(n_options, n_reps)
+    patterns = make_choice_patterns(n_options, n_reps)
+    str = ""
+    n = length(patterns)
+    for i ∈ 1:n
+        str *= "$i. $(patterns[i])\n"
+    end
+    return str
 end
 
 function add_choice_set_index(i; constrain_choice_set)
@@ -245,22 +255,50 @@ function make_struct_doc_strings(model_type, n_options, n_reps)
     error_parms = make_error_parms(n_options)
     ϵ = "ϵ = [" * join(error_parms, ", ") * "]"
     return str = """
-        $model_type{T <: Real} <: AbstractTrueErrorModel{T}
+        $model_type{T <: Real, V <: AbstractVector{T}} <: AbstractTrueErrorModel{T}
 
-    A True and Error Model (TEM) based on `n_options` = $n_options and `n_reps` = $n_reps. The ith element in `n_options`
+    A True and Error Model (TEM) based on an experimental design with $(length(n_options)) choice sets, `n_options` = $n_options per choice set, and `n_reps` = $n_reps presentations of each choice set. The ith element in `n_options`
     indicates the number of options in the ith choice set. `n_reps` denotes the number of times each choice set is presented 
     in an experiment. Typically, each choice set is presented once per block in a randomized fashion with filler choices interspersed.
 
     # Fields
 
     - `p::V`: a vector of true preference state probabilities with elements `$p`, such that pᵢ ≥ 0 ∀i and Σᵢ pᵢ = 1. 
-        The parameter `pᵢⱼ` indicates the probability of true prefering option `i` in the first choice set and option `j` in the
+        The parameter `pᵢⱼ` indicates the probability of truely prefering option `i` in the first choice set and option `j` in the
         second choice set.    
-    - `ϵ::V`: a vector of error probabilities with elements `$ϵ` such that 0 ≤ ϵₖ ≤ .50. 
-        The parameter ϵᵢₐ indicates the probability of erroneously selecting option `i` in block `a`. 
+    - `ϵ::V`: a vector of error probabilities `$ϵ` with elements 0 ≤ ϵⱼ ≤ .50. 
+        The parameter ϵᵢₖ indicates the probability of erroneously selecting option `i` in choice set `k`. 
+
+
+    # Response Patterns
+
+    Response patterns are coded as follows: responses within the same block are grouped by inner parentheses, numbers correspond to the index of the selected option, and position of the number within the parentheses indicates the choice set.
+     For example, `((1,1), (1,2))` indicates the first option was chosen in all cases except in the second choice set of the second block where the second option was selected.
+    For the experimental design described above, output vectors from `rand` and `compute_probs` correspond to the following
+    response patterns:
+
+    $(make_numbered_patterns(n_options, n_reps))
 
     # Example
 
+    The examples below illustrate basic usage of the API for `TrueAndErrorModels`.
+
+    ```julia
+    n_options = [2, 2]
+    n_reps = 2
+    @make_model $model_type n_options n_reps
+
+    model = $model_type(; p = [0.3, 0.40, 0.3, 0.0], ϵ = [0.4, 0.2, 0.2, 0.1])
+    probs = compute_probs(model)
+    data = rand(model, 100)
+    LL = logpdf(model, data)
+
+    get_error_parm_count(model)
+    get_n_options(model)
+    get_n_reps(model)
+    get_true_parm_count(model)
+    get_equations(model)
+    ```
 
     """
 end
@@ -285,7 +323,7 @@ using TrueAndErrorModels
 
 @make_model MyCoolModel [2,2] 3
 
-model = MyCoolModel(; p = [.3, .1, .2, .4], ϵ = [])
+model = MyCoolModel(; p = [0.3, 0.40, 0.3, 0.0], ϵ = [0.4, 0.2, 0.2, 0.1])
 ```
 """
 macro make_model(model_type, n_options, n_reps)

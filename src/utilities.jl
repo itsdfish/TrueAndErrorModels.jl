@@ -49,3 +49,10 @@ function get_response_labels(::Type{<:AbstractTrueErrorModel})
         "SS,SS"
     ]
 end
+
+function col_to_row_major(v::AbstractVector, dims::Tuple)
+    # Reconstruct the N-dimensional array
+    A = reshape(v, dims)
+    # Reverse the dimension order and flatten
+    return vec(permutedims(A, reverse(1:length(dims))))
+end

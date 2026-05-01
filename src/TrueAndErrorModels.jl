@@ -1,6 +1,5 @@
 module TrueAndErrorModels
 
-using ArgCheck
 using DocStringExtensions
 using PrettyTables
 using Random
@@ -23,15 +22,7 @@ export get_n_reps
 export logpdf
 export @make_model
 export rand
-export TrueErrorModel
 export get_true_parm_count
-
-export tet1_model
-export tet2_model
-export tet4_model
-export eut1_model
-export eut2_model
-export eut4_model
 
 export to_table
 export get_response_labels

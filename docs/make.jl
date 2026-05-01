@@ -17,7 +17,6 @@ makedocs(
     ),
     modules = [
         TrueAndErrorModels,
-        Base.get_extension(TrueAndErrorModels, :TuringExt),
         Base.get_extension(TrueAndErrorModels, :NamedArraysExt)
     ],
     pages = [
@@ -26,7 +25,6 @@ makedocs(
         "Bayesian Parameter Estimation" => "parameter_estimation.md",
         "Bayesian Model Comparison" => "bayes_factor.md",
         "Predictive Distributions" => "posterior_predictive.md",
-        "Off-the-shelf Turing Models" => "turing_models.md",
         "API" => "api.md"
     ]
 )

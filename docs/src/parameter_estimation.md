@@ -20,8 +20,20 @@ using Random
 using StatsPlots
 Random.seed!(25044)
 
-dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+n_options = [2, 2]
+n_reps = 2
+@make_model MyCoolModel n_options n_reps
+
+dist = MyCoolModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
 data = rand(dist, 200)
+
+@model function tet1_model(data::Vector{<:Integer})
+    p ~ Dirichlet(fill(1, 4))
+    ϵ ~ Uniform(0, 0.5)
+    ϵ′ = fill(ϵ, 4)
+    data ~ MyCoolModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
+end
 
 # Estimate parameters
 chains = sample(tet1_model(data), NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
@@ -73,7 +85,7 @@ In addition, our model assumes the error probabilities are constrained to be equ
 ``\epsilon_{\mathrm{S}_1} = \epsilon_{\mathrm{S}_S} = \epsilon_{\mathrm{R}_1} =\epsilon_{\mathrm{R}_2} = .10``
 
 ```julia
-dist = TrueErrorModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+dist = MyCoolModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
 data = rand(dist, 200)
 ```
 
