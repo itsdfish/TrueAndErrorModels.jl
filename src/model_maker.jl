@@ -425,7 +425,8 @@ macro make_model(model_type, n_options, n_reps)
             TEM.get_true_parm_labels(typeof(dist))
 
         local resp_patterns = TEM.make_response_patterns($n_options, $n_reps)
-        local _resp_patterns = map(x -> replace("$x", "((" => "(", "))" => ")", " " => ""), resp_patterns)
+        local _resp_patterns =
+            map(x -> replace("$x", "((" => "(", "))" => ")", " " => ""), resp_patterns)
         function TEM.get_response_labels(dist::Type{<:$model_type})
             return _resp_patterns
         end
