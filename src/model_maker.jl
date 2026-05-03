@@ -1,4 +1,4 @@
-function make_choice_patterns(n_options, n_reps)
+function make_response_patterns(n_options, n_reps)
     n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     sub_patterns = permutedims(sub_patterns, (1:n_choice_sets))[:]
@@ -19,7 +19,7 @@ function make_preference_patterns(n_options::Int)
 end
 
 function make_numbered_patterns(n_options, n_reps)
-    patterns = make_choice_patterns(n_options, n_reps)
+    patterns = make_response_patterns(n_options, n_reps)
     str = ""
     n = length(patterns)
     for i ∈ 1:n
@@ -55,7 +55,7 @@ end
 count_equations(n_options, n_reps) = prod(n_options)^n_reps
 
 function make_error_terms(
-    choice_pattern,
+    response_pattern,
     preference_pattern,
     n_options;
     constrain_option,
@@ -63,10 +63,10 @@ function make_error_terms(
 )
     error_terms = ""
     n_choice_sets = length(preference_pattern)
-    n_reps = length(choice_pattern)
+    n_reps = length(response_pattern)
     for r ∈ 1:n_reps
         for i ∈ 1:n_choice_sets
-            if preference_pattern[i] == choice_pattern[r][i]
+            if preference_pattern[i] == response_pattern[r][i]
                 error_terms *= "(1"
                 for c ∈ 1:n_options[i]
                     error_terms *=
@@ -77,7 +77,7 @@ function make_error_terms(
                 error_terms *= ")"
             else
                 error_terms *=
-                    "ϵ" * add_option_index(choice_pattern[r][i]; constrain_option) *
+                    "ϵ" * add_option_index(response_pattern[r][i]; constrain_option) *
                     add_choice_set_index(i; constrain_choice_set)
             end
             error_terms *= (r == n_reps) && (i == n_choice_sets) ? "" : " * "
@@ -89,7 +89,7 @@ end
 function make_equation_rhs(
     preference_parms,
     preference_patterns,
-    choice_pattern,
+    response_pattern,
     n_options;
     constrain_choice_set = false,
     constrain_option = false
@@ -101,7 +101,7 @@ function make_equation_rhs(
         eq *=
             preference_parms[i] * " * " *
             make_error_terms(
-                choice_pattern,
+                response_pattern,
                 preference_patterns[i],
                 n_options;
                 constrain_choice_set,
@@ -133,17 +133,17 @@ function make_equations(
     constrain_choice_set = false,
     constrain_option = false
 )
-    choice_patterns = make_choice_patterns(n_options, n_reps)
+    response_patterns = make_response_patterns(n_options, n_reps)
     preference_patterns = make_preference_patterns(n_options)
     preference_parms = make_preference_parms(preference_patterns)
     eqs = ""
     i = 1
-    for choice_pattern ∈ choice_patterns
-        comment = "# choice pattern: $choice_pattern \n"
+    for response_pattern ∈ response_patterns
+        comment = "# response pattern: $response_pattern \n"
         eq = make_equation_rhs(
             preference_parms,
             preference_patterns,
-            choice_pattern,
+            response_pattern,
             n_options;
             constrain_choice_set,
             constrain_option
@@ -266,7 +266,7 @@ function make_struct_doc_strings(model_type, n_options, n_reps)
     - `p::V`: a vector of true preference state probabilities with elements `$p`, such that pᵢ ≥ 0 ∀i and Σᵢ pᵢ = 1. 
         The parameter `pᵢⱼ` indicates the probability of truely prefering option `i` in the first choice set and option `j` in the
         second choice set.    
-    - `ϵ::V`: a vector of error probabilities `$ϵ` with elements 0 ≤ ϵⱼ ≤ .50. 
+    - `ϵ::V`: a vector of error probabilities with elements `$ϵ`, such that 0 ≤ ϵⱼ ≤ .50. 
         The parameter ϵᵢₖ indicates the probability of erroneously selecting option `i` in choice set `k`. 
 
 
@@ -399,6 +399,14 @@ macro make_model(model_type, n_options, n_reps)
         TEM.get_error_parm_count(dist::$model_type) =
             TEM.get_error_parm_count(typeof(dist))
 
+        local _error_parms = TEM.make_error_parms($n_options)
+        function TEM.get_error_parm_labels(dist::Type{<:$model_type})
+            return _error_parms
+        end
+
+        TEM.get_error_parm_labels(dist::$model_type) =
+            TEM.get_error_parm_labels(typeof(dist))
+
         local n_true_parms = prod($n_options)
         function TEM.get_true_parm_count(dist::Type{<:$model_type})
             return n_true_parms
@@ -406,6 +414,24 @@ macro make_model(model_type, n_options, n_reps)
 
         TEM.get_true_parm_count(dist::$model_type) =
             TEM.get_true_parm_count(typeof(dist))
+
+        local preference_patterns = TEM.make_preference_patterns($n_options)
+        local _true_parms = TEM.make_preference_parms(preference_patterns)
+        function TEM.get_true_parm_labels(dist::Type{<:$model_type})
+            return _true_parms
+        end
+
+        TEM.get_true_parm_labels(dist::$model_type) =
+            TEM.get_true_parm_labels(typeof(dist))
+
+        local resp_patterns = TEM.make_response_patterns($n_options, $n_reps)
+        local _resp_patterns = map(x -> replace("$x", "((" => "(", "))" => ")", " " => ""), resp_patterns)
+        function TEM.get_response_labels(dist::Type{<:$model_type})
+            return _resp_patterns
+        end
+
+        TEM.get_response_labels(dist::$model_type) =
+            TEM.get_response_labels(typeof(dist))
 
         local _n_options = deepcopy($n_options)
         function TEM.get_n_options(dist::Type{<:$model_type})
@@ -430,13 +456,19 @@ macro make_model(model_type, n_options, n_reps)
         local eqs = TEM.make_equations($n_options, $n_reps)
         eqs = replace(eqs, "# " => "", "*" => "⋅")
         function TEM.get_equations(dist::Type{<:$model_type})
-            return println(eqs)
+            return eqs
         end
         TEM.get_equations(dist::$model_type) = TEM.get_equations(typeof(dist))
+
+        function TEM.show_equations(dist::Type{<:$model_type})
+            return println(eqs)
+        end
+        TEM.show_equations(dist::$model_type) = TEM.show_equations(typeof(dist))
 
         @doc $func_doc
         function TEM.compute_probs(dist::$model_type{T, V}) where {T, V}
             $function_expr
         end
+        return nothing
     end)
 end

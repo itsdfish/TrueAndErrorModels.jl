@@ -1,12 +1,16 @@
 abstract type AbstractTrueErrorModel{T} <: DiscreteMultivariateDistribution end
 
 function get_error_parm_count end
+function get_error_parm_labels end
+function get_true_parm_labels end
 function get_true_parm_count end
 function get_n_options end
 function get_n_reps end
 function compute_probs end
 function get_equations end
 function get_equation_count end
+function get_response_labels end
+function show_equations end
 
 """
 $(TYPEDSIGNATURES)

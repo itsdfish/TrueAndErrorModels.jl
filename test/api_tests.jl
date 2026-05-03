@@ -178,3 +178,61 @@ end
 #     end
 #     println("$(@__MODULE__) passed")
 # end
+
+module ModelMakerTest2
+using Distributions
+using TrueAndErrorModels
+using Test
+
+n_reps = 2
+n_options = [2, 3]
+@make_model TestModel n_options n_reps
+
+for _ ∈ 1:100
+    model = TestModel(;
+        p = rand(Dirichlet(fill(1, 6))),
+        ϵ = rand(Uniform(0, 0.5), 5)
+    );
+    θ = compute_probs(model)
+
+    @test sum(θ) ≈ 1
+    @test all(x -> x ≥ 0, θ)
+    @test length(θ) == 36
+end
+println("$(@__MODULE__) passed")
+end
+
+module PredictDistribution
+using TrueAndErrorModels
+using Test
+using Turing
+using TuringUtilities
+
+n_reps = 2
+n_options = [2, 2]
+@make_model TestModel n_options n_reps
+n_sim = 200
+dist = TestModel(; p = [0.65, 0.15, 0.15, 0.05], ϵ = fill(0.10, 4))
+data = rand(dist, n_sim)
+
+@model function tet1_model(data::Vector{<:Integer})
+    p ~ Dirichlet(fill(1, 4))
+    ϵ ~ Uniform(0, 0.5)
+    ϵ′ = fill(ϵ, 4)
+    data ~ TestModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
+end
+model = tet1_model(data)
+chains = sample(model, NUTS(500, 0.65), MCMCThreads(), 500, 4)
+
+pred_model = predict_distribution(
+    simulator = p -> rand(TestModel(; p...), n_sim);
+    model,
+    func = x -> x ./ sum(x)
+)
+
+post_preds = returned(pred_model, chains)
+post_preds = stack(post_preds, dims = 1)
+@test model() ≠ nothing
+println("$(@__MODULE__) passed")
+end

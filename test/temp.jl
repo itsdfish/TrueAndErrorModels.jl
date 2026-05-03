@@ -16,7 +16,7 @@ get_error_parm_count(model)
 get_n_options(model)
 get_n_reps(model)
 get_true_parm_count(model)
-get_equations(model)
+show_equations(model)
 
 n_options = [2, 3]
 n_reps = 2
@@ -28,4 +28,4 @@ get_error_parm_count(model)
 get_n_options(model)
 get_n_reps(model)
 get_true_parm_count(model)
-get_equations(model)
+show_equations(model)

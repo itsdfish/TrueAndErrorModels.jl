@@ -22,34 +22,6 @@ function Base.show(io::IO, ::MIME"text/plain", model::AbstractTrueErrorModel)
     )
 end
 
-get_response_labels(model::AbstractTrueErrorModel) = get_response_labels(typeof(model))
-
-"""
-$(TYPEDSIGNATURES)
-
-Returns a vector of response pattern labels.
-"""
-function get_response_labels(::Type{<:AbstractTrueErrorModel})
-    labels = [
-        "RR,RR",
-        "RR,RS",
-        "RR,SR",
-        "RR,SS",
-        "RS,RR",
-        "RS,RS",
-        "RS,SR",
-        "RS,SS",
-        "SR,RR",
-        "SR,RS",
-        "SR,SR",
-        "SR,SS",
-        "SS,RR",
-        "SS,RS",
-        "SS,SR",
-        "SS,SS"
-    ]
-end
-
 function col_to_row_major(v::AbstractVector, dims::Tuple)
     # Reconstruct the N-dimensional array
     A = reshape(v, dims)

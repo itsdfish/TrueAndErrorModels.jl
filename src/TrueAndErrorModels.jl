@@ -15,6 +15,7 @@ import Distributions: rand
 export AbstractTrueErrorModel
 export compute_probs
 export get_error_parm_count
+export get_error_parm_labels
 export get_equation_count
 export get_equations
 export get_n_options
@@ -22,7 +23,9 @@ export get_n_reps
 export logpdf
 export @make_model
 export rand
+export get_true_parm_labels
 export get_true_parm_count
+export show_equations
 
 export to_table
 export get_response_labels
