@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Example · TrueAndErrorModels</title><meta name="title" content="Example · TrueAndErrorModels"/><meta property="og:title" content="Example · TrueAndErrorModels"/><meta property="twitter:title" content="Example · TrueAndErrorModels"/><meta name="description" content="Documentation for TrueAndErrorModels."/><meta property="og:description" content="Documentation for TrueAndErrorModels."/><meta property="twitter:description" content="Documentation for TrueAndErrorModels."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="TrueAndErrorModels logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">TrueAndErrorModels</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Example</a><ul class="internal"><li><a class="tocitem" href="#Full-Code"><span>Full Code</span></a></li><li><a class="tocitem" href="#Load-Packages"><span>Load Packages</span></a></li><li><a class="tocitem" href="#Generate-Model"><span>Generate Model</span></a></li><li><a class="tocitem" href="#Models"><span>Models</span></a></li><li><a class="tocitem" href="#Generate-Data"><span>Generate Data</span></a></li><li><a class="tocitem" href="#The-Turing-Model"><span>The Turing Model</span></a></li><li><a class="tocitem" href="#Estimate-the-Parameters"><span>Estimate the Parameters</span></a></li><li><a class="tocitem" href="#Evaluation"><span>Evaluation</span></a></li><li class="toplevel"><a class="tocitem" href="#Posterior-Predictive-Distributions"><span>Posterior Predictive Distributions</span></a></li><li class="toplevel"><a class="tocitem" href="#References"><span>References</span></a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Example</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Example</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/itsdfish/TrueAndErrorModels.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/itsdfish/TrueAndErrorModels.jl/blob/main/docs/src/example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><img src="https://raw.githubusercontent.com/itsdfish/TrueAndErrorModels.jl/gh-pages/dev/assets/logo_readme.png" alt="drawing" width="900"/><h1 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h1><p>The purpose of this tutorial is to demonstrate how to develop and apply True and Error Models (TEMs; Birnbaum &amp; Quispe-Torreblanca, 2018) with TrueAndErrorModels.jl. We will cover topics such as model development, Bayesian parameter estimation, and the API.</p><h2 id="Full-Code"><a class="docs-heading-anchor" href="#Full-Code">Full Code</a><a id="Full-Code-1"></a><a class="docs-heading-anchor-permalink" href="#Full-Code" title="Permalink"></a></h2><p>You can reveal copy-and-pastable version of the full code by clicking the ▶ below.</p><details>
+<summary><b>Show Full Code</b></summary><pre><code class="language-julia hljs">using FlexiChains
+using Random
+using StatsPlots
+using TrueAndErrorModels
+using Turing
+using TuringUtilities
+Random.seed!(6632)
+
+n_options = [2, 2]
+n_reps = 2
+@make_model MyCoolModel n_options n_reps
+
+dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
+n_sim = 200
+data = rand(dist, n_sim)
+
+@model function tem1_model(data::Vector{&lt;:Integer})
+    p ~ Dirichlet(fill(1, 4))
+    ϵ ~ Uniform(0, 0.5)
+    ϵ′ = fill(ϵ, 4)
+    data ~ MyCoolModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
+end
+
+model = tem1_model(data)
+chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+
+post_plot = plot(chains, grid = false, leg = false)
+vline!(
+    post_plot,
+    [missing 0.40 missing 0.10 missing 0.10 missing 0.40 missing 0.10],
+    color = :black,
+    linestyle = :dash
+)
+
+pred_model = predict_distribution(;
+    simulator = Θ -&gt; rand(MyCoolModel(; Θ...), n_sim),
+    model,
+    func = x -&gt; x ./ sum(x)
+)
+
+post_preds = generated_quantities(pred_model, chains)
+post_preds = stack(post_preds, dims = 1)
+
+labels = get_response_labels(dist)
+violin(
+    post_preds,
+    xticks = (1:length(labels), labels),
+    ylabel = &quot;Response Probability&quot;,
+    leg = false,
+    grid = false,
+    xrotation = 45
+)
+scatter!(1:16, data ./ sum(data), color = :black)</code></pre></details><h2 id="Load-Packages"><a class="docs-heading-anchor" href="#Load-Packages">Load Packages</a><a id="Load-Packages-1"></a><a class="docs-heading-anchor-permalink" href="#Load-Packages" title="Permalink"></a></h2><p>The first step is to load the required packages. You will need to install each package in your local environment in order to run the code locally. We will also set a random number generator so that the results are reproducible.</p><pre><code class="language-julia hljs">using FlexiChains
+using Random
+using StatsPlots
+using TrueAndErrorModels
+using Turing
+using TuringUtilities
+Random.seed!(6632)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Random.TaskLocalRNG()</code></pre><h2 id="Generate-Model"><a class="docs-heading-anchor" href="#Generate-Model">Generate Model</a><a id="Generate-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Generate-Model" title="Permalink"></a></h2><p>Due to the tight coupling between model and experiment, we will describe a simple experimental design and demonstrate how to generate a model programatically with meta-programming.</p><h3 id="Experimental-Design"><a class="docs-heading-anchor" href="#Experimental-Design">Experimental Design</a><a id="Experimental-Design-1"></a><a class="docs-heading-anchor-permalink" href="#Experimental-Design" title="Permalink"></a></h3><p>As a simple example, we will consider an experiment designed to test expected utility theory (EUT), which is commonly known as the Allias paradox. In this experiment, there are two choice sets, each containing two gambles. The choice sets are denoted as follows: </p><p><span>$\mathcal{C}_1 = \{\mathcal{G}_1,\mathcal{G}_2\}$</span></p><p>and </p><p><span>$\mathcal{C}_2 = \{\mathcal{G}_{1}^{\prime},\mathcal{G}_{2}^{\prime}\}$</span>,</p><p>A gamble is denoted as a set of outcome and corresponding probability pairs: </p><p><span>$\mathcal{G} = (x_{1}, p_{1}; \dots; x_{n}, p_{n})$</span>.</p><p>The gambles are constructed such that EUT predicts that people will select the corresponding gamble in  each choice set. Formally, EUT predicts the following preference relationship for <span>$i,j \in \{1,2\}$</span>, with <span>$i \ne j$</span>:</p><p><span>$\mathcal{G}_i \succ \mathcal{G}_j \Longleftrightarrow \mathcal{G}_{i}^{\prime} \succ \mathcal{G}_{j}^{\prime}$</span></p><p>To estimate the parameters of a TEM, both choice sets must be presented in at least two separate blocks. Filler choice sets are interspersed within each block to ensure that the errors are independent. Below, we create a model matching this experimental design: two choice sets, each with two options, which are repeated twice. We will name this model <code>MyCoolModel</code> to highlight the fact that it is indeed cool.</p><pre><code class="language-julia hljs">n_options = [2, 2]
+n_reps = 2
+@make_model MyCoolModel n_options n_reps</code></pre><h3 id="Response-Patterns"><a class="docs-heading-anchor" href="#Response-Patterns">Response Patterns</a><a id="Response-Patterns-1"></a><a class="docs-heading-anchor-permalink" href="#Response-Patterns" title="Permalink"></a></h3><p>In this experiment, there are <span>$2^4 = 16$</span> response patterns formed from two choice sets with two options each, and two presentations of the choice sets. We can generate the response patterns with the function <code>get_response_labels</code>.</p><pre><code class="language-julia hljs">get_response_labels(MyCoolModel)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">16-element Vector{String}:
+ &quot;(1,1),(1,1)&quot;
+ &quot;(2,1),(1,1)&quot;
+ &quot;(1,2),(1,1)&quot;
+ &quot;(2,2),(1,1)&quot;
+ &quot;(1,1),(2,1)&quot;
+ &quot;(2,1),(2,1)&quot;
+ &quot;(1,2),(2,1)&quot;
+ &quot;(2,2),(2,1)&quot;
+ &quot;(1,1),(1,2)&quot;
+ &quot;(2,1),(1,2)&quot;
+ &quot;(1,2),(1,2)&quot;
+ &quot;(2,2),(1,2)&quot;
+ &quot;(1,1),(2,2)&quot;
+ &quot;(2,1),(2,2)&quot;
+ &quot;(1,2),(2,2)&quot;
+ &quot;(2,2),(2,2)&quot;</code></pre><p>Response patterns are coded as follows: responses within the same block are grouped by parentheses, numbers correspond to the index of the selected option, and position of the number within the parentheses indicates the choice set. For example, <code>(1,1), (1,2)</code> indicates the first option was chosen in all cases except in the second choice set of the second block where the second option was selected.</p><h3 id="Parameters"><a class="docs-heading-anchor" href="#Parameters">Parameters</a><a id="Parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Parameters" title="Permalink"></a></h3><p>Most TEMs consist of two types of parameters: true preference parameters and error paramaters, which are organized into corresponding vectors. The true preference vector is defined as:</p><p><span>$\mathbf{p} = \left[p_{11},p_{21},p_{12},p_{22} \right],$</span></p><p>where <span>$\sum_{i \in \mathcal{I}} p_i = 1$</span> and <span>$p_i \geq 0, \forall i$</span>. Subscripts <span>$ij$</span> indicate preference for option <span>$i$</span> in the first choice set and preference for option <span>$j$</span> in the second choice set.</p><p>Similarly, the error parameters are defined as:</p><p><span>$\boldsymbol{\epsilon} = \left[\epsilon_{21},\epsilon_{11},\epsilon_{22},\epsilon_{12} \right],$</span></p><p>where <span>$\epsilon_{ka}$</span> is the probability of erroneously selecting option <span>$k$</span> from the <span>$a$</span>th choice set. </p><h3 id="Model-Equations"><a class="docs-heading-anchor" href="#Model-Equations">Model Equations</a><a id="Model-Equations-1"></a><a class="docs-heading-anchor-permalink" href="#Model-Equations" title="Permalink"></a></h3><p>You can view the model equations by calling <code>get_equations</code> and passing <code>MyCoolModel</code> or a model object of that type. The model equations are organized according to the response patterns above. The corresponding response pattern is shown above each equation.</p><pre><code class="language-julia hljs">show_equations(MyCoolModel)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">response pattern: ((1, 1), (1, 1))
+θ[1] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ +
+	p₂₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂
+response pattern: ((2, 1), (1, 1))
+θ[2] = p₁₁ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂
+response pattern: ((1, 2), (1, 1))
+θ[3] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ ϵ₁₁ ⋅ ϵ₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ +
+	p₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂) ⋅ ϵ₁₁ ⋅ ϵ₁₂
+response pattern: ((2, 2), (1, 1))
+θ[4] = p₁₁ ⋅ ϵ₂₁ ⋅ ϵ₂₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂) ⋅ ϵ₁₁ ⋅ ϵ₁₂
+response pattern: ((1, 1), (2, 1))
+θ[5] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ +
+	p₂₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂
+response pattern: ((2, 1), (2, 1))
+θ[6] = p₁₁ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂
+response pattern: ((1, 2), (2, 1))
+θ[7] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ ϵ₁₁ ⋅ ϵ₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) ⋅ ϵ₂₁ ⋅ ϵ₁₂ +
+	p₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂
+response pattern: ((2, 2), (2, 1))
+θ[8] = p₁₁ ⋅ ϵ₂₁ ⋅ ϵ₂₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) +
+	p₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) ⋅ ϵ₂₁ ⋅ ϵ₁₂ +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂
+response pattern: ((1, 1), (1, 2))
+θ[9] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ +
+	p₂₁ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) ⋅ ϵ₁₁ ⋅ ϵ₂₂ +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂)
+response pattern: ((2, 1), (1, 2))
+θ[10] = p₁₁ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) ⋅ ϵ₁₁ ⋅ ϵ₂₂ +
+	p₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂)
+response pattern: ((1, 2), (1, 2))
+θ[11] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ +
+	p₂₁ ⋅ ϵ₁₁ ⋅ ϵ₂₂ ⋅ ϵ₁₁ ⋅ ϵ₂₂ +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂) ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂)
+response pattern: ((2, 2), (1, 2))
+θ[12] = p₁₁ ⋅ ϵ₂₁ ⋅ ϵ₂₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ ⋅ ϵ₁₁ ⋅ ϵ₂₂ +
+	p₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂) ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂)
+response pattern: ((1, 1), (2, 2))
+θ[13] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₂₂) ⋅ ϵ₂₁ ⋅ ϵ₂₂ +
+	p₂₁ ⋅ ϵ₁₁ ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ ϵ₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ ϵ₁₁ ⋅ ϵ₁₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂)
+response pattern: ((2, 1), (2, 2))
+θ[14] = p₁₁ ⋅ ϵ₂₁ ⋅ (1 - ϵ₂₂) ⋅ ϵ₂₁ ⋅ ϵ₂₂ +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₂₂) ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ +
+	p₁₂ ⋅ ϵ₂₁ ⋅ ϵ₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₁₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂)
+response pattern: ((1, 2), (2, 2))
+θ[15] = p₁₁ ⋅ (1 - ϵ₂₁) ⋅ ϵ₂₂ ⋅ ϵ₂₁ ⋅ ϵ₂₂ +
+	p₂₁ ⋅ ϵ₁₁ ⋅ ϵ₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ +
+	p₁₂ ⋅ (1 - ϵ₂₁) ⋅ (1 - ϵ₁₂) ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ ϵ₁₁ ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂)
+response pattern: ((2, 2), (2, 2))
+θ[16] = p₁₁ ⋅ ϵ₂₁ ⋅ ϵ₂₂ ⋅ ϵ₂₁ ⋅ ϵ₂₂ +
+	p₂₁ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ ⋅ (1 - ϵ₁₁) ⋅ ϵ₂₂ +
+	p₁₂ ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) ⋅ ϵ₂₁ ⋅ (1 - ϵ₁₂) +
+	p₂₂ ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂) ⋅ (1 - ϵ₁₁) ⋅ (1 - ϵ₁₂)</code></pre><h2 id="Models"><a class="docs-heading-anchor" href="#Models">Models</a><a id="Models-1"></a><a class="docs-heading-anchor-permalink" href="#Models" title="Permalink"></a></h2><p>Below, we will consider two contrasting models and generate simulated data from the second model.</p><h3 id="EUT-Model"><a class="docs-heading-anchor" href="#EUT-Model">EUT Model</a><a id="EUT-Model-1"></a><a class="docs-heading-anchor-permalink" href="#EUT-Model" title="Permalink"></a></h3><p>In this section, we will encode the predictions of EUT into the TEM. Recall from above that EUT predicts a person will prefer first option in both choice sets <span>$\mathcal{C}_1$</span> and <span>$\mathcal{C}_2$</span> or the second option in both. This means <span>$p_{12} = p_{21} = 0$</span>, and the probability of prefering the first options is <span>$\lambda \in [0,1]$</span> and the probabilty of prefering the second options is <span>$1-\lambda$</span>:</p><ul><li><span>$p_{11} = \lambda$</span></li><li><span>$p_{12} = 0$</span></li><li><span>$p_{21} = 0$</span></li><li><span>$p_{22} = 1 - \lambda$</span></li></ul><h3 id="TEM1"><a class="docs-heading-anchor" href="#TEM1">TEM1</a><a id="TEM1-1"></a><a class="docs-heading-anchor-permalink" href="#TEM1" title="Permalink"></a></h3><p>Next, we will consider an alternative model in which <span>$p_{12} &gt; 0$</span> and <span>$p_{21} &gt; 0$</span>. </p><ul><li><span>$p_{11} = .40$</span></li><li><span>$p_{21} = .10$</span></li><li><span>$p_{12} = .10$</span></li><li><span>$p_{22} = .40$</span></li></ul><p>In addition, this model assumes the error probabilities are constrained to be equal:</p><p><span>$\epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22} = .10$</span>.</p><p>Hence, the name TEM indicates a single error parameter.</p><h2 id="Generate-Data"><a class="docs-heading-anchor" href="#Generate-Data">Generate Data</a><a id="Generate-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Generate-Data" title="Permalink"></a></h2><p>In the code block below, we will generate data from 200 subjects using the TEM1.</p><pre><code class="language-julia hljs">dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
+n_sim = 200
+data = rand(dist, n_sim)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">16-element Vector{Int64}:
+ 53
+  5
+ 10
+  2
+  8
+ 14
+  2
+  5
+  9
+  3
+ 11
+ 10
+  2
+  7
+  5
+ 54</code></pre><h2 id="The-Turing-Model"><a class="docs-heading-anchor" href="#The-Turing-Model">The Turing Model</a><a id="The-Turing-Model-1"></a><a class="docs-heading-anchor-permalink" href="#The-Turing-Model" title="Permalink"></a></h2><p>In this section, we will define the priors for the TEM1. The prior distributions are as follows:</p><p><span>$\mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])$</span></p><p><span>$\epsilon \sim \mathrm{Uniform}(0, .5)$</span></p><p>where <span>$\mathbf{p}$</span> is a vector of four preference state parameters, and <span>$\epsilon$</span> is a scalar. As noted above, in the TET1 model, we assume <span>$\epsilon = \epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22}$</span>. The sampling function below  accepts a vector of response frequencies and is used to sample from the posterior distribution.</p><pre><code class="language-julia hljs">@model function tem1_model(data::Vector{&lt;:Integer})
+    p ~ Dirichlet(fill(1, 4))
+    ϵ ~ Uniform(0, 0.5)
+    ϵ′ = fill(ϵ, 4)
+    data ~ MyCoolModel(; p, ϵ = ϵ′)
+    return (; p, ϵ = ϵ′)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">tem1_model (generic function with 2 methods)</code></pre><h2 id="Estimate-the-Parameters"><a class="docs-heading-anchor" href="#Estimate-the-Parameters">Estimate the Parameters</a><a id="Estimate-the-Parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Estimate-the-Parameters" title="Permalink"></a></h2><p>Now that the Turing model has been specified, we can perform Bayesian parameter estimation with the function <code>sample</code>. We will use the No U-Turn Sampler (NUTS) to sample from the posterior distribution. The inputs into the <code>sample</code> function below are summarized as follows:</p><ol><li><code>model(data)</code>: the Turing model with data passed</li><li><code>NUTS(1000, .65)</code>: a sampler object for the No U-Turn Sampler for 1000 warmup samples.</li><li><code>MCMCThreads()</code>: instructs Turing to run each chain on a separate thread</li><li><code>n_iterations</code>: the number of iterations performed after warmup</li><li><code>n_chains</code>: the number of chains</li></ol><p>For ease of intepretation, we will convert the numerical indices of preference vector <span>$\mathbf{p}$</span> to more informative labeled indices. </p><pre><code class="language-julia hljs">model = tem1_model(data)
+chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+# name_map = Dict(&quot;p[$i]&quot; =&gt; v for (i,v) ∈ enumerate(get_true_parm_labels(MyCoolModel)))
+# _chains = replacenames(chains, name_map)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Chains MCMC chain (1000×19×4 Array{Float64, 3}):
+
+Iterations        = 1001:1:2000
+Number of chains  = 4
+Samples per chain = 1000
+Wall duration     = 8.44 seconds
+Compute duration  = 4.52 seconds
+parameters        = p[1], p[2], p[3], p[4], ϵ
+internals         = n_steps, is_accept, acceptance_rate, log_density, hamiltonian_energy, hamiltonian_energy_error, max_hamiltonian_energy_error, tree_depth, numerical_error, step_size, nom_step_size, logprior, loglikelihood, logjoint
+
+Use `describe(chains)` for summary statistics and quantiles.
+</code></pre><p>The output below shows the mean, standard deviation, effective sample size, and rhat for each of the five parameters. The pannel below shows the quantiles of the marginal distributions.  We see that the chains converged according to <span>$\hat{r} \leq 1.05$</span>,</p><pre><code class="language-julia hljs">summarystats(chains)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Summary Statistics
+
+ <span class="sgr1"> parameters </span> <span class="sgr1">    mean </span> <span class="sgr1">     std </span> <span class="sgr1">    mcse </span> <span class="sgr1">  ess_bulk </span> <span class="sgr1">  ess_tail </span> <span class="sgr1">    rhat </span>  ⋯
+ <span class="sgr90">     Symbol </span> <span class="sgr90"> Float64 </span> <span class="sgr90"> Float64 </span> <span class="sgr90"> Float64 </span> <span class="sgr90">   Float64 </span> <span class="sgr90">   Float64 </span> <span class="sgr90"> Float64 </span>  ⋯
+
+        p[1]    0.4189    0.0385    0.0006   4805.7920   3259.1944    1.0004   ⋯
+        p[2]    0.0945    0.0257    0.0004   4920.9628   2918.0146    0.9997   ⋯
+        p[3]    0.0849    0.0264    0.0004   4021.1019   2752.7304    1.0012   ⋯
+        p[4]    0.4016    0.0386    0.0005   6694.1383   3121.5903    1.0005   ⋯
+           ϵ    0.1097    0.0127    0.0002   4983.6585   3300.7559    1.0012   ⋯
+
+<span class="sgr36">                                                                1 column omitted</span>
+</code></pre><h2 id="Evaluation"><a class="docs-heading-anchor" href="#Evaluation">Evaluation</a><a id="Evaluation-1"></a><a class="docs-heading-anchor-permalink" href="#Evaluation" title="Permalink"></a></h2><p>It is important to verify visually that the chains converged. The trace plots below show that the chains look like &quot;hairy caterpillars&quot;, which indicates the chains did not get stuck. </p><pre><code class="language-julia hljs">post_plot = plot(chains, grid = false, leg = false)
+vline!(
+    post_plot,
+    [missing 0.40 missing 0.10 missing 0.10 missing 0.40 missing 0.10],
+    color = :black,
+    linestyle = :dash
+)</code></pre><img src="cd5e6850.svg" alt="Example block output"/><p>The data-generating parameters are represented as black vertical lines in the density plots. As expected, the posterior distributions are centered near the data-generating parameters. Given that the data-generating and estimated model are the same, we would expect the posterior distributions to be near the data-generating parameters. </p><h1 id="Posterior-Predictive-Distributions"><a class="docs-heading-anchor" href="#Posterior-Predictive-Distributions">Posterior Predictive Distributions</a><a id="Posterior-Predictive-Distributions-1"></a><a class="docs-heading-anchor-permalink" href="#Posterior-Predictive-Distributions" title="Permalink"></a></h1><pre><code class="language-julia hljs">pred_model = predict_distribution(;
+    simulator = Θ -&gt; rand(MyCoolModel(; Θ...), n_sim),
+    model,
+    func = x -&gt; x ./ sum(x)
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">DynamicPPL.Model{typeof(TuringUtilities.predict_distribution), (Symbol(&quot;#splat#args&quot;),), (:simulator, :model, :func, :sim_kwargs), (), Tuple{Tuple{}}, Tuple{Main.var&quot;#4#6&quot;, DynamicPPL.Model{typeof(Main.tem1_model), (:data,), (), (), Tuple{Vector{Int64}}, Tuple{}, DynamicPPL.DefaultContext, false}, Main.var&quot;#5#7&quot;, Tuple{}}, DynamicPPL.DefaultContext, false}(TuringUtilities.predict_distribution, (var&quot;#splat#args&quot; = (),), (simulator = Main.var&quot;#4#6&quot;(), model = DynamicPPL.Model{typeof(Main.tem1_model), (:data,), (), (), Tuple{Vector{Int64}}, Tuple{}, DynamicPPL.DefaultContext, false}(Main.tem1_model, (data = [53, 5, 10, 2, 8, 14, 2, 5, 9, 3, 11, 10, 2, 7, 5, 54],), NamedTuple(), DynamicPPL.DefaultContext()), func = Main.var&quot;#5#7&quot;(), sim_kwargs = ()), DynamicPPL.DefaultContext())</code></pre><pre><code class="language-julia hljs">post_preds = generated_quantities(pred_model, chains)
+post_preds = stack(post_preds, dims = 1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4000×16 Matrix{Float64}:
+ 0.235  0.025  0.035  0.01   0.04   …  0.025  0.01   0.035  0.02   0.275
+ 0.285  0.045  0.05   0.01   0.025     0.055  0.005  0.04   0.03   0.235
+ 0.27   0.045  0.035  0.0    0.035     0.025  0.015  0.04   0.03   0.275
+ 0.27   0.04   0.015  0.015  0.02      0.035  0.01   0.09   0.045  0.27
+ 0.305  0.04   0.04   0.0    0.02      0.05   0.015  0.05   0.045  0.245
+ 0.26   0.05   0.045  0.015  0.025  …  0.035  0.01   0.015  0.05   0.225
+ 0.34   0.05   0.025  0.015  0.04      0.015  0.0    0.015  0.03   0.29
+ 0.26   0.045  0.03   0.005  0.06      0.05   0.035  0.035  0.04   0.29
+ 0.275  0.015  0.065  0.015  0.03      0.045  0.01   0.03   0.035  0.285
+ 0.155  0.03   0.04   0.025  0.025     0.03   0.015  0.08   0.05   0.305
+ ⋮                                  ⋱                              ⋮
+ 0.32   0.03   0.02   0.02   0.04      0.02   0.0    0.025  0.02   0.26
+ 0.27   0.05   0.025  0.015  0.025     0.07   0.01   0.03   0.035  0.245
+ 0.25   0.04   0.03   0.015  0.045     0.065  0.005  0.025  0.04   0.235
+ 0.225  0.065  0.045  0.01   0.025     0.03   0.01   0.05   0.02   0.26
+ 0.26   0.04   0.04   0.01   0.04   …  0.03   0.01   0.045  0.045  0.195
+ 0.27   0.055  0.02   0.01   0.045     0.015  0.025  0.065  0.025  0.235
+ 0.29   0.03   0.035  0.0    0.025     0.035  0.005  0.04   0.04   0.325
+ 0.25   0.07   0.03   0.01   0.02      0.035  0.015  0.045  0.06   0.235
+ 0.245  0.03   0.025  0.015  0.025     0.04   0.01   0.055  0.035  0.295</code></pre><pre><code class="language-julia hljs">labels = get_response_labels(dist)
+violin(
+    post_preds,
+    xticks = (1:length(labels), labels),
+    ylabel = &quot;Response Probability&quot;,
+    leg = false,
+    grid = false,
+    xrotation = 45
+)
+scatter!(1:16, data ./ sum(data), color = :black)</code></pre><img src="41f6383f.svg" alt="Example block output"/><h1 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h1><p>Birnbaum, M. H., &amp; Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.</p><p>Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision Making, 13(6), 622-635.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Wednesday 6 May 2026 10:11">Wednesday 6 May 2026</span>. Using Julia version 1.11.9.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
