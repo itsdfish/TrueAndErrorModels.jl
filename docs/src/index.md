@@ -4,9 +4,11 @@
 
 # Overview 
 
-The purpose of this package is to provide an implementation of True and Error Theory (TET; Birnbaum,  & Quispe-Torreblanca, 2018) in the Julia programming language. TET provides a mathematical framework for distinguishing between true preferences and errors in option evaluation and selection. For example, a person who selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$ may truely prefer $\mathcal{R}$, or may truely prefer $\mathcal{S}$, but committed an error during the evaluation process. For more details, see the section titled *Model Overview*.
+The purpose of this package is to automatically generate True and Error Models (TEMs; Birnbaum,  & Quispe-Torreblanca, 2018) based on experimental design parameters. TEMs provide a mathematical framework for distinguishing between true preferences and errors in option evaluation and selection, and are often used to perform critical tests designed to distinguish competing theories. For example, a person who selects risky option $\mathcal{R}$ over safe option $\mathcal{S}$ may truly prefer $\mathcal{R}$, or may truly prefer $\mathcal{S}$, but committed an error during the evaluation process. This package can generate TEMs from a large model class based on experimental design parameters using metaprogramming. See the provided example for details on how to generate TEMs and use the API.
 
 ## Key Features
+
+## Ecosystem Integration 
 
 One of the most valuable benefits of TrueAndErrorModels.jl is its seemless integration with the Julia ecosystem. Key examples include
 

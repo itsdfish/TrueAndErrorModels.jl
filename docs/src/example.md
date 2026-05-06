@@ -1,9 +1,9 @@
 ```@raw html
 <img src="https://raw.githubusercontent.com/itsdfish/TrueAndErrorModels.jl/gh-pages/dev/assets/logo_readme.png" alt="drawing" width="900"/>
 ```
-# Bayesian Parameter Estimation
+# Overview
 
-The purpose of this tutorial is to demonstrate how to perform Bayesian parameter estimation of the True and Error model (TET; Birnbaum & Quispe-Torreblanca, 2018) using the [Turing.jl](https://turinglang.org/) package. 
+The purpose of this tutorial is to demonstrate how to develop and apply True and Error Models (TEMs; Birnbaum & Quispe-Torreblanca, 2018) with TrueAndErrorModels.jl. We will cover topics such as model development, Bayesian parameter estimation, and the API.
 
 ## Full Code 
 
@@ -14,6 +14,7 @@ You can reveal copy-and-pastable version of the full code by clicking the ▶ be
 <summary><b>Show Full Code</b></summary>
 ```
 ```julia
+using FlexiChains
 using Random
 using StatsPlots
 using TrueAndErrorModels
@@ -25,10 +26,11 @@ n_options = [2, 2]
 n_reps = 2
 @make_model MyCoolModel n_options n_reps
 
-dist = MyCoolModel(; p = [0.65, 0.00, 0.0, 0.35], ϵ = fill(0.10, 4))
-data = rand(dist, 200)
+dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
+n_sim = 200
+data = rand(dist, n_sim)
 
-@model function tet1_model(data::Vector{<:Integer})
+@model function tem1_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
     ϵ ~ Uniform(0, 0.5)
     ϵ′ = fill(ϵ, 4)
@@ -36,24 +38,36 @@ data = rand(dist, 200)
     return (; p, ϵ = ϵ′)
 end
 
-# Estimate parameters
-chains = sample(tet1_model(data), NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
+model = tem1_model(data)
+chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
 
-name_map = Dict(
-    "p[1]" => "pᵣᵣ",
-    "p[2]" => "pᵣₛ",
-    "p[3]" => "pₛᵣ",
-    "p[4]" => "pₛₛ"
-)
-chains = replacenames(chains, name_map)
-
-post_plot = plot(chains, grid = false)
+post_plot = plot(chains, grid = false, leg = false)
 vline!(
     post_plot,
-    [missing 0.65 missing 0.15 missing 0.15 missing 0.05 missing 0.10],
+    [missing 0.40 missing 0.10 missing 0.10 missing 0.40 missing 0.10],
     color = :black,
     linestyle = :dash
 )
+
+pred_model = predict_distribution(;
+    simulator = Θ -> rand(MyCoolModel(; Θ...), n_sim),
+    model,
+    func = x -> x ./ sum(x)
+)
+
+post_preds = generated_quantities(pred_model, chains)
+post_preds = stack(post_preds, dims = 1)
+
+labels = get_response_labels(dist)
+violin(
+    post_preds,
+    xticks = (1:length(labels), labels),
+    ylabel = "Response Probability",
+    leg = false,
+    grid = false,
+    xrotation = 45
+)
+scatter!(1:16, data ./ sum(data), color = :black)
 ```
 ```@raw html
 </details>
@@ -65,6 +79,7 @@ The first step is to load the required packages. You will need to install each p
 environment in order to run the code locally. We will also set a random number generator so that the results are reproducible.
 
 ```@example estimate
+using FlexiChains
 using Random
 using StatsPlots
 using TrueAndErrorModels
@@ -75,9 +90,11 @@ Random.seed!(6632)
 
 ## Generate Model
 
+Due to the tight coupling between model and experiment, we will describe a simple experimental design and demonstrate how to generate a model programatically with meta-programming.
+
 ### Experimental Design
 
-As a simple example, we will consider an experiment designed to test expected utility theory (EUT), which commonly known as the Allias paradox. In this experiment, there are two choice sets, each containing two gambles. The choice sets are denoted as follows: 
+As a simple example, we will consider an experiment designed to test expected utility theory (EUT), which is commonly known as the Allias paradox. In this experiment, there are two choice sets, each containing two gambles. The choice sets are denoted as follows: 
 
 ``\mathcal{C}_1 = \{\mathcal{G}_1,\mathcal{G}_2\}``
 
@@ -89,12 +106,12 @@ A gamble is denoted as a set of outcome and corresponding probability pairs:
 
 ``\mathcal{G} = (x_{1}, p_{1}; \dots; x_{n}, p_{n})``.
 
-The gambles are constructed such that EUT predicts people will select the corresponding gamble in 
+The gambles are constructed such that EUT predicts that people will select the corresponding gamble in 
 each choice set. Formally, EUT predicts the following preference relationship for ``i,j \in \{1,2\}``, with ``i \ne j``:
 
 ``\mathcal{G}_i \succ \mathcal{G}_j \Longleftrightarrow \mathcal{G}_{i}^{\prime} \succ \mathcal{G}_{j}^{\prime}``
 
-To estimate the parameters of a TEM, both choice sets must be presented in at least separate blocks. Filler choice sets are interspersed within each block to ensure that the errors are independent. Below, we create a model matching this experimental design: two choice sets, each with two options, which are repeated twice. We will name this model `MyCoolModel` to highlight the fact that it is indeed cool.
+To estimate the parameters of a TEM, both choice sets must be presented in at least two separate blocks. Filler choice sets are interspersed within each block to ensure that the errors are independent. Below, we create a model matching this experimental design: two choice sets, each with two options, which are repeated twice. We will name this model `MyCoolModel` to highlight the fact that it is indeed cool.
 
 ```@example estimate
 n_options = [2, 2]
@@ -104,14 +121,18 @@ n_reps = 2
 
 ### Response Patterns
 
-In this experiment, there are $2^4 = 16$ response patterns formed from two choice sets with two options each, and two repetitions of the choice sets. We can generate the response patterns with the function `get_response_labels`.
+In this experiment, there are $2^4 = 16$ response patterns formed from two choice sets with two options each, and two presentations of the choice sets. We can generate the response patterns with the function `get_response_labels`.
 
-Response patterns are coded as follows: responses within the same block are grouped by inner parentheses, numbers correspond to the index of the selected option, and position of the number within the parentheses indicates the choice set.
-For example, `((1,1), (1,2))` indicates the first option was chosen in all cases except in the second choice set of the second block where the second option was selected.
+```@example estimate
+get_response_labels(MyCoolModel)
+```
+
+Response patterns are coded as follows: responses within the same block are grouped by parentheses, numbers correspond to the index of the selected option, and position of the number within the parentheses indicates the choice set.
+For example, `(1,1), (1,2)` indicates the first option was chosen in all cases except in the second choice set of the second block where the second option was selected.
     
 ### Parameters
 
-Most TEMs consist of two types of parameters: true preference parameters and error paramaters. These parameters are organized into corresponding vectors. The true preference vector is defined as:
+Most TEMs consist of two types of parameters: true preference parameters and error paramaters, which are organized into corresponding vectors. The true preference vector is defined as:
 
 ``\mathbf{p} = \left[p_{11},p_{21},p_{12},p_{22} \right],``
 
@@ -131,39 +152,48 @@ You can view the model equations by calling `get_equations` and passing `MyCoolM
 show_equations(MyCoolModel)
 ```
 
-## Model 
+## Models 
 
-In this section, we will encode the predictions of EUT into the TEM. Recall from above that EUT predictions a person will prefer first option in both choice sets $\mathcal{C}_1$ and $\mathcal{C}_2$ or the second option in both. This means $p_{12} = p_{21} = 0$, and the probability of prefering the first options is ``\lambda \in [0,1]`` and the probabilty of prefering the second options is ``1-\lambda``:
+Below, we will consider two contrasting models and generate simulated data from the second model.
+
+### EUT Model
+
+In this section, we will encode the predictions of EUT into the TEM. Recall from above that EUT predicts a person will prefer first option in both choice sets $\mathcal{C}_1$ and $\mathcal{C}_2$ or the second option in both. This means $p_{12} = p_{21} = 0$, and the probability of prefering the first options is ``\lambda \in [0,1]`` and the probabilty of prefering the second options is ``1-\lambda``:
 
 - ``p_{11} = \lambda``
 - ``p_{12} = 0``
 - ``p_{21} = 0``
 - ``p_{22} = 1 - \lambda``
 
+### TEM1
 
-## Generate Data
-
-
+Next, we will consider an alternative model in which ``p_{12} > 0`` and ``p_{21} > 0``. 
 
 - ``p_{11} = .40``
 - ``p_{21} = .10``
 - ``p_{12} = .10``
 - ``p_{22} = .40``
 
-In addition, our model assumes the error probabilities are constrained to be equal:
+In addition, this model assumes the error probabilities are constrained to be equal:
 
-``\epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22} = .10``
+``\epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22} = .10``.
+
+Hence, the name TEM indicates a single error parameter.
+
+## Generate Data
+
+In the code block below, we will generate data from 200 subjects using the TEM1.
 
 ```@example estimate
 dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
 n_sim = 200
-data = rand(dist, 200)
+data = rand(dist, n_sim)
 ```
  
 
 ## The Turing Model
 
-The TET1 model is automatically loaded when Turing is loaded into your Julia session. The `tet1_model` function accepts a vector of response frequencies. The prior distributions are as follows:
+In this section, we will define the priors for the TEM1. The prior distributions are as follows:
 
 ``
 \mathbf{p} \sim \mathrm{Dirichlet}([1,1,1,1])
@@ -173,7 +203,7 @@ The TET1 model is automatically loaded when Turing is loaded into your Julia ses
 \epsilon \sim \mathrm{Uniform}(0, .5)
 ``
 
-where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. In the TET1 model, we assume `` \epsilon = \epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22}``. 
+where $\mathbf{p}$ is a vector of four preference state parameters, and $\epsilon$ is a scalar. As noted above, in the TET1 model, we assume `` \epsilon = \epsilon_{21} = \epsilon_{12} = \epsilon_{21} =\epsilon_{22}``. The sampling function below  accepts a vector of response frequencies and is used to sample from the posterior distribution.
 
 ```@example estimate
 @model function tem1_model(data::Vector{<:Integer})
@@ -200,13 +230,13 @@ For ease of intepretation, we will convert the numerical indices of preference v
 ```@example estimate
 model = tem1_model(data)
 chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
-name_map = Dict("p[$i]" => v for (i,v) ∈ enumerate(get_true_parm_labels(MyCoolModel)))
-_chains = replacenames(chains, name_map)
+# name_map = Dict("p[$i]" => v for (i,v) ∈ enumerate(get_true_parm_labels(MyCoolModel)))
+# _chains = replacenames(chains, name_map)
 ```
 
 The output below shows the mean, standard deviation, effective sample size, and rhat for each of the five parameters. The pannel below shows the quantiles of the marginal distributions.  We see that the chains converged according to $\hat{r} \leq 1.05$,
 ```@example estimate
-describe(_chains)
+summarystats(chains)
 ```
 
 ## Evaluation
@@ -214,7 +244,7 @@ describe(_chains)
 It is important to verify visually that the chains converged. The trace plots below show that the chains look like "hairy caterpillars", which indicates the chains did not get stuck. 
 
 ```@example estimate
-post_plot = plot(_chains, grid = false)
+post_plot = plot(chains, grid = false, leg = false)
 vline!(
     post_plot,
     [missing 0.40 missing 0.10 missing 0.10 missing 0.40 missing 0.10],

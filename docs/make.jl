@@ -21,10 +21,7 @@ makedocs(
     ],
     pages = [
         "Home" => "index.md",
-        "Model Overview" => "overview.md",
-        "Bayesian Parameter Estimation" => "parameter_estimation.md",
-        "Bayesian Model Comparison" => "bayes_factor.md",
-        "Predictive Distributions" => "posterior_predictive.md",
+        "Example" => "example.md",
         "API" => "api.md"
     ]
 )

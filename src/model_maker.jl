@@ -1,3 +1,7 @@
+function add_conditional_index(i; constrain_conditional)
+    return constrain_conditional ? "" : "₍" * sub("$i") * "₎"
+end
+
 function make_response_patterns(n_options, n_reps)
     n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
@@ -62,6 +66,7 @@ function make_error_terms(
     constrain_choice_set
 )
     error_terms = ""
+    constrain_conditional = true
     n_choice_sets = length(preference_pattern)
     n_reps = length(response_pattern)
     for r ∈ 1:n_reps
@@ -72,13 +77,16 @@ function make_error_terms(
                     error_terms *=
                         preference_pattern[i] ≠ c ?
                         " - ϵ" * add_option_index(c; constrain_option) *
-                        add_choice_set_index(i; constrain_choice_set) : ""
+                        add_choice_set_index(i; constrain_choice_set) *
+                        add_conditional_index(preference_pattern[i]; constrain_conditional) :
+                        ""
                 end
                 error_terms *= ")"
             else
                 error_terms *=
                     "ϵ" * add_option_index(response_pattern[r][i]; constrain_option) *
-                    add_choice_set_index(i; constrain_choice_set)
+                    add_choice_set_index(i; constrain_choice_set) *
+                    add_conditional_index(preference_pattern[i]; constrain_conditional)
             end
             error_terms *= (r == n_reps) && (i == n_choice_sets) ? "" : " * "
         end
