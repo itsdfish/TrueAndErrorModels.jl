@@ -318,4 +318,3 @@ end
 
 loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) =
     logpdf(dist, data)
-
