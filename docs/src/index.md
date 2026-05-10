@@ -8,6 +8,10 @@ The purpose of this package is to automatically generate True and Error Models (
 
 ## Key Features
 
+1. Provides macros that generate models and methods based on experimental design.
+2. Provides convienence functions for tables and plotting.
+3. Integrates with many Julia ecosystems.
+
 ## Ecosystem Integration 
 
 One of the most valuable benefits of TrueAndErrorModels.jl is its seemless integration with the Julia ecosystem. Key examples include

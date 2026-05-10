@@ -12,6 +12,14 @@ function make_response_patterns(n_options, n_reps)
     return patterns
 end
 
+function make_table_labels(n_options)
+    n_choice_sets = length(n_options)
+    sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
+    sub_patterns = permutedims(sub_patterns, (1:n_choice_sets))[:]
+    str = string.(sub_patterns)
+    return map(s -> replace(s, " " => ""), str)
+end
+
 function make_preference_patterns(n_options)
     n_choice_sets = length(n_options)
     patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
@@ -306,6 +314,17 @@ function make_struct_doc_strings(model_type, n_options, n_reps)
     get_n_reps(model)
     get_true_parm_count(model)
     get_equations(model)
+
+
+    # Documentation 
+
+    Full documentation can be found at https://itsdfish.github.io/TrueAndErrorModels.jl/dev/
+
+    # References
+
+    Birnbaum, M. H., & Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.
+
+    Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision Making, 13(6), 622-635.
     ```
 
     """
@@ -459,6 +478,12 @@ macro make_model(model_type, n_options, n_reps)
             return _n_equations
         end
         TEM.get_equation_count(dist::$model_type) = TEM.get_equation_count(typeof(dist))
+
+        local table_labels = TEM.make_table_labels($n_options)
+        function TEM.get_table_labels(dist::Type{<:$model_type})
+            return table_labels
+        end
+        TEM.get_table_labels(dist::$model_type) = TEM.get_table_labels(typeof(dist))
 
         Base.length(dist::$model_type) = TEM.get_equation_count(dist)
 

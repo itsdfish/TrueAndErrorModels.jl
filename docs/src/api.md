@@ -7,13 +7,23 @@
 ```@docs
 @make_model
 compute_probs
+get_error_parm_count
+get_error_parm_labels
+get_equations
+get_equation_count
+get_n_options
+get_n_reps
+get_response_labels
+get_true_parm_labels
+get_true_parm_count
 logpdf
+show_equations
 rand
 ```
+
 
 ## Utilities 
 
 ```@docs
-get_response_labels
 to_table
 ```

@@ -23,6 +23,7 @@ export get_n_reps
 export logpdf
 export @make_model
 export rand
+export get_table_labels
 export get_true_parm_labels
 export get_true_parm_count
 export show_equations

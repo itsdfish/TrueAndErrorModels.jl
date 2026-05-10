@@ -1,16 +1,257 @@
 abstract type AbstractTrueErrorModel{T} <: DiscreteMultivariateDistribution end
 
-function get_error_parm_count end
-function get_error_parm_labels end
-function get_true_parm_labels end
-function get_true_parm_count end
-function get_n_options end
-function get_n_reps end
-function compute_probs end
-function get_equations end
-function get_equation_count end
-function get_response_labels end
-function show_equations end
+"""
+$(TYPEDSIGNATURES)
+
+Computes the response probability for each response pattern. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function compute_probs(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of error parameters. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_error_parm_count(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of error parameters. 
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_error_parm_count(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of names corresponding to each error parameter.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_error_parm_labels(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of names corresponding to each error parameter.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_error_parm_labels(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns all model equations as a string. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_equations(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns all model equations as a string. 
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_equations(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of equations in the model which corresponds to the number of response patterns.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_equation_count(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of equations in the model which corresponds to the number of response patterns.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_equation_count(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES) 
+
+Returns a vector where each element corresponds to the number of options in a choice set. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_n_options(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES) 
+
+Returns a vector where each element corresponds to the number of options in a choice set. 
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_n_options(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of times the choice sets are presented. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_n_reps(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of times the choice sets are presented. 
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_n_reps(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of labels for the response patterns.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_response_labels(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of labels for the response patterns.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_response_labels(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of names corresponding to each true parameter.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_true_parm_labels(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns a vector of names corresponding to each true parameter.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_true_parm_labels(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of true parameters.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_true_parm_count(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Returns the number of true parameters.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_true_parm_count(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Generates labels for response patterns for a single block.
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function get_table_labels(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Generates labels for response patterns for a single block.
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function get_table_labels(::Type{<:AbstractTrueErrorModel}) end
+
+"""
+$(TYPEDSIGNATURES)
+
+Displays all model equations. 
+
+# Arguments
+
+- `model::AbstractTrueErrorModel`: a generic true and error model 
+"""
+function show_equations(model::AbstractTrueErrorModel) end
+
+"""
+$(TYPEDSIGNATURES) 
+
+Displays all model equations. 
+
+# Arguments
+
+- `::Type{<:AbstractTrueErrorModel}`: a generic true and error model type
+"""
+function show_equations(::Type{<:AbstractTrueErrorModel}) end
 
 """
 $(TYPEDSIGNATURES)
@@ -77,3 +318,4 @@ end
 
 loglikelihood(dist::AbstractTrueErrorModel, data::AbstractVector{<:Integer}) =
     logpdf(dist, data)
+

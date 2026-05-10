@@ -15,6 +15,7 @@ You can reveal copy-and-pastable version of the full code by clicking the ▶ be
 ```
 ```julia
 using FlexiChains
+using NamedArrays
 using Random
 using StatsPlots
 using TrueAndErrorModels
@@ -29,6 +30,8 @@ n_reps = 2
 dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
 n_sim = 200
 data = rand(dist, n_sim)
+
+to_table(MyCoolModel, data)
 
 @model function tem1_model(data::Vector{<:Integer})
     p ~ Dirichlet(fill(1, 4))
@@ -80,6 +83,7 @@ environment in order to run the code locally. We will also set a random number g
 
 ```@example estimate
 using FlexiChains
+using NamedArrays
 using Random
 using StatsPlots
 using TrueAndErrorModels
@@ -188,6 +192,14 @@ In the code block below, we will generate data from 200 subjects using the TEM1.
 dist = MyCoolModel(; p = [0.40, 0.10, 0.10, 0.40], ϵ = fill(0.10, 4))
 n_sim = 200
 data = rand(dist, n_sim)
+```
+
+### Table 
+
+We can also organize the data into a joint frequency table such that each dimension respresents a response pattern on the corresponding block.
+
+```@example estimate
+to_table(MyCoolModel, data)
 ```
  
 

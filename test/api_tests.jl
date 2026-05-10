@@ -96,18 +96,18 @@ model2 = TestModel([0.1, 0.3, 0.2, 0.4], [0.05, 0.15, 0.10, 0.20])
 println("$(@__MODULE__) passed")
 end
 
-# @safetestset "constructors 2" begin
-#     using TrueAndErrorModels
-#     using Test
-# n_options = [2, 2]
-# n_reps = 2
-# @make_model TestModel n_options n_reps
-#     model1 = TestModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.15, 0.10, 0.20])
-#     @test isa(model1.p, Vector{Float64})
-#     println("$(@__MODULE__) passed")
-# end
+module Constructors2
+using TrueAndErrorModels
+using Test
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
+model1 = TestModel(; p = [0.1, 0.2, 0.3, 0.4], ϵ = Float32[0.05, 0.15, 0.10, 0.20])
+@test isa(model1.p, Vector{Float64})
+println("$(@__MODULE__) passed")
+end
 
-module Constructors4
+module Constructors3
 using TrueAndErrorModels
 using Test
 
@@ -122,33 +122,39 @@ n_reps = 2
 println("$(@__MODULE__) passed")
 end
 
-# @safetestset "constructors 4" begin
-#     using TrueAndErrorModels
-#     using Test
+module Constructors4
+using TrueAndErrorModels
+using Test
 
-# n_options = [2, 2]
-# n_reps = 2
-# @make_model TestModel n_options n_reps
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
 
-#     Θ = (
-#         p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.51, 0.10, 0.15, 0.20]
-#     )
-#     @test_throws ArgumentError TestModel(; Θ...)
-#     println("$(@__MODULE__) passed")
-# end
+Θ = (
+    p = [0.1, 0.2, 0.3, 0.4], ϵ = [0.51, 0.10, 0.15, 0.20]
+)
+@test_throws ArgumentError TestModel(; Θ...)
+println("$(@__MODULE__) passed")
+end
 
-# @safetestset "two methods" begin
-#     using TrueAndErrorModels
-#     using Test
-#     using Turing
+module ToTable1
+using NamedArrays
+using TrueAndErrorModels
+using Test
 
-# n_options = [2, 2]
-# n_reps = 2
-# @make_model TestModel n_options n_reps
+n_options = [2, 2]
+n_reps = 2
+@make_model TestModel n_options n_reps
 
-#     @test length(methods(tet1_model)) == 2
-#     println("$(@__MODULE__) passed")
-# end
+labels = get_response_labels(TestModel)
+table = to_table(TestModel, labels)
+
+choices = ["(1,1)", "(1,2)", "(2,1)", "(2,2)"]
+for c1 ∈ choices, c2 ∈ choices
+    @test table[c1, c2] == "$c1,$c2"
+end
+println("$(@__MODULE__) passed")
+end
 
 # @safetestset "one methods to_table" begin
 #     using TrueAndErrorModels
