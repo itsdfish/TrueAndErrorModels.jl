@@ -1,7 +1,38 @@
+"""
+$(TYPEDSIGNATURES)
+
+Generate a subscripted index for conditional parameters if not constrained.
+
+# Arguments 
+
+- `i`: the index of the preference state
+
+# Keyword 
+
+- `constrain_conditional`: constrains the conditional index to an empty string if true
+
+# Returns 
+
+Returns a string representation of the conditional index
+"""
 function add_conditional_index(i; constrain_conditional)
     return constrain_conditional ? "" : "₍" * sub("$i") * "₎"
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate all possible response patterns given the number of options and repetitions.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Returns 
+
+Returns a vector of all possible response patterns
+"""
 function make_response_patterns(n_options, n_reps)
     n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
@@ -12,6 +43,19 @@ function make_response_patterns(n_options, n_reps)
     return patterns
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate string labels for choice set patterns used in table headers.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+
+# Returns 
+
+Returns a vector of strings representing choice set pattern labels
+"""
 function make_table_labels(n_options)
     n_choice_sets = length(n_options)
     sub_patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
@@ -20,16 +64,56 @@ function make_table_labels(n_options)
     return map(s -> replace(s, " " => ""), str)
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate all possible latent preference patterns for the model.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+
+# Returns 
+
+Returns a vector of preference patterns
+"""
 function make_preference_patterns(n_options)
     n_choice_sets = length(n_options)
     patterns = collect(Base.product(map(i -> (1:n_options[i]...,), 1:n_choice_sets)...))
     return permutedims(patterns, (1:n_choice_sets))[:]
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate preference patterns for a uniform number of options across choice sets.
+
+# Arguments 
+
+- `n_options::Int`: the number of options in each choice set
+
+# Returns 
+
+Returns a vector of preference patterns
+"""
 function make_preference_patterns(n_options::Int)
     return make_preference_patterns(fill(n_options, length(options)))
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a numbered list of all response patterns for documentation.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Returns 
+
+Returns a formatted string of numbered response patterns
+"""
 function make_numbered_patterns(n_options, n_reps)
     patterns = make_response_patterns(n_options, n_reps)
     str = ""
@@ -40,18 +124,78 @@ function make_numbered_patterns(n_options, n_reps)
     return str
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a subscripted index for choice sets if not constrained.
+
+# Arguments 
+
+- `i`: the index of the choice set
+
+# Keyword 
+
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+
+# Returns 
+
+Returns a string representation of the choice set index
+"""
 function add_choice_set_index(i; constrain_choice_set)
     return constrain_choice_set ? "" : sub("$i")
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a subscripted index for options if not constrained.
+
+# Arguments 
+
+- `i`: the index of the option within a choice set
+
+# Keyword 
+
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+
+# Returns 
+
+Returns a string representation of the option index
+"""
 function add_option_index(i; constrain_option)
     return constrain_option ? "" : sub("$i")
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a vector of symbolic preference parameter names.
+
+# Arguments 
+
+- `preference_patterns`: a vector of latent preference patterns
+
+# Returns 
+
+Returns a vector of strings representing preference parameters
+"""
 function make_preference_parms(preference_patterns)
     return map(i -> "p" * (sub.("$i")...), preference_patterns)
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate a vector of symbolic error parameter names for the model.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+
+# Returns 
+
+Returns a vector of strings representing error parameters
+"""
 function make_error_parms(n_options)
     parms = fill("", sum(n_options))
     i = 1
@@ -64,8 +208,42 @@ function make_error_parms(n_options)
     return parms
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Compute the total number of unique response patterns (equations).
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Returns 
+
+Returns the total number of equations as an integer
+"""
 count_equations(n_options, n_reps) = prod(n_options)^n_reps
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate symbolic error terms for a specific response and preference pattern combination.
+
+# Arguments 
+
+- `response_pattern`: the observed response pattern
+- `preference_pattern`: the latent preference pattern
+- `n_options::Vector{Int}`: the number of options in each choice set
+
+# Keyword 
+
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+
+# Returns 
+
+Returns a string representation of the error term product
+"""
 function make_error_terms(
     response_pattern,
     preference_pattern,
@@ -102,6 +280,27 @@ function make_error_terms(
     return error_terms
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Construct the right-hand side of a probability equation for a single response pattern.
+
+# Arguments 
+
+- `preference_parms`: names of preference parameters
+- `preference_patterns`: list of all latent preference patterns
+- `response_pattern`: the specific response pattern for this equation
+- `n_options::Vector{Int}`: the number of options in each choice set
+
+# Keyword 
+
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+
+# Returns 
+
+Returns a string representing the summation of probabilities for the pattern
+"""
 function make_equation_rhs(
     preference_parms,
     preference_patterns,
@@ -128,6 +327,26 @@ function make_equation_rhs(
     return eq
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate probability equations for a model with uniform options across choice sets.
+
+# Arguments 
+
+- `n_choice_sets::Int`: the number of choice sets
+- `n_options::Int`: the number of options per choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Keyword 
+
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+
+# Returns 
+
+Returns a string containing all probability equations
+"""
 function make_equations(
     n_choice_sets::Int,
     n_options::Int,
@@ -143,6 +362,25 @@ function make_equations(
     )
 end
 
+"""
+$(TYPEDSIGNATURES)
+
+Generate all probability equations for the model given a vector of options.
+
+# Arguments 
+
+- `n_options::Vector{Int}`: the number of options in each choice set
+- `n_reps::Int`: the number of times each choice set is presented
+
+# Keyword 
+
+- `constrain_choice_set = false`: constrains `ϵ` parameters based on choice set
+- `constrain_option = false`: constrains `ϵ` parameters based on option
+
+# Returns 
+
+Returns a string containing all probability equations mapped to theta indices
+"""
 function make_equations(
     n_options::Vector{Int},
     n_reps::Int;
@@ -190,13 +428,6 @@ Generate a standard True and Error model based on options per choice set and num
 # Returns 
 
 Returns a string representation of the compute_probs function
-
-# Example
-
-```julia
-using TrueAndErrorModels
-model_str = make_compute_probs(3, 2, 2, "MyModel")
-```
 """
 function make_function_body(
     n_choice_sets::Int,
