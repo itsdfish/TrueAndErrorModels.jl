@@ -193,51 +193,63 @@ data = rand(dist, n_sim)</code></pre><pre class="documenter-example-output"><cod
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">tem1_model (generic function with 2 methods)</code></pre><h2 id="Estimate-the-Parameters"><a class="docs-heading-anchor" href="#Estimate-the-Parameters">Estimate the Parameters</a><a id="Estimate-the-Parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Estimate-the-Parameters" title="Permalink"></a></h2><p>Now that the Turing model has been specified, we can perform Bayesian parameter estimation with the function <code>sample</code>. We will use the No U-Turn Sampler (NUTS) to sample from the posterior distribution. The inputs into the <code>sample</code> function below are summarized as follows:</p><ol><li><code>model(data)</code>: the Turing model with data passed</li><li><code>NUTS(1000, .65)</code>: a sampler object for the No U-Turn Sampler for 1000 warmup samples.</li><li><code>MCMCThreads()</code>: instructs Turing to run each chain on a separate thread</li><li><code>n_iterations</code>: the number of iterations performed after warmup</li><li><code>n_chains</code>: the number of chains</li></ol><p>For ease of intepretation, we will convert the numerical indices of preference vector <span>$\mathbf{p}$</span> to more informative labeled indices. </p><pre><code class="language-julia hljs">model = tem1_model(data)
 chains = sample(model, NUTS(1000, 0.65), MCMCThreads(), 1000, 4)
 # name_map = Dict(&quot;p[$i]&quot; =&gt; v for (i,v) ∈ enumerate(get_true_parm_labels(MyCoolModel)))
-# _chains = replacenames(chains, name_map)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Chains MCMC chain (1000×19×4 Array{Float64, 3}):
-
-Iterations        = 1001:1:2000
-Number of chains  = 4
-Samples per chain = 1000
-Wall duration     = 7.87 seconds
-Compute duration  = 4.11 seconds
-parameters        = p[1], p[2], p[3], p[4], ϵ
-internals         = n_steps, is_accept, acceptance_rate, log_density, hamiltonian_energy, hamiltonian_energy_error, max_hamiltonian_energy_error, tree_depth, numerical_error, step_size, nom_step_size, logprior, loglikelihood, logjoint
-
-Use `describe(chains)` for summary statistics and quantiles.
-</code></pre><p>The output below shows the mean, standard deviation, effective sample size, and rhat for each of the five parameters. The pannel below shows the quantiles of the marginal distributions.  We see that the chains converged according to <span>$\hat{r} \leq 1.05$</span>,</p><pre><code class="language-julia hljs">summarystats(chains)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Summary Statistics
-
- <span class="sgr1"> parameters </span> <span class="sgr1">    mean </span> <span class="sgr1">     std </span> <span class="sgr1">    mcse </span> <span class="sgr1">  ess_bulk </span> <span class="sgr1">  ess_tail </span> <span class="sgr1">    rhat </span>  ⋯
- <span class="sgr90">     Symbol </span> <span class="sgr90"> Float64 </span> <span class="sgr90"> Float64 </span> <span class="sgr90"> Float64 </span> <span class="sgr90">   Float64 </span> <span class="sgr90">   Float64 </span> <span class="sgr90"> Float64 </span>  ⋯
-
-        p[1]    0.4189    0.0385    0.0006   4805.7920   3259.1944    1.0004   ⋯
-        p[2]    0.0945    0.0257    0.0004   4920.9628   2918.0146    0.9997   ⋯
-        p[3]    0.0849    0.0264    0.0004   4021.1019   2752.7304    1.0012   ⋯
-        p[4]    0.4016    0.0386    0.0005   6694.1383   3121.5903    1.0005   ⋯
-           ϵ    0.1097    0.0127    0.0002   4983.6585   3300.7559    1.0012   ⋯
-
-<span class="sgr36">                                                                1 column omitted</span>
-</code></pre><h2 id="Evaluation"><a class="docs-heading-anchor" href="#Evaluation">Evaluation</a><a id="Evaluation-1"></a><a class="docs-heading-anchor-permalink" href="#Evaluation" title="Permalink"></a></h2><p>It is important to verify visually that the chains converged. The trace plots below show that the chains look like &quot;hairy caterpillars&quot;, which indicates the chains did not get stuck. </p><pre><code class="language-julia hljs">post_plot = plot(chains, grid = false, leg = false)
+# _chains = replacenames(chains, name_map)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr90">╭─</span><span class="sgr1">FlexiChain (1000 iterations, 4 chains)</span><span class="sgr90"> ──────────────────────────────────────╮</span>
+<span class="sgr90">│</span> <span class="sgr38_5" style="color:#ff875f">↓ iter  = 1001:2000</span>                                                          <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr38_5" style="color:#0087d7">→ chain = 1:4</span>                                                                <span class="sgr90">│</span>
+<span class="sgr90">│</span>                                                                              <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">Parameters (2)</span><span class="sgr90"> ── AbstractPPL.VarName</span>                                        <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Vector{Float64}</span>  p <span class="sgr37">(4,)</span>                                                     <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Float64        </span>  ϵ                                                          <span class="sgr90">│</span>
+<span class="sgr90">│</span>                                                                              <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">Extras (14)</span>                                                                  <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Int64  </span>  n_steps, tree_depth                                                <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Bool   </span>  is_accept, numerical_error                                         <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Float64</span>  acceptance_rate, log_density, hamiltonian_energy,                  <span class="sgr90">│</span>
+<span class="sgr90">│</span>           hamiltonian_energy_error, max_hamiltonian_energy_error, step_size, <span class="sgr90">│</span>
+<span class="sgr90">│</span>           nom_step_size, logprior, loglikelihood, logjoint                   <span class="sgr90">│</span>
+<span class="sgr90">╰──────────────────────────────────────────────────────────────────────────────╯</span></code></pre><p>The output below shows the mean, standard deviation, effective sample size, and rhat for each of the five parameters. The pannel below shows the quantiles of the marginal distributions.  We see that the chains converged according to <span>$\hat{r} \leq 1.05$</span>,</p><pre><code class="language-julia hljs">summarystats(chains)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr90">╭─</span><span class="sgr1">FlexiSummary (9 statistics)</span><span class="sgr90"> ─────────────────────────────────────────────────╮</span>
+<span class="sgr90">│</span> <span class="sgr37">  iter    collapsed</span>                                                          <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr37">  chain   collapsed</span>                                                          <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr38_5" style="color:#ff875f">↓ stat  = [mean, std, mcse, ess_bulk, ess_tail, rhat, q5, q50, q95]</span>          <span class="sgr90">│</span>
+<span class="sgr90">│</span>                                                                              <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">Parameters (5)</span><span class="sgr90"> ── AbstractPPL.VarName</span>                                        <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Float64</span>  p[1], p[2], p[3], p[4], ϵ                                          <span class="sgr90">│</span>
+<span class="sgr90">│</span>                                                                              <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">Extras (14)</span>                                                                  <span class="sgr90">│</span>
+<span class="sgr90">│</span>  <span class="sgr32">Float64</span>  n_steps, is_accept, acceptance_rate, log_density,                  <span class="sgr90">│</span>
+<span class="sgr90">│</span>           hamiltonian_energy, hamiltonian_energy_error,                      <span class="sgr90">│</span>
+<span class="sgr90">│</span>           max_hamiltonian_energy_error, tree_depth, numerical_error,         <span class="sgr90">│</span>
+<span class="sgr90">│</span>           step_size, nom_step_size, logprior, loglikelihood, logjoint        <span class="sgr90">│</span>
+<span class="sgr90">│</span>                                                                              <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">Summary</span>                                                                      <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">  param    mean     std    mcse   ess_bulk   ess_tail    rhat      q5</span><span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">   p[1]</span>  0.4189  0.0385  0.0006  4765.9711  3222.0540  0.9998  0.3560<span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">   p[2]</span>  0.0945  0.0257  0.0004  4872.8424  2884.5315  1.0001  0.0552<span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">   p[3]</span>  0.0849  0.0264  0.0004  3983.4424  2672.5962  1.0026  0.0443<span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">   p[4]</span>  0.4016  0.0386  0.0005  6658.3901  3079.2776  0.9999  0.3390<span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">│</span> <span class="sgr1">      ϵ</span>  0.1097  0.0127  0.0002  4909.0665  3268.5998  1.0003  0.0898<span class="sgr90">  …</span>     <span class="sgr90">│</span>
+<span class="sgr90">╰──────────────────────────────────────────────────────────────────────────────╯</span></code></pre><h2 id="Evaluation"><a class="docs-heading-anchor" href="#Evaluation">Evaluation</a><a id="Evaluation-1"></a><a class="docs-heading-anchor-permalink" href="#Evaluation" title="Permalink"></a></h2><p>It is important to verify visually that the chains converged. The trace plots below show that the chains look like &quot;hairy caterpillars&quot;, which indicates the chains did not get stuck. </p><pre><code class="language-julia hljs">post_plot = plot(chains, grid = false, leg = false)
 vline!(
     post_plot,
     [missing 0.40 missing 0.10 missing 0.10 missing 0.40 missing 0.10],
     color = :black,
     linestyle = :dash
-)</code></pre><img src="ff862deb.svg" alt="Example block output"/><p>The data-generating parameters are represented as black vertical lines in the density plots. As expected, the posterior distributions are centered near the data-generating parameters. Given that the data-generating and estimated model are the same, we would expect the posterior distributions to be near the data-generating parameters. </p><h1 id="Posterior-Predictive-Distributions"><a class="docs-heading-anchor" href="#Posterior-Predictive-Distributions">Posterior Predictive Distributions</a><a id="Posterior-Predictive-Distributions-1"></a><a class="docs-heading-anchor-permalink" href="#Posterior-Predictive-Distributions" title="Permalink"></a></h1><pre><code class="language-julia hljs">pred_model = predict_distribution(;
+)</code></pre><img src="7cdb14b5.svg" alt="Example block output"/><p>The data-generating parameters are represented as black vertical lines in the density plots. As expected, the posterior distributions are centered near the data-generating parameters. Given that the data-generating and estimated model are the same, we would expect the posterior distributions to be near the data-generating parameters. </p><h1 id="Posterior-Predictive-Distributions"><a class="docs-heading-anchor" href="#Posterior-Predictive-Distributions">Posterior Predictive Distributions</a><a id="Posterior-Predictive-Distributions-1"></a><a class="docs-heading-anchor-permalink" href="#Posterior-Predictive-Distributions" title="Permalink"></a></h1><pre><code class="language-julia hljs">pred_model = predict_distribution(;
     simulator = Θ -&gt; rand(MyCoolModel(; Θ...), n_sim),
     model,
     func = x -&gt; x ./ sum(x)
 )</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">DynamicPPL.Model{typeof(TuringUtilities.predict_distribution), (Symbol(&quot;#splat#args&quot;),), (:simulator, :model, :func, :sim_kwargs), (), Tuple{Tuple{}}, Tuple{Main.var&quot;#4#6&quot;, DynamicPPL.Model{typeof(Main.tem1_model), (:data,), (), (), Tuple{Vector{Int64}}, Tuple{}, DynamicPPL.DefaultContext, false}, Main.var&quot;#5#7&quot;, Tuple{}}, DynamicPPL.DefaultContext, false}(TuringUtilities.predict_distribution, (var&quot;#splat#args&quot; = (),), (simulator = Main.var&quot;#4#6&quot;(), model = DynamicPPL.Model{typeof(Main.tem1_model), (:data,), (), (), Tuple{Vector{Int64}}, Tuple{}, DynamicPPL.DefaultContext, false}(Main.tem1_model, (data = [53, 5, 10, 2, 8, 14, 2, 5, 9, 3, 11, 10, 2, 7, 5, 54],), NamedTuple(), DynamicPPL.DefaultContext()), func = Main.var&quot;#5#7&quot;(), sim_kwargs = ()), DynamicPPL.DefaultContext())</code></pre><pre><code class="language-julia hljs">post_preds = generated_quantities(pred_model, chains)
 post_preds = stack(post_preds, dims = 1)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4000×16 Matrix{Float64}:
- 0.235  0.025  0.035  0.01   0.04   …  0.025  0.01   0.035  0.02   0.275
- 0.285  0.045  0.05   0.01   0.025     0.055  0.005  0.04   0.03   0.235
- 0.27   0.045  0.035  0.0    0.035     0.025  0.015  0.04   0.03   0.275
- 0.27   0.04   0.015  0.015  0.02      0.035  0.01   0.09   0.045  0.27
- 0.305  0.04   0.04   0.0    0.02      0.05   0.015  0.05   0.045  0.245
- 0.26   0.05   0.045  0.015  0.025  …  0.035  0.01   0.015  0.05   0.225
- 0.34   0.05   0.025  0.015  0.04      0.015  0.0    0.015  0.03   0.29
- 0.26   0.045  0.03   0.005  0.06      0.05   0.035  0.035  0.04   0.29
- 0.275  0.015  0.065  0.015  0.03      0.045  0.01   0.03   0.035  0.285
- 0.155  0.03   0.04   0.025  0.025     0.03   0.015  0.08   0.05   0.305
+ 0.28   0.03   0.02   0.01   0.025  …  0.03   0.01   0.02   0.045  0.275
+ 0.235  0.06   0.04   0.01   0.055     0.015  0.005  0.03   0.035  0.215
+ 0.26   0.04   0.04   0.01   0.02      0.06   0.0    0.04   0.035  0.305
+ 0.23   0.065  0.03   0.01   0.04      0.03   0.01   0.045  0.025  0.285
+ 0.28   0.03   0.03   0.005  0.03      0.035  0.02   0.01   0.05   0.3
+ 0.3    0.035  0.04   0.01   0.04   …  0.035  0.02   0.05   0.025  0.225
+ 0.35   0.03   0.035  0.005  0.025     0.03   0.0    0.035  0.05   0.28
+ 0.255  0.06   0.035  0.01   0.055     0.025  0.01   0.035  0.05   0.275
+ 0.29   0.025  0.04   0.005  0.025     0.05   0.01   0.035  0.06   0.26
+ 0.195  0.045  0.05   0.015  0.04      0.04   0.015  0.045  0.05   0.325
  ⋮                                  ⋱                              ⋮
  0.32   0.03   0.02   0.02   0.04      0.02   0.0    0.025  0.02   0.26
  0.27   0.05   0.025  0.015  0.025     0.07   0.01   0.03   0.035  0.245
@@ -256,4 +268,4 @@ violin(
     grid = false,
     xrotation = 45
 )
-scatter!(1:16, data ./ sum(data), color = :black)</code></pre><img src="ecbc17f9.svg" alt="Example block output"/><h1 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h1><p>Birnbaum, M. H., &amp; Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.</p><p>Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision Making, 13(6), 622-635.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Monday 29 June 2026 22:59">Monday 29 June 2026</span>. Using Julia version 1.11.9.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+scatter!(1:16, data ./ sum(data), color = :black)</code></pre><img src="1b0a279f.svg" alt="Example block output"/><h1 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h1><p>Birnbaum, M. H., &amp; Quispe-Torreblanca, E. G. (2018). TEMAP2. R: True and error model analysis program in R. Judgment and Decision Making, 13(5), 428-440.</p><p>Lee, M. D. (2018). Bayesian methods for analyzing true-and-error models. Judgment and Decision Making, 13(6), 622-635.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Monday 27 July 2026 09:37">Monday 27 July 2026</span>. Using Julia version 1.11.9.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
