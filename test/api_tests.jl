@@ -198,7 +198,7 @@ for _ ∈ 1:100
     model = TestModel(;
         p = rand(Dirichlet(fill(1, 6))),
         ϵ = rand(Uniform(0, 0.5), 5)
-    );
+    )
     θ = compute_probs(model)
 
     @test sum(θ) ≈ 1
