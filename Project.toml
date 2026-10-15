@@ -19,7 +19,7 @@ NamedArraysExt = "NamedArrays"
 
 [compat]
 Distributions = "0.25.0"
-DocStringExtensions = "0.9.5"
+DocStringExtensions = "0.9.5, 0.10"
 NamedArrays = "0.10.0"
 PrettyTables = "3.0.10"
 Random = "1.11.0"
